@@ -1,0 +1,7 @@
+{
+  "updated": "尚未執行",
+  "timezone": "Asia/Taipei",
+  "strategy": "MA20/MA60 + RSI14 + MACD + 20D breakout + volume",
+  "count": 0,
+  "stocks": []
+}
