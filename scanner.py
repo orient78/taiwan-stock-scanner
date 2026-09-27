@@ -89,7 +89,7 @@ def get_stock_info(code):
 
 def get_twse_codes():
     """
-    V6.2.1: Build the universe from twstock.twse directly.
+    V6.2.2: Build the universe from twstock.twse directly.
     twstock.twse is the package's parsed TWSE-listed securities mapping.
     Keep common stocks plus the project's listed ETF codes.
     OTC/TPEX securities are excluded completely.
@@ -1150,7 +1150,7 @@ def validate_scan_result(universe_count, valid_count, market_ref):
 
 def main():
     print("=" * 60)
-    print("Taiwan Stock Radar V6.2.1 - TWSE Only")
+    print("Taiwan Stock Radar V6.2.2 - TWSE Only")
     print("=" * 60)
 
     codes = get_twse_codes()
@@ -1326,7 +1326,7 @@ def main():
         "updated": now,
         "timezone": TIMEZONE,
         "strategy": (
-            "V6.2.1 TWSE Entry & Position Radar: "
+            "V6.2.2 TWSE Entry & Position Radar: "
             "Trend + Breakout + Volume + Relative Strength "
             "+ Sector Strength + Overheat Control"
         ),
@@ -1404,7 +1404,7 @@ def main():
 
     print()
     print("=" * 60)
-    print("V6.2.1 COMPLETE")
+    print("V6.2.2 COMPLETE")
     print("=" * 60)
 
     print("Updated:", now)
