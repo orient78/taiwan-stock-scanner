@@ -9,30 +9,44 @@ import pandas as pd
 import twstock
 import yfinance as yf
 
+from stock_pool import get_stock_codes, get_groups
+
+
 TZ = ZoneInfo("Asia/Taipei")
 
 MIN_PRICE = 10
 MIN_AVG_DAILY_VALUE = 20_000_000
-MAX_RESULTS = 30
+MAX_RESULTS = 50
 MIN_SCORE = 3
 
 
 def get_universe():
+    """
+    V3:
+    Only scan symbols defined in stock_pool.py.
+    """
+
     stocks = []
 
-    for code, info in twstock.codes.items():
-        if not (
-            code.isdigit()
-            and len(code) == 4
-            and info.type == "股票"
-        ):
+    for code in get_stock_codes():
+
+        info = twstock.codes.get(code)
+
+        if info is None:
+            print(f"Unknown code: {code}")
             continue
+
+        # ETF
+        is_etf = "ETF" in get_groups(code)
 
         if info.market == "上市":
             suffix = ".TW"
+
         elif info.market == "上櫃":
             suffix = ".TWO"
+
         else:
+            print(f"Unsupported market: {code}")
             continue
 
         stocks.append(
@@ -41,6 +55,8 @@ def get_universe():
                 code,
                 info.name,
                 info.market,
+                get_groups(code),
+                is_etf,
             )
         )
 
@@ -52,15 +68,13 @@ def add_indicators(df):
     close = df["Close"].astype(float)
     volume = df["Volume"].astype(float)
 
-    # Short-term moving averages
+    # Moving averages
     df["MA5"] = close.rolling(5).mean()
     df["MA10"] = close.rolling(10).mean()
     df["MA20"] = close.rolling(20).mean()
-
-    # Medium-term trend
     df["MA60"] = close.rolling(60).mean()
 
-    # RSI
+    # RSI 14
     delta = close.diff()
 
     gain = delta.clip(lower=0)
@@ -68,38 +82,44 @@ def add_indicators(df):
 
     avg_gain = gain.ewm(
         alpha=1 / 14,
-        adjust=False,
+        adjust=False
     ).mean()
 
     avg_loss = loss.ewm(
         alpha=1 / 14,
-        adjust=False,
+        adjust=False
     ).mean()
 
-    rs = avg_gain / avg_loss.replace(0, np.nan)
+    rs = avg_gain / avg_loss.replace(
+        0,
+        np.nan
+    )
 
-    df["RSI14"] = 100 - (
-        100 / (1 + rs)
+    df["RSI14"] = (
+        100 -
+        (100 / (1 + rs))
     )
 
     # MACD
     ema12 = close.ewm(
         span=12,
-        adjust=False,
+        adjust=False
     ).mean()
 
     ema26 = close.ewm(
         span=26,
-        adjust=False,
+        adjust=False
     ).mean()
 
-    df["MACD"] = ema12 - ema26
+    df["MACD"] = (
+        ema12 - ema26
+    )
 
     df["MACD_SIGNAL"] = (
         df["MACD"]
         .ewm(
             span=9,
-            adjust=False,
+            adjust=False
         )
         .mean()
     )
@@ -124,7 +144,7 @@ def add_indicators(df):
         .max()
     )
 
-    # ATR
+    # ATR 14
     high = df["High"].astype(float)
     low = df["Low"].astype(float)
 
@@ -153,6 +173,8 @@ def scan_one(
     code,
     name,
     market,
+    groups,
+    is_etf,
 ):
 
     try:
@@ -172,7 +194,7 @@ def scan_one(
 
         if isinstance(
             df.columns,
-            pd.MultiIndex,
+            pd.MultiIndex
         ):
             df.columns = (
                 df.columns
@@ -204,30 +226,43 @@ def scan_one(
         ma20 = float(x["MA20"])
         ma60 = float(x["MA60"])
 
+        rsi = float(x["RSI14"])
+
+        if not np.isfinite(
+            [
+                price,
+                ma5,
+                ma10,
+                ma20,
+                ma60,
+                rsi,
+            ]
+        ).all():
+            return None
+
+        # ----------------------------------
+        # Liquidity filter
+        # ----------------------------------
+
         avg_value = float(
             x["VOL20"] * ma20
         )
 
-        if (
-            not np.isfinite(
-                [
-                    price,
-                    ma5,
-                    ma10,
-                    ma20,
-                    ma60,
-                    float(x["RSI14"]),
-                ]
-            ).all()
-            or price < MIN_PRICE
-            or avg_value
-            < MIN_AVG_DAILY_VALUE
-        ):
-            return None
+        # ETF 不使用個股價格 / 成交額硬篩選
+        if not is_etf:
 
-        # --------------------------------
-        # 1. Above 3 short-term averages
-        # --------------------------------
+            if price < MIN_PRICE:
+                return None
+
+            if (
+                avg_value
+                < MIN_AVG_DAILY_VALUE
+            ):
+                return None
+
+        # ----------------------------------
+        # Technical conditions
+        # ----------------------------------
 
         above_3ma = bool(
             price > ma5
@@ -235,47 +270,29 @@ def scan_one(
             and price > ma20
         )
 
-        # --------------------------------
-        # 2. Bull trend
-        # --------------------------------
-
         trend = bool(
             price > ma20 > ma60
-            and ma20 > float(
-                p["MA20"]
-            )
+            and ma20
+            > float(p["MA20"])
         )
-
-        # --------------------------------
-        # 3. RSI
-        # --------------------------------
 
         rsi_ok = bool(
-            50
-            <= float(x["RSI14"])
-            <= 70
+            50 <= rsi <= 70
         )
-
-        # --------------------------------
-        # 4. MACD momentum
-        # --------------------------------
 
         macd_strong = bool(
             float(x["MACD"])
             > float(
                 x["MACD_SIGNAL"]
             )
-            and float(
+            and
+            float(
                 x["MACD_HIST"]
             )
             > float(
                 p["MACD_HIST"]
             )
         )
-
-        # --------------------------------
-        # 5. Breakout
-        # --------------------------------
 
         breakout = bool(
             price
@@ -284,17 +301,19 @@ def scan_one(
             )
         )
 
-        # --------------------------------
-        # 6. Volume
-        # --------------------------------
+        if (
+            pd.notna(x["VOL20"])
+            and float(x["VOL20"]) > 0
+        ):
 
-        if x["VOL20"]:
             volume_ratio = float(
                 x["Volume"]
                 / x["VOL20"]
             )
+
         else:
-            volume_ratio = 0
+
+            volume_ratio = 0.0
 
         volume_ok = bool(
             volume_ratio >= 1.5
@@ -329,31 +348,38 @@ def scan_one(
             return None
 
         reasons = [
-            k
-            for k, v
+            key
+            for key, value
             in checks.items()
-            if v
+            if value
         ]
 
-        # --------------------------------
-        # Category
-        # --------------------------------
+        # ----------------------------------
+        # Signal category
+        # ----------------------------------
 
         if (
             breakout
             and volume_ok
             and above_3ma
         ):
+
             category = "強勢突破"
 
         elif (
             trend
             and above_3ma
         ):
+
             category = "多頭趨勢"
 
         else:
+
             category = "觀察名單"
+
+        # ----------------------------------
+        # ATR risk reference
+        # ----------------------------------
 
         atr = (
             float(x["ATR14"])
@@ -363,12 +389,35 @@ def scan_one(
             else np.nan
         )
 
+        risk_reference = (
+            round(
+                price - 2 * atr,
+                2
+            )
+            if np.isfinite(atr)
+            else None
+        )
+
         return {
 
-            "code": code,
-            "name": name,
-            "market": market,
-            "ticker": ticker,
+            "code":
+                code,
+
+            "name":
+                name,
+
+            "market":
+                market,
+
+            "ticker":
+                ticker,
+
+            # V3 industry groups
+            "groups":
+                groups,
+
+            "is_etf":
+                is_etf,
 
             "date":
                 pd.Timestamp(
@@ -390,17 +439,12 @@ def scan_one(
                 above_3ma,
 
             "rsi":
-                round(
-                    float(
-                        x["RSI14"]
-                    ),
-                    1,
-                ),
+                round(rsi, 1),
 
             "volume_ratio":
                 round(
                     volume_ratio,
-                    2,
+                    2
                 ),
 
             "ma5":
@@ -416,17 +460,14 @@ def scan_one(
                 round(ma60, 2),
 
             "atr14":
-                round(atr, 2)
-                if np.isfinite(atr)
-                else None,
+                (
+                    round(atr, 2)
+                    if np.isfinite(atr)
+                    else None
+                ),
 
             "risk_reference":
-                round(
-                    price - 2 * atr,
-                    2,
-                )
-                if np.isfinite(atr)
-                else None,
+                risk_reference,
 
             "reasons":
                 reasons,
@@ -436,7 +477,7 @@ def scan_one(
 
         print(
             f"Skip {ticker}: "
-            f"{str(exc)[:120]}"
+            f"{str(exc)[:150]}"
         )
 
         return None
@@ -447,15 +488,15 @@ def main():
     universe = get_universe()
 
     print(
-        f"Universe: "
-        f"{len(universe)} stocks"
+        f"V3 Universe: "
+        f"{len(universe)} symbols"
     )
 
     rows = []
 
     for i, item in enumerate(
         universe,
-        1,
+        1
     ):
 
         result = scan_one(
@@ -467,17 +508,18 @@ def main():
                 result
             )
 
-        if i % 100 == 0:
-            print(
-                f"{i}/"
-                f"{len(universe)}"
-            )
+        print(
+            f"{i}/"
+            f"{len(universe)} "
+            f"{item[1]}"
+        )
 
+        # Small delay to reduce API pressure
         time.sleep(0.03)
 
-    # --------------------------------
+    # ----------------------------------
     # Ranking
-    # --------------------------------
+    # ----------------------------------
 
     rows.sort(
         key=lambda x: (
@@ -491,9 +533,34 @@ def main():
         :MAX_RESULTS
     ]
 
+    # ----------------------------------
+    # Group statistics
+    # ----------------------------------
+
+    group_counts = {
+        "半導體": 0,
+        "AI": 0,
+        "科技": 0,
+        "ETF": 0,
+    }
+
+    for row in rows:
+
+        for group in row["groups"]:
+
+            if group in group_counts:
+                group_counts[group] += 1
+
+    # ----------------------------------
+    # Output
+    # ----------------------------------
+
     now = datetime.now(TZ)
 
     payload = {
+
+        "version":
+            "V3",
 
         "updated":
             now.strftime(
@@ -503,16 +570,24 @@ def main():
         "timezone":
             "Asia/Taipei",
 
+        "universe_count":
+            len(universe),
+
         "strategy":
             (
+                "Focused Tech/AI/"
+                "Semiconductor/ETF + "
                 "MA5/MA10/MA20 + "
-                "MA20/MA60 + "
-                "RSI14 + MACD + "
-                "20D breakout + volume"
+                "MA20/MA60 + RSI14 + "
+                "MACD + 20D breakout + "
+                "volume"
             ),
 
         "count":
             len(rows),
+
+        "group_counts":
+            group_counts,
 
         "stocks":
             rows,
@@ -520,25 +595,25 @@ def main():
 
     os.makedirs(
         "docs",
-        exist_ok=True,
+        exist_ok=True
     )
 
     os.makedirs(
         "data",
-        exist_ok=True,
+        exist_ok=True
     )
 
     with open(
         "docs/data.json",
         "w",
-        encoding="utf-8",
+        encoding="utf-8"
     ) as f:
 
         json.dump(
             payload,
             f,
             ensure_ascii=False,
-            indent=2,
+            indent=2
         )
 
     pd.DataFrame(
@@ -546,12 +621,27 @@ def main():
     ).to_csv(
         "data/signals.csv",
         index=False,
-        encoding="utf-8-sig",
+        encoding="utf-8-sig"
+    )
+
+    print()
+    print("==============================")
+    print("Taiwan Stock Scanner V3")
+    print("==============================")
+
+    print(
+        "Universe:",
+        len(universe)
     )
 
     print(
-        f"Selected: "
-        f"{len(rows)}"
+        "Selected:",
+        len(rows)
+    )
+
+    print(
+        "Groups:",
+        group_counts
     )
 
 
