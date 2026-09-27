@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>台股 Entry Radar V6.1</title>
+<title>台股 Entry Radar V6.2.2</title>
 <style>
 :root{--bg:#08111f;--panel:#101b2d;--panel2:#15233a;--line:#263956;--text:#edf4ff;--muted:#91a3bd;--green:#31d07f;--red:#ff6376;--blue:#5aa9ff;--yellow:#ffc857;--purple:#b68cff;--orange:#ff9f43}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC",Arial,sans-serif}
@@ -20,7 +20,7 @@
 </style>
 </head>
 <body><div class="container">
-<header><h1>🚀 台股 Entry Radar V6.1</h1><div class="subtitle">明日進場・明日候補・準備進場・中長期布局・買入區・停損・族群強度</div><div class="update" id="updated">Loading...</div></header>
+<header><h1>🚀 台股 Entry Radar V6.2.2</h1><div class="subtitle">明日進場・明日候補・準備進場・中長期布局・買入區・停損・族群強度</div><div class="update" id="updated">Loading...</div></header>
 <div class="summary">
 <div class="box"><div class="label">股票池</div><div class="value" id="universe">-</div></div>
 <div class="box"><div class="label">有效股票</div><div class="value" id="valid">-</div></div>
@@ -33,8 +33,8 @@
 </div>
 <section class="section" id="sectorSection"><div class="title">🔥 強勢族群</div><div class="desc">先看強勢族群，再找族群中的強勢個股。</div><div class="sectors" id="sectorList"></div></section>
 <div id="stockArea"><div class="controls"><input id="search" class="search" placeholder="搜尋股票名稱或代碼，例如：國巨 / 2327"><select id="sectorFilter"><option value="">全部族群</option></select></div><div class="title" id="viewTitle">🚀 明日進場</div><div class="desc" id="viewDescription"></div><div id="watchNote"></div><div class="grid" id="stockGrid"></div></div>
-<div id="guideArea" style="display:none"><div class="section"><div class="title">📖 V6.1 使用說明</div><div class="education">
-<div class="edu"><b>🚀 明日進場</b><span>只顯示真正符合 V6.1 明日進場條件的股票，不再為了湊滿 10 檔而補入一般候選。</span></div>
+<div id="guideArea" style="display:none"><div class="section"><div class="title">📖 V6.2 使用說明</div><div class="education">
+<div class="edu"><b>🚀 明日進場</b><span>只顯示真正符合 V6.2 明日進場條件的股票，不再為了湊滿 10 檔而補入一般候選。</span></div>
 <div class="edu"><b>👀 明日候補</b><span>分數較高但尚未完全符合明日進場條件，適合等待突破、量能或價格確認。</span></div>
 <div class="edu"><b>🟡 準備進場</b><span>趨勢已成形，但突破或成交量尚未完全確認。</span></div>
 <div class="edu"><b>💎 中長期</b><span>偏重 MA20/60/120/240、相對大盤強度與族群趨勢。</span></div>
@@ -42,7 +42,7 @@
 <div class="edu"><b>💰 價格計畫</b><span>建議買入區用 MA10/MA20/ATR；突破買點參考前 20 日壓力；最高追價限制跳空追高；短線停損與中長期防守採不同尺度。</span></div>
 <div class="edu"><b>📚 五檔 / 分價</b><span>五檔掛單可撤單，不應單獨作為買進依據。分價大量成交區可輔助觀察支撐、壓力與突破是否站穩。</span></div>
 </div></div></div>
-<footer>V6.1 是規則式技術分析與候選排序工具，不是未來報酬保證。實際交易仍需考量隔日跳空、流動性、重大消息與個人風險承受度。</footer>
+<footer>V6.2 是規則式技術分析與候選排序工具，不是未來報酬保證。實際交易仍需考量隔日跳空、流動性、重大消息與個人風險承受度。</footer>
 </div>
 <script>
 let DATA=null,currentView="next";
@@ -87,3 +87,4 @@ function drawChart(canvas,code){if(!canvas||canvas.dataset.drawn)return;const s=
 a.forEach((d,i)=>{const x=L+i*xs+xs/2,col=d.close>=d.open?"#ff6376":"#31d07f";c.strokeStyle=c.fillStyle=col;c.beginPath();c.moveTo(x,yp(d.high));c.lineTo(x,yp(d.low));c.stroke();const yo=yp(d.open),yc=yp(d.close);c.fillRect(x-Math.max(1,xs*.28),Math.min(yo,yc),Math.max(2,xs*.56),Math.max(1,Math.abs(yo-yc)));const vh=d.volume/mv*(B-VT);c.fillRect(x-Math.max(1,xs*.25),B-vh,Math.max(2,xs*.5),vh)});
 function line(k,col){c.beginPath();c.strokeStyle=col;c.lineWidth=1.4;let st=false;a.forEach((d,i)=>{const v=Number(d[k]);if(!Number.isFinite(v)||v<=0)return;const x=L+i*xs+xs/2,y=yp(v);st?c.lineTo(x,y):(c.moveTo(x,y),st=true)});c.stroke()}line("ma5","#5aa9ff");line("ma10","#ffc857");line("ma20","#b68cff");line("ma60","#ff9f43")}
 document.querySelectorAll(".tab").forEach(b=>b.addEventListener("click",()=>showView(b.dataset.view)));$("search").addEventListener("input",filterStocks);$("sectorFilter").addEventListener("change",filterStocks);loadData();
+</script></body></html>
