@@ -71,3 +71,6 @@ export default {
     }
   }
 };
+
+
+// Cloudflare auto deploy
