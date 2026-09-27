@@ -1,0 +1,48 @@
+name: Daily Taiwan Stock Scan
+
+on:
+  workflow_dispatch:
+
+  schedule:
+    # 07:00 UTC = 台灣時間 15:00
+    - cron: "0 7 * * 1-5"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: daily-stock-scan
+  cancel-in-progress: false
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run scanner
+        run: python scanner.py
+
+      - name: Commit latest result
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/data.json data/signals.csv
+          if git diff --cached --quiet; then
+            echo "No changes."
+          else
+            git commit -m "Update daily stock scan"
+            git push
+          fi
