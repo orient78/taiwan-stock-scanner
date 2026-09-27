@@ -4,392 +4,557 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>台股起漲雷達 V5</title>
+<title>台股 Entry Radar V6</title>
 
 <style>
-* {
-    box-sizing: border-box;
+:root{
+  --bg:#08111f;
+  --panel:#101b2d;
+  --panel2:#15233a;
+  --line:#263956;
+  --text:#edf4ff;
+  --muted:#91a3bd;
+  --green:#31d07f;
+  --red:#ff6376;
+  --blue:#5aa9ff;
+  --yellow:#ffc857;
+  --purple:#b68cff;
+  --orange:#ff9f43;
 }
 
-body {
-    margin: 0;
-    background: #07111f;
-    color: #eef4ff;
-    font-family:
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        sans-serif;
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:
+    -apple-system,BlinkMacSystemFont,
+    "Segoe UI","Noto Sans TC",
+    Arial,sans-serif;
 }
 
-.container {
-    max-width: 1100px;
-    margin: auto;
-    padding: 16px;
+.container{
+  width:min(1180px,94%);
+  margin:auto;
+  padding-bottom:60px;
 }
 
-.hero {
-    padding: 18px 0 12px;
+header{
+  padding:24px 0 14px;
 }
 
-h1 {
-    margin: 0;
-    font-size: 27px;
+h1{
+  margin:0;
+  font-size:28px;
 }
 
-.subtitle {
-    color: #8fa7c6;
-    margin-top: 6px;
-    font-size: 14px;
+.subtitle{
+  color:var(--muted);
+  margin-top:7px;
+  line-height:1.6;
 }
 
-.version {
-    display: inline-block;
-    margin-top: 9px;
-    padding: 4px 9px;
-    border-radius: 20px;
-    background: #183457;
-    font-size: 12px;
+.update{
+  color:var(--muted);
+  font-size:13px;
+  margin-top:8px;
 }
 
-.summary {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
-    margin: 16px 0;
+/* ==============================
+   SUMMARY
+================================ */
+
+.summary{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:10px;
+  margin:15px 0;
 }
 
-.summary-card {
-    background: #0d1c30;
-    border: 1px solid #1d3655;
-    border-radius: 14px;
-    padding: 12px;
+.summary-card{
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:14px;
 }
 
-.summary-label {
-    color: #8298b5;
-    font-size: 12px;
+.summary-label{
+  color:var(--muted);
+  font-size:12px;
 }
 
-.summary-value {
-    font-size: 20px;
-    font-weight: 700;
-    margin-top: 4px;
+.summary-value{
+  font-size:21px;
+  font-weight:800;
+  margin-top:5px;
 }
 
-.controls {
-    position: sticky;
-    top: 0;
-    z-index: 20;
-    background: rgba(7,17,31,.96);
-    padding: 10px 0;
+/* ==============================
+   MARKET
+================================ */
+
+.market{
+  padding:13px 15px;
+  border:1px solid var(--line);
+  border-radius:14px;
+  background:var(--panel);
+  margin-bottom:16px;
 }
 
-.search {
-    width: 100%;
-    border: 1px solid #244361;
-    background: #0d1c30;
-    color: white;
-    border-radius: 12px;
-    padding: 12px 14px;
-    font-size: 15px;
-    outline: none;
+.market-title{
+  font-weight:800;
 }
 
-.tabs {
-    display: flex;
-    gap: 8px;
-    overflow-x: auto;
-    margin-top: 10px;
-    padding-bottom: 4px;
+.market-note{
+  color:var(--muted);
+  font-size:13px;
+  margin-top:5px;
 }
 
-.tab {
-    flex: 0 0 auto;
-    border: 1px solid #294665;
-    background: #10233a;
-    color: #b9c9db;
-    padding: 8px 12px;
-    border-radius: 20px;
-    cursor: pointer;
-    font-size: 13px;
+/* ==============================
+   NAV
+================================ */
+
+.tabs{
+  display:flex;
+  gap:8px;
+  overflow-x:auto;
+  position:sticky;
+  top:0;
+  background:rgba(8,17,31,.96);
+  padding:10px 0;
+  z-index:20;
 }
 
-.tab.active {
-    background: #246bfd;
-    color: white;
-    border-color: #246bfd;
+.tab{
+  border:1px solid var(--line);
+  background:var(--panel);
+  color:var(--text);
+  border-radius:20px;
+  padding:9px 13px;
+  white-space:nowrap;
+  cursor:pointer;
 }
 
-.sector-select {
-    width: 100%;
-    margin-top: 10px;
-    padding: 11px;
-    border-radius: 10px;
-    background: #0d1c30;
-    color: white;
-    border: 1px solid #294665;
+.tab.active{
+  background:#2468b4;
+  border-color:#438bdc;
 }
 
-.stock-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 14px;
+/* ==============================
+   SECTION
+================================ */
+
+.section{
+  margin-top:23px;
 }
 
-.card {
-    background: #0d1c30;
-    border: 1px solid #1d3655;
-    border-radius: 16px;
-    padding: 15px;
+.section-title{
+  font-size:20px;
+  font-weight:800;
+  margin-bottom:6px;
 }
 
-.card-top {
-    display: flex;
-    justify-content: space-between;
-    gap: 10px;
+.section-desc{
+  color:var(--muted);
+  font-size:13px;
+  margin-bottom:12px;
 }
 
-.stock-name {
-    font-size: 20px;
-    font-weight: 750;
+/* ==============================
+   SECTORS
+================================ */
+
+.sectors{
+  display:flex;
+  gap:8px;
+  overflow-x:auto;
+  padding-bottom:5px;
 }
 
-.stock-code {
-    color: #8298b5;
-    font-size: 13px;
-    margin-top: 3px;
+.sector{
+  min-width:140px;
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:13px;
+  padding:11px;
 }
 
-.rank {
-    color: #82aaff;
-    font-size: 13px;
-    font-weight: 600;
+.sector-rank{
+  font-size:12px;
+  color:var(--yellow);
 }
 
-.price {
-    font-size: 22px;
-    font-weight: 700;
-    text-align: right;
+.sector-name{
+  font-weight:800;
+  margin-top:3px;
 }
 
-.date {
-    color: #8298b5;
-    font-size: 11px;
-    text-align: right;
+.sector-score{
+  color:var(--green);
+  margin-top:5px;
+  font-size:13px;
 }
 
-.tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 5px;
-    margin-top: 10px;
+/* ==============================
+   SEARCH
+================================ */
+
+.controls{
+  display:flex;
+  gap:8px;
+  margin:15px 0;
 }
 
-.tag {
-    background: #142b47;
-    color: #9dc7ff;
-    border-radius: 12px;
-    padding: 4px 8px;
-    font-size: 11px;
+.search{
+  width:100%;
+  border:1px solid var(--line);
+  border-radius:11px;
+  background:var(--panel);
+  color:var(--text);
+  padding:12px;
+  font-size:15px;
 }
 
-.signal {
-    margin: 12px 0;
-    padding: 10px;
-    border-radius: 10px;
-    font-weight: 700;
-    text-align: center;
+select{
+  border:1px solid var(--line);
+  border-radius:11px;
+  background:var(--panel);
+  color:var(--text);
+  padding:10px;
 }
 
-.signal-buy {
-    background: rgba(34,197,94,.15);
-    color: #5ee58a;
-    border: 1px solid rgba(34,197,94,.4);
+/* ==============================
+   STOCK GRID
+================================ */
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:12px;
 }
 
-.signal-wait {
-    background: rgba(59,130,246,.15);
-    color: #74aaff;
-    border: 1px solid rgba(59,130,246,.4);
+.card{
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:16px;
+  overflow:hidden;
 }
 
-.signal-hot {
-    background: rgba(239,68,68,.14);
-    color: #ff8181;
-    border: 1px solid rgba(239,68,68,.4);
+.card-main{
+  padding:15px;
 }
 
-.signal-low {
-    background: rgba(148,163,184,.1);
-    color: #aab6c6;
-    border: 1px solid rgba(148,163,184,.25);
+.stock-head{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
 }
 
-.score-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
+.stock-name{
+  font-size:19px;
+  font-weight:800;
 }
 
-.score-box {
-    background: #091726;
-    border-radius: 10px;
-    padding: 9px;
+.code{
+  color:var(--muted);
+  font-size:13px;
+  margin-top:3px;
 }
 
-.score-title {
-    font-size: 11px;
-    color: #8198b5;
+.price{
+  font-size:21px;
+  font-weight:800;
+  text-align:right;
 }
 
-.score-value {
-    font-size: 19px;
-    font-weight: 700;
-    margin-top: 2px;
+.score{
+  color:var(--yellow);
+  font-size:13px;
+  text-align:right;
 }
 
-.metrics {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 7px;
-    margin-top: 10px;
+.tags{
+  display:flex;
+  gap:5px;
+  flex-wrap:wrap;
+  margin-top:10px;
 }
 
-.metric {
-    background: #091726;
-    padding: 8px;
-    border-radius: 9px;
+.tag{
+  font-size:11px;
+  padding:4px 7px;
+  border-radius:12px;
+  background:var(--panel2);
+  color:#bfd3ef;
 }
 
-.metric-label {
-    color: #738ba9;
-    font-size: 10px;
+/* ==============================
+   SIGNAL
+================================ */
+
+.signal{
+  margin-top:11px;
+  border-radius:9px;
+  padding:8px 10px;
+  font-weight:800;
 }
 
-.metric-value {
-    margin-top: 3px;
-    font-size: 13px;
-    font-weight: 600;
+.buy{
+  background:rgba(49,208,127,.12);
+  color:var(--green);
 }
 
-.section-title {
-    margin-top: 14px;
-    margin-bottom: 7px;
-    font-size: 13px;
-    font-weight: 700;
+.ready{
+  background:rgba(90,169,255,.12);
+  color:var(--blue);
 }
 
-.reason {
-    font-size: 12px;
-    line-height: 1.55;
-    padding: 3px 0;
-    color: #c7d7e8;
+.hot{
+  background:rgba(255,99,118,.12);
+  color:var(--red);
 }
 
-.good {
-    color: #62dc8c;
+.normal{
+  background:rgba(145,163,189,.10);
+  color:#b9c5d7;
 }
 
-.risk {
-    color: #ff9a9a;
+/* ==============================
+   SCORES
+================================ */
+
+.score-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:6px;
+  margin-top:11px;
 }
 
-.trigger {
-    background: #112943;
-    border-left: 3px solid #3b82f6;
-    padding: 9px;
-    margin-top: 11px;
-    font-size: 12px;
-    line-height: 1.5;
+.score-box{
+  background:var(--panel2);
+  border-radius:9px;
+  padding:8px;
 }
 
-.chart-btn {
-    width: 100%;
-    margin-top: 12px;
-    padding: 10px;
-    border: none;
-    border-radius: 10px;
-    background: #17365a;
-    color: white;
-    font-weight: 600;
-    cursor: pointer;
+.score-label{
+  font-size:10px;
+  color:var(--muted);
 }
 
-.chart-wrap {
-    display: none;
-    margin-top: 12px;
+.score-number{
+  font-weight:800;
+  margin-top:3px;
 }
 
-.chart-wrap.open {
-    display: block;
+/* ==============================
+   TRADE PLAN
+================================ */
+
+.trade{
+  margin-top:13px;
+  border-top:1px solid var(--line);
+  padding-top:12px;
 }
 
-canvas {
-    width: 100%;
-    height: 310px;
-    background: #081522;
-    border-radius: 10px;
+.trade-title{
+  font-weight:800;
+  margin-bottom:8px;
 }
 
-.legend {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-top: 7px;
-    font-size: 10px;
-    color: #93a7bd;
+.trade-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:7px;
 }
 
-.legend span::before {
-    content: "●";
-    margin-right: 4px;
+.trade-box{
+  background:var(--panel2);
+  padding:9px;
+  border-radius:9px;
 }
 
-.ma5 { color: #58a6ff; }
-.ma10 { color: #f2cc60; }
-.ma20 { color: #bc8cff; }
-.ma60 { color: #ff9f43; }
-
-.news-item {
-    font-size: 12px;
-    padding: 7px 0;
-    border-bottom: 1px solid #17304c;
+.trade-label{
+  color:var(--muted);
+  font-size:11px;
 }
 
-.empty {
-    text-align: center;
-    color: #849ab5;
-    padding: 50px 0;
+.trade-value{
+  margin-top:3px;
+  font-weight:800;
 }
 
-.footer {
-    color: #6f849e;
-    font-size: 11px;
-    line-height: 1.6;
-    margin: 25px 0;
+.entry-value{color:var(--green)}
+.break-value{color:var(--yellow)}
+.stop-value{color:var(--red)}
+.target-value{color:var(--blue)}
+
+/* ==============================
+   REASONS
+================================ */
+
+.reasons{
+  margin-top:12px;
 }
 
-@media(max-width: 760px) {
-    .stock-grid {
-        grid-template-columns: 1fr;
-    }
+.reason-title{
+  font-weight:800;
+  font-size:13px;
+  margin-bottom:5px;
+}
 
-    .summary {
-        grid-template-columns: repeat(3, 1fr);
-    }
+.reason{
+  font-size:13px;
+  margin:4px 0;
+  line-height:1.45;
+}
 
-    h1 {
-        font-size: 24px;
-    }
+.good{color:#bff4d7}
+.risk{color:#ffc0c8}
 
-    .container {
-        padding: 12px;
-    }
+.action{
+  margin-top:11px;
+  background:#0c1728;
+  border-left:3px solid var(--yellow);
+  padding:9px;
+  font-size:13px;
+  line-height:1.55;
+}
 
-    canvas {
-        height: 280px;
-    }
+/* ==============================
+   DETAILS
+================================ */
+
+details{
+  margin-top:10px;
+}
+
+summary{
+  cursor:pointer;
+  color:var(--blue);
+  font-weight:700;
+}
+
+.metrics{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:6px;
+  margin-top:10px;
+}
+
+.metric{
+  background:var(--panel2);
+  border-radius:8px;
+  padding:7px;
+}
+
+.metric-label{
+  color:var(--muted);
+  font-size:10px;
+}
+
+.metric-value{
+  font-size:13px;
+  font-weight:700;
+  margin-top:2px;
+}
+
+/* ==============================
+   CHART
+================================ */
+
+.chart-wrap{
+  margin-top:10px;
+  overflow-x:auto;
+}
+
+canvas{
+  width:100%;
+  height:280px;
+  background:#091422;
+  border-radius:10px;
+}
+
+/* ==============================
+   EDUCATION
+================================ */
+
+.education{
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:15px;
+  padding:15px;
+  margin-top:12px;
+}
+
+.education h3{
+  margin:5px 0 10px;
+}
+
+.edu-item{
+  border-top:1px solid var(--line);
+  padding:10px 0;
+  line-height:1.6;
+}
+
+.edu-item:first-of-type{
+  border-top:0;
+}
+
+.edu-name{
+  font-weight:800;
+}
+
+.edu-text{
+  color:#c3d0e1;
+  font-size:13px;
+}
+
+/* ==============================
+   FOOTER
+================================ */
+
+footer{
+  margin-top:35px;
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.7;
+}
+
+/* ==============================
+   MOBILE
+================================ */
+
+@media(max-width:760px){
+
+  .container{width:94%}
+
+  h1{font-size:24px}
+
+  .summary{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .grid{
+    grid-template-columns:1fr;
+  }
+
+  .controls{
+    flex-direction:column;
+  }
+
+  .metrics{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .score-grid{
+    grid-template-columns:repeat(3,1fr);
+  }
+
+  canvas{
+    height:250px;
+  }
 }
 </style>
 </head>
@@ -398,1113 +563,1499 @@ canvas {
 
 <div class="container">
 
-    <div class="hero">
-        <h1>🚀 台股起漲雷達 V5</h1>
+<header>
+  <h1>🚀 台股 Entry Radar V6</h1>
 
-        <div class="subtitle">
-            日K・短均線・RSI・MACD・量價・20日突破・族群雷達
-        </div>
+  <div class="subtitle">
+    明日進場・準備進場・中長期布局・買入區・停損・族群強度
+  </div>
 
-        <span class="version">
-            V5 Launch Radar
-        </span>
-    </div>
+  <div class="update" id="updated">
+    Loading...
+  </div>
+</header>
 
-    <div class="summary">
 
-        <div class="summary-card">
-            <div class="summary-label">掃描股票</div>
-            <div class="summary-value" id="universeCount">-</div>
-        </div>
+<div class="summary">
 
-        <div class="summary-card">
-            <div class="summary-label">今日候選</div>
-            <div class="summary-value" id="selectedCount">-</div>
-        </div>
+  <div class="summary-card">
+    <div class="summary-label">股票池</div>
+    <div class="summary-value" id="universe">-</div>
+  </div>
 
-        <div class="summary-card">
-            <div class="summary-label">進場訊號</div>
-            <div class="summary-value" id="buyCount">-</div>
-        </div>
+  <div class="summary-card">
+    <div class="summary-label">有效股票</div>
+    <div class="summary-value" id="valid">-</div>
+  </div>
 
-    </div>
+  <div class="summary-card">
+    <div class="summary-label">明日 Top Picks</div>
+    <div class="summary-value" id="tomorrowCount">-</div>
+  </div>
 
-    <div class="subtitle" id="updated">
-        資料載入中...
-    </div>
-
-    <div class="controls">
-
-        <input
-            class="search"
-            id="searchInput"
-            placeholder="搜尋股票名稱或代碼，例如：國巨 / 2327"
-        >
-
-        <div class="tabs">
-
-            <button class="tab active" data-signal="all">
-                全部
-            </button>
-
-            <button class="tab" data-signal="符合進場條件">
-                🟢 進場條件
-            </button>
-
-            <button class="tab" data-signal="等待突破確認">
-                🔵 等待突破
-            </button>
-
-            <button class="tab" data-signal="過熱／不追價">
-                🔴 過熱
-            </button>
-
-            <button class="tab" data-signal="條件不足">
-                ⚪ 觀察
-            </button>
-
-        </div>
-
-        <select class="sector-select" id="sectorSelect">
-            <option value="all">
-                全部族群
-            </option>
-        </select>
-
-    </div>
-
-    <div id="stockGrid" class="stock-grid"></div>
-
-    <div class="footer">
-        Launch Score 與 Confidence 為技術條件評分，
-        用來協助排序與觀察，不代表未來報酬率或保證上漲。
-
-        <br><br>
-
-        「符合進場條件」代表目前技術條件達到系統門檻；
-        實際操作仍應觀察突破是否守穩、成交量是否延續，
-        並自行評估風險。
-    </div>
+  <div class="summary-card">
+    <div class="summary-label">強勢族群</div>
+    <div class="summary-value" id="sectorCount">-</div>
+  </div>
 
 </div>
+
+
+<div class="market">
+  <div class="market-title" id="marketRegime">
+    市場狀態：-
+  </div>
+
+  <div class="market-note">
+    Risk-On：市場環境偏多｜
+    Neutral：中性｜
+    Risk-Off：提高進場門檻
+  </div>
+</div>
+
+
+<div class="tabs">
+
+  <button class="tab active"
+          data-view="next">
+    🚀 明日進場
+  </button>
+
+  <button class="tab"
+          data-view="ready">
+    🟡 準備進場
+  </button>
+
+  <button class="tab"
+          data-view="long">
+    💎 中長期
+  </button>
+
+  <button class="tab"
+          data-view="radar">
+    📡 Top 80
+  </button>
+
+  <button class="tab"
+          data-view="all">
+    🔎 全部股票
+  </button>
+
+  <button class="tab"
+          data-view="guide">
+    📖 使用說明
+  </button>
+
+</div>
+
+
+<section class="section" id="sectorSection">
+
+  <div class="section-title">
+    🔥 強勢族群
+  </div>
+
+  <div class="section-desc">
+    先看強勢族群，再找族群中的強勢個股。
+  </div>
+
+  <div class="sectors" id="sectorList"></div>
+
+</section>
+
+
+<div id="stockArea">
+
+  <div class="controls">
+
+    <input
+      id="search"
+      class="search"
+      placeholder="搜尋股票名稱或代碼，例如：國巨 / 2327">
+
+    <select id="sectorFilter">
+      <option value="">全部族群</option>
+    </select>
+
+  </div>
+
+  <div class="section-title" id="viewTitle">
+    🚀 明日 Top Picks
+  </div>
+
+  <div class="section-desc" id="viewDescription">
+    收盤後依趨勢、突破、量能、相對強弱與族群強度排序。
+  </div>
+
+  <div class="grid" id="stockGrid"></div>
+
+</div>
+
+
+<div id="guideArea" style="display:none">
+
+  <div class="section">
+
+    <div class="section-title">
+      📖 V6 怎麼使用？
+    </div>
+
+    <div class="education">
+
+      <div class="edu-item">
+        <div class="edu-name">🚀 明日進場</div>
+        <div class="edu-text">
+          找下一交易日最值得優先觀察的股票。
+          不是開盤直接買，而是搭配突破價、量能與追價上限判斷。
+        </div>
+      </div>
+
+      <div class="edu-item">
+        <div class="edu-name">🟡 準備進場</div>
+        <div class="edu-text">
+          趨勢已經成形，但突破或成交量尚未完全確認。
+          適合加入觀察清單等待訊號。
+        </div>
+      </div>
+
+      <div class="edu-item">
+        <div class="edu-name">💎 中長期</div>
+        <div class="edu-text">
+          主要看 MA20、MA60、MA120、MA240、
+          相對大盤強度與族群趨勢。
+          與短線進場使用不同的停損/防守位置。
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <div class="section">
+
+    <div class="section-title">
+      📊 V6 五大核心
+    </div>
+
+    <div class="education">
+
+      <div class="edu-item">
+        <div class="edu-name">1. Trend — 25分</div>
+        <div class="edu-text">
+          主要看股價是否站上 MA20，
+          以及 MA5 &gt; MA10 &gt; MA20、
+          MA20 &gt; MA60。
+          多頭排列代表短中期趨勢較完整。
+        </div>
+      </div>
+
+      <div class="edu-item">
+        <div class="edu-name">2. Breakout — 25分</div>
+        <div class="edu-text">
+          看股價與20日高點的距離。
+          越接近突破位置，分數越高；
+          正式突破後仍需要成交量確認。
+        </div>
+      </div>
+
+      <div class="edu-item">
+        <div class="edu-name">3. Volume — 20分</div>
+        <div class="edu-text">
+          Volume Ratio = 今日成交量 ÷ 20日平均成交量。
+          1.2x代表量能開始增加；
+          1.5x以上代表明顯放量；
+          2x以上代表強力放量。
+        </div>
+      </div>
+
+      <div class="edu-item">
+        <div class="edu-name">4. RS — 15分</div>
+        <div class="edu-text">
+          Relative Strength不是RSI。
+          V6比較個股最近20/60日報酬與台灣加權指數，
+          用來找出真正強於大盤的股票。
+        </div>
+      </div>
+
+      <div class="edu-item">
+        <div class="edu-name">5. Sector — 15分</div>
+        <div class="edu-text">
+          同時比較AI Server、PCB、CPO、被動元件、
+          散熱、半導體等族群。
+          強勢族群中的強勢個股會得到較高分數。
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <div class="section">
+
+    <div class="section-title">
+      🌡 RSI 怎麼看？
+    </div>
+
+    <div class="education">
+
+      <div class="edu-item">
+        <div class="edu-name">RSI 50～65</div>
+        <div class="edu-text">
+          偏多且通常仍屬健康區域。
+        </div>
+      </div>
+
+      <div class="edu-item">
+        <div class="edu-name">RSI 65～70</div>
+        <div class="edu-text">
+          股票偏強，但需要開始注意追價。
+        </div>
+      </div>
+
+      <div class="edu-item">
+        <div class="edu-name">RSI 70～75</div>
+        <div class="edu-text">
+          強勢但偏熱。V6會降低部分明日進場分數。
+        </div>
+      </div>
+
+      <div class="edu-item">
+        <div class="edu-name">RSI ≥ 75</div>
+        <div class="edu-text">
+          V6視為過熱警示，不會因為RSI高而加分。
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <div class="section">
+
+    <div class="section-title">
+      💰 買入價格怎麼看？
+    </div>
+
+    <div class="education">
+
+      <div class="edu-item">
+        <div class="edu-name">建議買入區</div>
+        <div class="edu-text">
+          主要利用 MA10、MA20、ATR
+          找出拉回承接區。
+          不是要求一定要在這個價格成交。
+        </div>
+      </div>
+
+      <div class="edu-item">
+        <div class="edu-name">突破買點</div>
+        <div class="edu-text">
+          主要以前20日壓力/高點作為Trigger。
+          最好搭配成交量同步放大。
+        </div>
+      </div>
+
+      <div class="edu-item">
+        <div class="edu-name">最高追價</div>
+        <div class="edu-text">
+          若隔天直接大幅跳空，
+          即使股票排名很高，也不應無限制追價。
+        </div>
+      </div>
+
+      <div class="edu-item">
+        <div class="edu-name">短線停損</div>
+        <div class="edu-text">
+          綜合近期低點、MA20與ATR。
+          跌破代表原本短線Setup可能失效。
+        </div>
+      </div>
+
+      <div class="edu-item">
+        <div class="edu-name">中長期防守</div>
+        <div class="edu-text">
+          主要參考MA60、波段低點與ATR，
+          空間通常比短線停損更大。
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <div class="section">
+
+    <div class="section-title">
+      📚 五檔怎麼看？
+    </div>
+
+    <div class="education">
+
+      <div class="edu-item">
+        <div class="edu-name">買一～買五</div>
+        <div class="edu-text">
+          尚未成交、等待買進的委託。
+          買一是目前最接近成交價的買單。
+        </div>
+      </div>
+
+      <div class="edu-item">
+        <div class="edu-name">賣一～賣五</div>
+        <div class="edu-text">
+          尚未成交、等待賣出的委託。
+          賣一是目前最接近成交價的賣單。
+        </div>
+      </div>
+
+      <div class="edu-item">
+        <div class="edu-name">突破時怎麼觀察？</div>
+        <div class="edu-text">
+          如果股價突破V6的突破價，
+          同時成交量增加，而且賣一/賣二的大單持續被成交，
+          可以作為突破得到更多確認的線索。
+        </div>
+      </div>
+
+      <div class="edu-item">
+        <div class="edu-name">⚠️ 注意</div>
+        <div class="edu-text">
+          五檔是委託資料，掛單可以撤單或改單。
+          不應只因為委買量大於委賣量就直接買進。
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <div class="section">
+
+    <div class="section-title">
+      📊 分價怎麼看？
+    </div>
+
+    <div class="education">
+
+      <div class="edu-item">
+        <div class="edu-name">大量成交區</div>
+        <div class="edu-text">
+          某個價格累積大量成交，
+          代表市場在該價位交換大量籌碼，
+          未來可能形成支撐或壓力區。
+        </div>
+      </div>
+
+      <div class="edu-item">
+        <div class="edu-name">突破價上方大量成交</div>
+        <div class="edu-text">
+          如果突破後成交持續集中在突破價上方，
+          通常比瞬間突破後立刻跌回更健康。
+        </div>
+      </div>
+
+      <div class="edu-item">
+        <div class="edu-name">跌回大量成交區下方</div>
+        <div class="edu-text">
+          如果突破後又跌回主要成交密集區下方，
+          要注意突破失敗風險。
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<footer>
+V6 是規則式技術分析與候選排序工具，
+不是未來報酬保證。買入區、突破價、停損與目標價
+皆為依歷史價格與波動計算的策略參考。
+實際交易仍需考量隔日跳空、流動性、重大消息與個人風險承受度。
+</footer>
+
+</div>
+
 
 <script>
 
 let DATA = null;
-let stocks = [];
-
-let activeSignal = "all";
-let activeSector = "all";
+let currentView = "next";
 
 
-/* ========================================================
-   LOAD DATA
-======================================================== */
+/* ============================================
+   HELPERS
+============================================ */
 
-async function loadData() {
-
-    try {
-
-        const response = await fetch(
-            "data.json?t=" + Date.now()
-        );
-
-        DATA = await response.json();
-
-        if (
-            !DATA ||
-            !Array.isArray(DATA.stocks)
-        ) {
-            throw new Error(
-                "V5 data.json 格式錯誤"
-            );
-        }
-
-        stocks = DATA.stocks;
-
-        updateSummary();
-        buildSectorOptions();
-        render();
-
-    } catch(error) {
-
-        console.error(error);
-
-        document.getElementById(
-            "stockGrid"
-        ).innerHTML = `
-            <div class="empty">
-                無法讀取 V5 data.json
-                <br><br>
-                請確認 GitHub Action 已成功執行 scanner.py
-            </div>
-        `;
-    }
+function n(v, digits=2){
+  const x = Number(v);
+  if(!Number.isFinite(x)) return "-";
+  return x.toFixed(digits);
 }
 
 
-/* ========================================================
-   SUMMARY
-======================================================== */
+function signalClass(signal){
 
-function updateSummary() {
+  if(!signal) return "normal";
 
-    document.getElementById(
-        "universeCount"
-    ).textContent =
-        DATA.universe_count ?? "-";
+  if(signal.includes("明日進場"))
+    return "buy";
 
-    document.getElementById(
-        "selectedCount"
-    ).textContent =
-        DATA.count ?? stocks.length;
+  if(
+    signal.includes("準備") ||
+    signal.includes("等待") ||
+    signal.includes("追蹤")
+  )
+    return "ready";
 
-    document.getElementById(
-        "buyCount"
-    ).textContent =
-        DATA.signal_counts?.[
-            "符合進場條件"
-        ] ?? 0;
+  if(
+    signal.includes("過熱") ||
+    signal.includes("不追")
+  )
+    return "hot";
 
-    document.getElementById(
-        "updated"
-    ).textContent =
-        "最後更新：" +
-        (DATA.updated || "-") +
-        " ｜ " +
-        (DATA.strategy || "");
+  return "normal";
 }
 
 
-/* ========================================================
-   SECTOR OPTIONS
-======================================================== */
+function stockSignal(stock){
 
-function buildSectorOptions() {
+  if(currentView === "ready")
+    return stock.ready_signal;
 
-    const select =
-        document.getElementById(
-            "sectorSelect"
-        );
+  if(currentView === "long")
+    return stock.mid_long_signal;
 
-    const groups =
-        DATA.group_counts || {};
-
-    Object.entries(groups)
-        .sort((a,b) => b[1] - a[1])
-        .forEach(([group,count]) => {
-
-            const option =
-                document.createElement(
-                    "option"
-                );
-
-            option.value = group;
-
-            option.textContent =
-                `${group} (${count})`;
-
-            select.appendChild(option);
-        });
+  return stock.next_day_signal;
 }
 
 
-/* ========================================================
-   FILTER
-======================================================== */
+function primaryScore(stock){
 
-function getFilteredStocks() {
+  if(currentView === "ready")
+    return stock.ready_score;
 
-    const keyword =
-        document.getElementById(
-            "searchInput"
-        )
-        .value
-        .trim()
-        .toLowerCase();
+  if(currentView === "long")
+    return stock.mid_long_score;
 
-    return stocks.filter(stock => {
-
-        if (
-            activeSignal !== "all" &&
-            stock.signal !== activeSignal
-        ) {
-            return false;
-        }
-
-        if (
-            activeSector !== "all" &&
-            !(stock.groups || []).includes(
-                activeSector
-            )
-        ) {
-            return false;
-        }
-
-        if (keyword) {
-
-            const text =
-                `${stock.code} ${stock.name}`
-                .toLowerCase();
-
-            if (!text.includes(keyword)) {
-                return false;
-            }
-        }
-
-        return true;
-    });
+  return stock.next_day_score;
 }
 
 
-/* ========================================================
-   SIGNAL CLASS
-======================================================== */
+/* ============================================
+   LOAD
+============================================ */
 
-function signalClass(signal) {
+async function loadData(){
 
-    if (signal === "符合進場條件") {
-        return "signal-buy";
-    }
+  try{
 
-    if (signal === "等待突破確認") {
-        return "signal-wait";
-    }
+    const res = await fetch(
+      "data.json?t=" + Date.now()
+    );
 
-    if (signal === "過熱／不追價") {
-        return "signal-hot";
-    }
+    DATA = await res.json();
 
-    return "signal-low";
+    document.getElementById("updated").textContent =
+      "最後更新：" +
+      DATA.updated +
+      "｜" +
+      DATA.version;
+
+    document.getElementById("universe").textContent =
+      DATA.universe_count ?? "-";
+
+    document.getElementById("valid").textContent =
+      DATA.valid_count ?? "-";
+
+    document.getElementById("tomorrowCount").textContent =
+      DATA.next_day_top?.length ?? 0;
+
+    document.getElementById("sectorCount").textContent =
+      DATA.sector_ranking?.length ?? 0;
+
+    document.getElementById("marketRegime").textContent =
+      "市場狀態：" +
+      (DATA.market_regime?.label || "-");
+
+    renderSectors();
+
+    buildSectorFilter();
+
+    renderCurrentView();
+
+  }catch(err){
+
+    document.getElementById("updated").textContent =
+      "資料載入失敗：" + err.message;
+
+  }
+
 }
 
 
-/* ========================================================
-   HTML ESCAPE
-======================================================== */
+/* ============================================
+   SECTORS
+============================================ */
 
-function esc(value) {
+function renderSectors(){
 
-    return String(value ?? "")
-        .replaceAll("&","&amp;")
-        .replaceAll("<","&lt;")
-        .replaceAll(">","&gt;")
-        .replaceAll('"',"&quot;");
-}
+  const box =
+    document.getElementById("sectorList");
 
+  box.innerHTML = "";
 
-/* ========================================================
-   STOCK CARD
-======================================================== */
+  const sectors =
+    (DATA.sector_ranking || []).slice(0,12);
 
-function stockCard(stock) {
+  sectors.forEach(s=>{
 
-    const groups =
-        (stock.groups || [])
-        .map(
-            group =>
-                `<span class="tag">${esc(group)}</span>`
-        )
-        .join("");
+    const div =
+      document.createElement("div");
 
-    const positives =
-        (
-            stock.recommendation_reasons ||
-            stock.launch_reasons ||
-            []
-        )
-        .slice(0,6)
-        .map(
-            reason =>
-                `<div class="reason good">
-                    ✓ ${esc(reason)}
-                </div>`
-        )
-        .join("");
+    div.className = "sector";
 
-    const risks =
-        (stock.risk_reasons || [])
-        .slice(0,5)
-        .map(
-            reason =>
-                `<div class="reason risk">
-                    △ ${esc(reason)}
-                </div>`
-        )
-        .join("");
+    div.innerHTML = `
+      <div class="sector-rank">
+        #${s.rank}
+      </div>
 
-    let newsHtml = "";
+      <div class="sector-name">
+        ${s.group}
+      </div>
 
-    if (
-        Array.isArray(stock.news) &&
-        stock.news.length
-    ) {
+      <div class="sector-score">
+        強度 ${s.score}/100
+      </div>
 
-        newsHtml = `
-            <div class="section-title">
-                📰 最新消息
-            </div>
-
-            ${
-                stock.news
-                .slice(0,3)
-                .map(
-                    item => `
-                        <div class="news-item">
-                            ${esc(
-                                item.title || item
-                            )}
-                        </div>
-                    `
-                )
-                .join("")
-            }
-        `;
-    }
-
-    const canvasId =
-        "chart-" + stock.code;
-
-    const wrapId =
-        "wrap-" + stock.code;
-
-    return `
-
-    <div class="card">
-
-        <div class="card-top">
-
-            <div>
-
-                <div class="rank">
-                    #${stock.rank ?? "-"}
-                </div>
-
-                <div class="stock-name">
-                    ${esc(stock.name)}
-                </div>
-
-                <div class="stock-code">
-                    ${esc(stock.code)}
-                    ・
-                    ${esc(stock.market)}
-                </div>
-
-            </div>
-
-            <div>
-
-                <div class="price">
-                    ${Number(
-                        stock.price
-                    ).toFixed(2)}
-                </div>
-
-                <div class="date">
-                    ${esc(stock.date)}
-                </div>
-
-            </div>
-
-        </div>
-
-        <div class="tags">
-            ${groups}
-        </div>
-
-        <div
-            class="
-                signal
-                ${signalClass(stock.signal)}
-            ">
-            ${esc(stock.signal)}
-        </div>
-
-        <div class="score-row">
-
-            <div class="score-box">
-                <div class="score-title">
-                    Launch Score
-                </div>
-                <div class="score-value">
-                    ${stock.launch_score}
-                </div>
-            </div>
-
-            <div class="score-box">
-                <div class="score-title">
-                    Confidence
-                </div>
-                <div class="score-value">
-                    ${stock.confidence}%
-                </div>
-            </div>
-
-        </div>
-
-        <div class="metrics">
-
-            <div class="metric">
-                <div class="metric-label">
-                    RSI14
-                </div>
-                <div class="metric-value">
-                    ${stock.rsi}
-                </div>
-            </div>
-
-            <div class="metric">
-                <div class="metric-label">
-                    Volume
-                </div>
-                <div class="metric-value">
-                    ${stock.volume_ratio}x
-                </div>
-            </div>
-
-            <div class="metric">
-                <div class="metric-label">
-                    MA20乖離
-                </div>
-                <div class="metric-value">
-                    ${stock.distance_ma20_pct}%
-                </div>
-            </div>
-
-            <div class="metric">
-                <div class="metric-label">
-                    MA5
-                </div>
-                <div class="metric-value">
-                    ${stock.ma5}
-                </div>
-            </div>
-
-            <div class="metric">
-                <div class="metric-label">
-                    MA10
-                </div>
-                <div class="metric-value">
-                    ${stock.ma10}
-                </div>
-            </div>
-
-            <div class="metric">
-                <div class="metric-label">
-                    MA20
-                </div>
-                <div class="metric-value">
-                    ${stock.ma20}
-                </div>
-            </div>
-
-        </div>
-
-        <div class="section-title">
-            🎯 關鍵價位
-        </div>
-
-        <div class="metrics">
-
-            <div class="metric">
-                <div class="metric-label">
-                    20日突破價
-                </div>
-                <div class="metric-value">
-                    ${stock.breakout_price}
-                </div>
-            </div>
-
-            <div class="metric">
-                <div class="metric-label">
-                    觀察區間
-                </div>
-                <div class="metric-value">
-                    ${stock.entry_low}
-                    ~
-                    ${stock.entry_high}
-                </div>
-            </div>
-
-            <div class="metric">
-                <div class="metric-label">
-                    ATR風險參考
-                </div>
-                <div class="metric-value">
-                    ${stock.risk_reference}
-                </div>
-            </div>
-
-        </div>
-
-        ${
-            positives
-            ? `
-            <div class="section-title">
-                💡 為什麼入選
-            </div>
-            ${positives}
-            `
-            : ""
-        }
-
-        ${
-            risks
-            ? `
-            <div class="section-title">
-                ⚠️ 目前風險
-            </div>
-            ${risks}
-            `
-            : ""
-        }
-
-        <div class="trigger">
-            <b>下一步觀察：</b>
-            ${esc(stock.trigger)}
-        </div>
-
-        ${newsHtml}
-
-        <button
-            class="chart-btn"
-            onclick="toggleChart('${stock.code}')">
-            📈 查看 90 日 K 線
-        </button>
-
-        <div
-            class="chart-wrap"
-            id="${wrapId}">
-
-            <canvas id="${canvasId}">
-            </canvas>
-
-            <div class="legend">
-                <span class="ma5">MA5</span>
-                <span class="ma10">MA10</span>
-                <span class="ma20">MA20</span>
-                <span class="ma60">MA60</span>
-            </div>
-
-        </div>
-
-    </div>
+      <div class="update">
+        ${n(s.trend_ratio,0)}%
+        個股站上趨勢
+      </div>
     `;
-}
 
+    div.onclick = ()=>{
 
-/* ========================================================
-   RENDER
-======================================================== */
+      document.getElementById(
+        "sectorFilter"
+      ).value = s.group;
 
-function render() {
+      showView("all");
 
-    const filtered =
-        getFilteredStocks();
+      filterStocks();
 
-    const grid =
-        document.getElementById(
-            "stockGrid"
-        );
-
-    if (filtered.length === 0) {
-
-        grid.innerHTML = `
-            <div class="empty">
-                沒有符合目前篩選條件的股票
-            </div>
-        `;
-
-        return;
-    }
-
-    grid.innerHTML =
-        filtered
-        .map(stockCard)
-        .join("");
-}
-
-
-/* ========================================================
-   K LINE
-======================================================== */
-
-function toggleChart(code) {
-
-    const stock =
-        stocks.find(
-            s => s.code === code
-        );
-
-    if (!stock) {
-        return;
-    }
-
-    const wrap =
-        document.getElementById(
-            "wrap-" + code
-        );
-
-    const canvas =
-        document.getElementById(
-            "chart-" + code
-        );
-
-    const opening =
-        !wrap.classList.contains(
-            "open"
-        );
-
-    wrap.classList.toggle(
-        "open"
-    );
-
-    if (opening) {
-
-        setTimeout(() => {
-            drawChart(
-                canvas,
-                stock.chart || []
-            );
-        }, 50);
-    }
-}
-
-
-/* ========================================================
-   DRAW DAILY CANDLESTICK
-======================================================== */
-
-function drawChart(canvas,data) {
-
-    if (!data || data.length < 2) {
-        return;
-    }
-
-    const rect =
-        canvas.getBoundingClientRect();
-
-    const dpr =
-        window.devicePixelRatio || 1;
-
-    canvas.width =
-        rect.width * dpr;
-
-    canvas.height =
-        rect.height * dpr;
-
-    const ctx =
-        canvas.getContext("2d");
-
-    ctx.scale(dpr,dpr);
-
-    const W = rect.width;
-    const H = rect.height;
-
-    ctx.clearRect(
-        0,
-        0,
-        W,
-        H
-    );
-
-    const pad = {
-        left: 42,
-        right: 10,
-        top: 15,
-        bottom: 65
     };
 
-    const chartH =
-        H -
-        pad.top -
-        pad.bottom;
+    box.appendChild(div);
 
-    const priceH =
-        chartH * 0.76;
+  });
 
-    const volumeH =
-        chartH * 0.20;
-
-    const priceValues = [];
-
-    data.forEach(d => {
-
-        priceValues.push(
-            d.high,
-            d.low
-        );
-
-        [
-            d.ma5,
-            d.ma10,
-            d.ma20,
-            d.ma60
-        ]
-        .forEach(v => {
-
-            if (
-                v &&
-                Number.isFinite(
-                    Number(v)
-                )
-            ) {
-                priceValues.push(
-                    Number(v)
-                );
-            }
-        });
-    });
-
-    const minPrice =
-        Math.min(...priceValues);
-
-    const maxPrice =
-        Math.max(...priceValues);
-
-    const range =
-        maxPrice - minPrice || 1;
-
-    const maxVolume =
-        Math.max(
-            ...data.map(
-                d => d.volume || 0
-            ),
-            1
-        );
-
-    function yPrice(value) {
-
-        return (
-            pad.top +
-            (maxPrice - value)
-            / range
-            * priceH
-        );
-    }
-
-    const usableW =
-        W -
-        pad.left -
-        pad.right;
-
-    const step =
-        usableW /
-        data.length;
-
-    const candleWidth =
-        Math.max(
-            2,
-            Math.min(
-                7,
-                step * .62
-            )
-        );
-
-    /* GRID */
-
-    ctx.strokeStyle =
-        "rgba(130,150,175,.15)";
-
-    ctx.lineWidth = 1;
-
-    ctx.font =
-        "10px -apple-system";
-
-    ctx.fillStyle =
-        "#7890aa";
-
-    for (
-        let i = 0;
-        i <= 4;
-        i++
-    ) {
-
-        const y =
-            pad.top +
-            priceH *
-            i / 4;
-
-        ctx.beginPath();
-
-        ctx.moveTo(
-            pad.left,
-            y
-        );
-
-        ctx.lineTo(
-            W - pad.right,
-            y
-        );
-
-        ctx.stroke();
-
-        const price =
-            maxPrice -
-            range *
-            i / 4;
-
-        ctx.fillText(
-            price.toFixed(1),
-            2,
-            y + 3
-        );
-    }
-
-    /* CANDLES */
-
-    data.forEach((d,i) => {
-
-        const x =
-            pad.left +
-            step *
-            (i + .5);
-
-        const open =
-            Number(d.open);
-
-        const close =
-            Number(d.close);
-
-        const high =
-            Number(d.high);
-
-        const low =
-            Number(d.low);
-
-        const up =
-            close >= open;
-
-        ctx.strokeStyle =
-            up
-            ? "#ef5350"
-            : "#26a69a";
-
-        ctx.fillStyle =
-            up
-            ? "#ef5350"
-            : "#26a69a";
-
-        ctx.beginPath();
-
-        ctx.moveTo(
-            x,
-            yPrice(high)
-        );
-
-        ctx.lineTo(
-            x,
-            yPrice(low)
-        );
-
-        ctx.stroke();
-
-        const yOpen =
-            yPrice(open);
-
-        const yClose =
-            yPrice(close);
-
-        const top =
-            Math.min(
-                yOpen,
-                yClose
-            );
-
-        const bodyH =
-            Math.max(
-                1,
-                Math.abs(
-                    yClose -
-                    yOpen
-                )
-            );
-
-        ctx.fillRect(
-            x -
-            candleWidth / 2,
-            top,
-            candleWidth,
-            bodyH
-        );
-    });
-
-    /* MA */
-
-    function drawMA(key,color) {
-
-        ctx.strokeStyle = color;
-        ctx.lineWidth = 1.4;
-
-        ctx.beginPath();
-
-        let started = false;
-
-        data.forEach((d,i) => {
-
-            const value =
-                Number(d[key]);
-
-            if (
-                !value ||
-                !Number.isFinite(value)
-            ) {
-                return;
-            }
-
-            const x =
-                pad.left +
-                step *
-                (i + .5);
-
-            const y =
-                yPrice(value);
-
-            if (!started) {
-
-                ctx.moveTo(x,y);
-                started = true;
-
-            } else {
-
-                ctx.lineTo(x,y);
-            }
-        });
-
-        ctx.stroke();
-    }
-
-    drawMA(
-        "ma5",
-        "#58a6ff"
-    );
-
-    drawMA(
-        "ma10",
-        "#f2cc60"
-    );
-
-    drawMA(
-        "ma20",
-        "#bc8cff"
-    );
-
-    drawMA(
-        "ma60",
-        "#ff9f43"
-    );
-
-    /* VOLUME */
-
-    const volumeTop =
-        pad.top +
-        priceH +
-        14;
-
-    data.forEach((d,i) => {
-
-        const x =
-            pad.left +
-            step *
-            (i + .5);
-
-        const h =
-            (
-                Number(d.volume)
-                /
-                maxVolume
-            )
-            *
-            volumeH;
-
-        const up =
-            Number(d.close)
-            >=
-            Number(d.open);
-
-        ctx.fillStyle =
-            up
-            ? "rgba(239,83,80,.45)"
-            : "rgba(38,166,154,.45)";
-
-        ctx.fillRect(
-            x -
-            candleWidth / 2,
-            volumeTop +
-            volumeH -
-            h,
-            candleWidth,
-            h
-        );
-    });
 }
 
 
-/* ========================================================
-   EVENTS
-======================================================== */
+function buildSectorFilter(){
 
-document
-.getElementById(
-    "searchInput"
-)
-.addEventListener(
-    "input",
-    render
-);
+  const select =
+    document.getElementById("sectorFilter");
 
-document
-.getElementById(
-    "sectorSelect"
-)
-.addEventListener(
-    "change",
-    event => {
+  const names = new Set();
 
-        activeSector =
-            event.target.value;
+  (DATA.sector_ranking || [])
+    .forEach(x=>names.add(x.group));
 
-        render();
-    }
-);
+  [...names]
+    .sort()
+    .forEach(name=>{
 
-document
-.querySelectorAll(
-    ".tab"
-)
-.forEach(tab => {
+      const opt =
+        document.createElement("option");
 
-    tab.addEventListener(
-        "click",
-        () => {
+      opt.value = name;
+      opt.textContent = name;
 
-            document
-                .querySelectorAll(
-                    ".tab"
-                )
-                .forEach(
-                    item =>
-                        item.classList.remove(
-                            "active"
-                        )
-                );
+      select.appendChild(opt);
 
-            tab.classList.add(
-                "active"
-            );
+    });
 
-            activeSignal =
-                tab.dataset.signal;
+}
 
-            render();
-        }
+
+/* ============================================
+   VIEWS
+============================================ */
+
+function getViewStocks(){
+
+  if(currentView === "next")
+    return DATA.next_day_top || [];
+
+  if(currentView === "ready")
+    return DATA.ready_top || [];
+
+  if(currentView === "long")
+    return DATA.mid_long_top || [];
+
+  if(currentView === "radar")
+    return DATA.stocks || [];
+
+  if(currentView === "all")
+    return DATA.all_stocks || [];
+
+  return [];
+
+}
+
+
+function showView(view){
+
+  currentView = view;
+
+  document
+    .querySelectorAll(".tab")
+    .forEach(btn=>{
+
+      btn.classList.toggle(
+        "active",
+        btn.dataset.view === view
+      );
+
+    });
+
+  const guide =
+    document.getElementById("guideArea");
+
+  const stockArea =
+    document.getElementById("stockArea");
+
+  const sector =
+    document.getElementById("sectorSection");
+
+
+  if(view === "guide"){
+
+    guide.style.display = "block";
+    stockArea.style.display = "none";
+    sector.style.display = "none";
+
+    return;
+
+  }
+
+
+  guide.style.display = "none";
+  stockArea.style.display = "block";
+  sector.style.display = "block";
+
+
+  const title =
+    document.getElementById("viewTitle");
+
+  const desc =
+    document.getElementById("viewDescription");
+
+
+  if(view === "next"){
+
+    title.textContent =
+      "🚀 明日 Top Picks";
+
+    desc.textContent =
+      "下一交易日優先觀察。請搭配突破價、成交量與最高追價。";
+
+  }
+
+
+  if(view === "ready"){
+
+    title.textContent =
+      "🟡 準備進場";
+
+    desc.textContent =
+      "趨勢已經成形，但仍等待突破或量能確認。";
+
+  }
+
+
+  if(view === "long"){
+
+    title.textContent =
+      "💎 中長期布局";
+
+    desc.textContent =
+      "偏重中期趨勢、相對強弱與族群強度。";
+
+  }
+
+
+  if(view === "radar"){
+
+    title.textContent =
+      "📡 Top 80 Radar";
+
+    desc.textContent =
+      "綜合明日、準備進場與中長期評分後的主要候選。";
+
+  }
+
+
+  if(view === "all"){
+
+    title.textContent =
+      "🔎 Full Universe";
+
+    desc.textContent =
+      "完整有效股票池。即使未進Top 80仍可以搜尋。";
+
+  }
+
+
+  filterStocks();
+
+}
+
+
+function renderCurrentView(){
+
+  showView(currentView);
+
+}
+
+
+/* ============================================
+   FILTER
+============================================ */
+
+function filterStocks(){
+
+  const keyword =
+    document.getElementById("search")
+      .value
+      .trim()
+      .toLowerCase();
+
+  const sector =
+    document.getElementById(
+      "sectorFilter"
+    ).value;
+
+  let stocks =
+    [...getViewStocks()];
+
+
+  if(keyword){
+
+    stocks = stocks.filter(s=>
+
+      String(s.code)
+        .toLowerCase()
+        .includes(keyword)
+
+      ||
+
+      String(s.name)
+        .toLowerCase()
+        .includes(keyword)
+
     );
-});
+
+  }
 
 
-/* ========================================================
-   START
-======================================================== */
+  if(sector){
+
+    stocks = stocks.filter(s=>
+      (s.groups || []).includes(sector)
+    );
+
+  }
+
+
+  renderStocks(stocks);
+
+}
+
+
+/* ============================================
+   STOCK CARD
+============================================ */
+
+function renderStocks(stocks){
+
+  const grid =
+    document.getElementById("stockGrid");
+
+  grid.innerHTML = "";
+
+
+  if(!stocks.length){
+
+    grid.innerHTML = `
+      <div class="card">
+        <div class="card-main">
+          沒有符合目前條件的股票。
+        </div>
+      </div>
+    `;
+
+    return;
+
+  }
+
+
+  stocks.forEach(stock=>{
+
+    const div =
+      document.createElement("div");
+
+    div.className = "card";
+
+    div.innerHTML =
+      stockCard(stock);
+
+    grid.appendChild(div);
+
+  });
+
+}
+
+
+function stockCard(s){
+
+  const p =
+    s.trade_plan || {};
+
+  const signal =
+    stockSignal(s);
+
+  const score =
+    primaryScore(s);
+
+  const reasons =
+    s.recommendation_reasons || [];
+
+  const risks =
+    s.risk_reasons || [];
+
+  const groups =
+    (s.groups || [])
+      .slice(0,4)
+      .map(x=>`<span class="tag">${x}</span>`)
+      .join("");
+
+
+  return `
+
+  <div class="card-main">
+
+    <div class="stock-head">
+
+      <div>
+
+        <div class="stock-name">
+          ${s.name}
+        </div>
+
+        <div class="code">
+          ${s.code}
+          · ${s.market || ""}
+          · ${s.date || ""}
+        </div>
+
+      </div>
+
+
+      <div>
+
+        <div class="price">
+          ${n(s.price)}
+        </div>
+
+        <div class="score">
+          Score ${score}/100
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <div class="tags">
+      ${groups}
+    </div>
+
+
+    <div class="signal ${signalClass(signal)}">
+      ${signal || "-"}
+    </div>
+
+
+    <div class="score-grid">
+
+      <div class="score-box">
+        <div class="score-label">
+          🚀 明日
+        </div>
+        <div class="score-number">
+          ${s.next_day_score}
+        </div>
+      </div>
+
+      <div class="score-box">
+        <div class="score-label">
+          🟡 準備
+        </div>
+        <div class="score-number">
+          ${s.ready_score}
+        </div>
+      </div>
+
+      <div class="score-box">
+        <div class="score-label">
+          💎 中長期
+        </div>
+        <div class="score-number">
+          ${s.mid_long_score}
+        </div>
+      </div>
+
+    </div>
+
+
+    <div class="trade">
+
+      <div class="trade-title">
+        💰 交易計畫
+      </div>
+
+
+      <div class="trade-grid">
+
+        <div class="trade-box">
+          <div class="trade-label">
+            建議買入區
+          </div>
+          <div class="trade-value entry-value">
+            ${n(p.entry_low)}
+            ～
+            ${n(p.entry_high)}
+          </div>
+        </div>
+
+
+        <div class="trade-box">
+          <div class="trade-label">
+            突破買點
+          </div>
+          <div class="trade-value break-value">
+            ${n(p.breakout_price)}
+          </div>
+        </div>
+
+
+        <div class="trade-box">
+          <div class="trade-label">
+            最高追價
+          </div>
+          <div class="trade-value">
+            ${n(p.chase_limit)}
+          </div>
+        </div>
+
+
+        <div class="trade-box">
+          <div class="trade-label">
+            🛑 短線停損
+          </div>
+          <div class="trade-value stop-value">
+            ${n(p.short_stop)}
+          </div>
+        </div>
+
+
+        <div class="trade-box">
+          <div class="trade-label">
+            💎 中長期防守
+          </div>
+          <div class="trade-value stop-value">
+            ${n(p.long_stop)}
+          </div>
+        </div>
+
+
+        <div class="trade-box">
+          <div class="trade-label">
+            Target 1
+          </div>
+          <div class="trade-value target-value">
+            ${n(p.target1)}
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <div class="reasons">
+
+      <div class="reason-title">
+        為什麼入選？
+      </div>
+
+      ${reasons.map(
+        x=>`
+        <div class="reason good">
+          ✓ ${x}
+        </div>`
+      ).join("")}
+
+    </div>
+
+
+    <div class="reasons">
+
+      <div class="reason-title">
+        ⚠️ 目前風險
+      </div>
+
+      ${risks.map(
+        x=>`
+        <div class="reason risk">
+          • ${x}
+        </div>`
+      ).join("")}
+
+    </div>
+
+
+    <div class="action">
+      <b>明日策略：</b><br>
+      ${s.next_day_action || "-"}
+    </div>
+
+
+    <details>
+
+      <summary>
+        📊 查看技術數據
+      </summary>
+
+
+      <div class="metrics">
+
+        <div class="metric">
+          <div class="metric-label">MA5</div>
+          <div class="metric-value">
+            ${n(s.ma5)}
+          </div>
+        </div>
+
+        <div class="metric">
+          <div class="metric-label">MA10</div>
+          <div class="metric-value">
+            ${n(s.ma10)}
+          </div>
+        </div>
+
+        <div class="metric">
+          <div class="metric-label">MA20</div>
+          <div class="metric-value">
+            ${n(s.ma20)}
+          </div>
+        </div>
+
+        <div class="metric">
+          <div class="metric-label">MA60</div>
+          <div class="metric-value">
+            ${n(s.ma60)}
+          </div>
+        </div>
+
+        <div class="metric">
+          <div class="metric-label">RSI14</div>
+          <div class="metric-value">
+            ${n(s.rsi,1)}
+          </div>
+        </div>
+
+        <div class="metric">
+          <div class="metric-label">量比</div>
+          <div class="metric-value">
+            ${n(s.volume_ratio)}x
+          </div>
+        </div>
+
+        <div class="metric">
+          <div class="metric-label">RS20</div>
+          <div class="metric-value">
+            ${n(s.rs20)}%
+          </div>
+        </div>
+
+        <div class="metric">
+          <div class="metric-label">MA20乖離</div>
+          <div class="metric-value">
+            ${n(s.distance_ma20_pct)}%
+          </div>
+        </div>
+
+      </div>
+
+    </details>
+
+
+    <details
+      ontoggle="
+        if(this.open){
+          drawChart(
+            this.querySelector('canvas'),
+            '${s.code}'
+          )
+        }
+      "
+    >
+
+      <summary>
+        📈 查看120日K線
+      </summary>
+
+      <div class="chart-wrap">
+        <canvas
+          data-code="${s.code}"
+          width="720"
+          height="320">
+        </canvas>
+      </div>
+
+    </details>
+
+  </div>
+  `;
+
+}
+
+
+/* ============================================
+   CHART
+============================================ */
+
+function findStock(code){
+
+  return (DATA.all_stocks || [])
+    .find(x=>String(x.code) === String(code));
+
+}
+
+
+function drawChart(canvas, code){
+
+  if(!canvas || canvas.dataset.drawn)
+    return;
+
+  const stock =
+    findStock(code);
+
+  if(!stock || !stock.chart?.length)
+    return;
+
+  canvas.dataset.drawn = "1";
+
+  const ctx =
+    canvas.getContext("2d");
+
+  const data =
+    stock.chart;
+
+  const W =
+    canvas.width;
+
+  const H =
+    canvas.height;
+
+  const left = 42;
+  const right = 12;
+  const top = 12;
+
+  const priceBottom =
+    H * 0.74;
+
+  const volumeTop =
+    H * 0.78;
+
+  const bottom =
+    H - 20;
+
+
+  const highs =
+    data.map(x=>x.high);
+
+  const lows =
+    data.map(x=>x.low);
+
+  let maxP =
+    Math.max(...highs);
+
+  let minP =
+    Math.min(...lows);
+
+  const pad =
+    (maxP-minP)*0.05;
+
+  maxP += pad;
+  minP -= pad;
+
+
+  const maxVol =
+    Math.max(
+      ...data.map(x=>x.volume)
+    ) || 1;
+
+
+  const xStep =
+    (W-left-right) /
+    data.length;
+
+
+  function yPrice(v){
+
+    return top +
+      (maxP-v) /
+      (maxP-minP) *
+      (priceBottom-top);
+
+  }
+
+
+  ctx.clearRect(0,0,W,H);
+
+  ctx.fillStyle="#091422";
+  ctx.fillRect(0,0,W,H);
+
+
+  /* grid */
+
+  ctx.strokeStyle="#1e3048";
+  ctx.lineWidth=1;
+
+  for(let i=0;i<=4;i++){
+
+    const y =
+      top +
+      (priceBottom-top) *
+      i/4;
+
+    ctx.beginPath();
+    ctx.moveTo(left,y);
+    ctx.lineTo(W-right,y);
+    ctx.stroke();
+
+    const price =
+      maxP -
+      (maxP-minP)*i/4;
+
+    ctx.fillStyle="#7f93ae";
+    ctx.font="10px sans-serif";
+
+    ctx.fillText(
+      price.toFixed(1),
+      3,
+      y+3
+    );
+
+  }
+
+
+  /* candles */
+
+  data.forEach((d,i)=>{
+
+    const x =
+      left +
+      i*xStep +
+      xStep/2;
+
+    const up =
+      d.close >= d.open;
+
+    /* Taiwan convention:
+       up = red
+       down = green
+    */
+
+    const color =
+      up
+      ? "#ff6376"
+      : "#31d07f";
+
+    ctx.strokeStyle=color;
+    ctx.fillStyle=color;
+
+
+    ctx.beginPath();
+    ctx.moveTo(x,yPrice(d.high));
+    ctx.lineTo(x,yPrice(d.low));
+    ctx.stroke();
+
+
+    const yOpen =
+      yPrice(d.open);
+
+    const yClose =
+      yPrice(d.close);
+
+    const bodyTop =
+      Math.min(yOpen,yClose);
+
+    const bodyH =
+      Math.max(
+        1,
+        Math.abs(yOpen-yClose)
+      );
+
+    ctx.fillRect(
+      x-Math.max(1,xStep*.28),
+      bodyTop,
+      Math.max(2,xStep*.56),
+      bodyH
+    );
+
+
+    /* volume */
+
+    const volH =
+      (d.volume/maxVol) *
+      (bottom-volumeTop);
+
+    ctx.fillRect(
+      x-Math.max(1,xStep*.25),
+      bottom-volH,
+      Math.max(2,xStep*.5),
+      volH
+    );
+
+  });
+
+
+  function line(key,color){
+
+    ctx.beginPath();
+    ctx.strokeStyle=color;
+    ctx.lineWidth=1.4;
+
+    let started=false;
+
+    data.forEach((d,i)=>{
+
+      const v =
+        Number(d[key]);
+
+      if(!Number.isFinite(v) || v<=0)
+        return;
+
+      const x =
+        left +
+        i*xStep +
+        xStep/2;
+
+      const y =
+        yPrice(v);
+
+      if(!started){
+
+        ctx.moveTo(x,y);
+        started=true;
+
+      }else{
+
+        ctx.lineTo(x,y);
+
+      }
+
+    });
+
+    ctx.stroke();
+
+  }
+
+
+  line("ma5","#5aa9ff");
+  line("ma10","#ffc857");
+  line("ma20","#b68cff");
+  line("ma60","#ff9f43");
+
+
+  /* legend */
+
+  ctx.font="11px sans-serif";
+
+  ctx.fillStyle="#5aa9ff";
+  ctx.fillText(
+    "MA5",
+    left,
+    H-4
+  );
+
+  ctx.fillStyle="#ffc857";
+  ctx.fillText(
+    "MA10",
+    left+45,
+    H-4
+  );
+
+  ctx.fillStyle="#b68cff";
+  ctx.fillText(
+    "MA20",
+    left+95,
+    H-4
+  );
+
+  ctx.fillStyle="#ff9f43";
+  ctx.fillText(
+    "MA60",
+    left+145,
+    H-4
+  );
+
+}
+
+
+/* ============================================
+   EVENTS
+============================================ */
+
+document
+  .querySelectorAll(".tab")
+  .forEach(btn=>{
+
+    btn.addEventListener(
+      "click",
+      ()=>showView(btn.dataset.view)
+    );
+
+  });
+
+
+document
+  .getElementById("search")
+  .addEventListener(
+    "input",
+    filterStocks
+  );
+
+
+document
+  .getElementById("sectorFilter")
+  .addEventListener(
+    "change",
+    filterStocks
+  );
+
 
 loadData();
 
