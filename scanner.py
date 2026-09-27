@@ -18,7 +18,7 @@ from stock_pool import get_stock_codes, get_groups
 # V6 CONFIG
 # ============================================================
 
-VERSION = "V6.1"
+VERSION = "V6.2"
 TIMEZONE = "Asia/Taipei"
 
 MIN_PRICE = 10
@@ -81,6 +81,39 @@ def get_stock_info(code):
         pass
 
     return {"name": code, "market": "", "industry": ""}
+
+
+# ============================================================
+# V6.2 TWSE-ONLY UNIVERSE
+# ============================================================
+
+def get_twse_codes():
+    """
+    Use twstock as the market master and keep TWSE-listed securities only.
+    Ordinary listed stocks are included. The ETF codes already used by this
+    project are also retained. OTC/TPEX securities are excluded completely.
+    """
+    codes = []
+
+    for code, item in twstock.codes.items():
+        try:
+            market = str(getattr(item, "market", "") or "")
+            security_type = str(getattr(item, "type", "") or "")
+
+            if market != "ä¸å¸":
+                continue
+
+            # Taiwan common stock codes are four numeric digits.
+            # Keep the project's listed ETF universe as well.
+            is_common_stock = code.isdigit() and len(code) == 4
+            is_project_etf = code in ETF_CODES
+
+            if is_common_stock or is_project_etf:
+                codes.append(code)
+        except Exception:
+            continue
+
+    return sorted(set(codes))
 
 
 # ============================================================
@@ -182,79 +215,47 @@ def normalize_yfinance_df(df):
 # ============================================================
 
 def download_history(code, max_retries=MAX_DOWNLOAD_RETRIES):
-    # Prefer the suffix implied by twstock metadata, then fallback once needed.
-    # This avoids wasting three retries on .TW for known OTC stocks.
-    info = get_stock_info(code)
-    market_hint = str(info.get("market", "") or "")
+    """Download TWSE data only. V6.2 never queries .TWO."""
+    ticker = f"{code}.TW"
 
-    if "ä¸æ«" in market_hint:
-        candidates = [
-            (f"{code}.TWO", "ä¸æ«"),
-            (f"{code}.TW", "ä¸å¸"),
-        ]
-    else:
-        candidates = [
-            (f"{code}.TW", "ä¸å¸"),
-            (f"{code}.TWO", "ä¸æ«"),
-        ]
+    for attempt in range(1, max_retries + 1):
+        try:
+            print(f"[DOWNLOAD] {ticker} attempt {attempt}/{max_retries}")
 
-    for ticker, market in candidates:
-        for attempt in range(1, max_retries + 1):
-            try:
-                print(
-                    f"[DOWNLOAD] {ticker} "
-                    f"attempt {attempt}/{max_retries}"
-                )
+            df = yf.download(
+                ticker,
+                period="18mo",
+                interval="1d",
+                auto_adjust=True,
+                repair=False,
+                progress=False,
+                threads=False,
+                timeout=20,
+            )
 
-                df = yf.download(
-                    ticker,
-                    period="18mo",
-                    interval="1d",
-                    auto_adjust=True,
-                    repair=False,
-                    progress=False,
-                    threads=False,
-                    timeout=20,
-                )
+            df = normalize_yfinance_df(df)
 
-                df = normalize_yfinance_df(df)
+            if df is None or df.empty:
+                raise RuntimeError("empty/invalid dataframe")
 
-                if df is None or df.empty:
-                    raise RuntimeError("empty/invalid dataframe")
+            if len(df) < 80:
+                raise RuntimeError(f"insufficient history: {len(df)} days")
 
-                if len(df) < 80:
-                    raise RuntimeError(
-                        f"insufficient history: {len(df)} days"
-                    )
+            last_close = safe_float(df["Close"].iloc[-1])
+            if last_close <= 0:
+                raise RuntimeError("invalid last close")
 
-                last_close = safe_float(df["Close"].iloc[-1])
+            print(f"[OK] {ticker}: {len(df)} days, close={last_close:.2f}")
+            return ticker, "ä¸å¸", df
 
-                if last_close <= 0:
-                    raise RuntimeError("invalid last close")
+        except Exception as e:
+            print(f"[WARN] {ticker} attempt {attempt}/{max_retries} failed: {e}")
+            if attempt < max_retries:
+                wait_seconds = (2 ** attempt) + random.uniform(0.5, 1.5)
+                print(f"[WAIT] {wait_seconds:.1f}s")
+                time.sleep(wait_seconds)
 
-                print(
-                    f"[OK] {ticker}: {len(df)} days, "
-                    f"close={last_close:.2f}"
-                )
-
-                return ticker, market, df
-
-            except Exception as e:
-                print(
-                    f"[WARN] {ticker} attempt "
-                    f"{attempt}/{max_retries} failed: {e}"
-                )
-
-                if attempt < max_retries:
-                    wait_seconds = (
-                        (2 ** attempt) + random.uniform(0.5, 1.5)
-                    )
-                    print(f"[WAIT] {wait_seconds:.1f}s")
-                    time.sleep(wait_seconds)
-
-        print(f"[FAIL] {ticker}: all retries failed")
-
-    print(f"[FAIL] {code}: TW and TWO both unavailable")
+    print(f"[FAIL] {ticker}: all retries failed")
     return None, None, None
 
 
@@ -955,6 +956,8 @@ def scan_one(code, market_ref):
     info = get_stock_info(code)
     market = info["market"] or detected_market
     groups = get_groups(code)
+    if not groups and info.get("industry"):
+        groups = [info["industry"]]
 
     ma5 = safe_float(row["MA5"])
     ma10 = safe_float(row["MA10"])
@@ -1119,10 +1122,10 @@ def validate_scan_result(universe_count, valid_count, market_ref):
 
 def main():
     print("=" * 60)
-    print("Taiwan Stock Radar V6")
+    print("Taiwan Stock Radar V6.2 - TWSE Only")
     print("=" * 60)
 
-    codes = get_stock_codes()
+    codes = get_twse_codes()
     print(f"Universe: {len(codes)}")
 
     market_ref = get_market_reference()
@@ -1295,7 +1298,7 @@ def main():
         "updated": now,
         "timezone": TIMEZONE,
         "strategy": (
-            "V6.1 Entry & Position Radar: "
+            "V6.2 TWSE Entry & Position Radar: "
             "Trend + Breakout + Volume + Relative Strength "
             "+ Sector Strength + Overheat Control"
         ),
@@ -1373,7 +1376,7 @@ def main():
 
     print()
     print("=" * 60)
-    print("V6 COMPLETE")
+    print("V6.2 COMPLETE")
     print("=" * 60)
 
     print("Updated:", now)
