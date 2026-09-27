@@ -1,6 +1,8 @@
 import os
 import json
 import math
+import time
+import random
 from datetime import datetime
 from zoneinfo import ZoneInfo
 
@@ -21,14 +23,15 @@ TIMEZONE = "Asia/Taipei"
 
 MIN_PRICE = 10
 MIN_AVG_DAILY_VALUE = 20_000_000
-
 CHART_DAYS = 120
 
-# 首頁各雷達數量
 NEXT_DAY_TOP = 10
 READY_TOP = 20
 MID_LONG_TOP = 20
 RADAR_TOP = 80
+
+MAX_DOWNLOAD_RETRIES = 3
+MIN_DOWNLOAD_SUCCESS_RATE = 0.50
 
 ETF_CODES = {
     "0050", "006208", "0052", "0053",
@@ -62,17 +65,12 @@ def pct(a, b):
 
 
 # ============================================================
-# 中文名稱 / 市場
+# ä¸­æåç¨± / å¸å ´
 # ============================================================
 
 def get_stock_info(code):
-    """
-    使用 twstock 本地代碼表。
-    避免 Yahoo Finance 回傳英文公司名稱。
-    """
     try:
         info = twstock.codes.get(code)
-
         if info:
             return {
                 "name": info.name,
@@ -82,11 +80,7 @@ def get_stock_info(code):
     except Exception:
         pass
 
-    return {
-        "name": code,
-        "market": "",
-        "industry": "",
-    }
+    return {"name": code, "market": "", "industry": ""}
 
 
 # ============================================================
@@ -95,24 +89,18 @@ def get_stock_info(code):
 
 def calculate_rsi(series, period=14):
     delta = series.diff()
-
     gain = delta.clip(lower=0)
     loss = -delta.clip(upper=0)
 
     avg_gain = gain.ewm(
-        alpha=1 / period,
-        adjust=False,
-        min_periods=period
+        alpha=1 / period, adjust=False, min_periods=period
     ).mean()
 
     avg_loss = loss.ewm(
-        alpha=1 / period,
-        adjust=False,
-        min_periods=period
+        alpha=1 / period, adjust=False, min_periods=period
     ).mean()
 
     rs = avg_gain / avg_loss.replace(0, np.nan)
-
     return 100 - (100 / (1 + rs))
 
 
@@ -134,30 +122,22 @@ def calculate_atr(df, period=14):
 def add_indicators(df):
     df = df.copy()
 
-    # Moving averages
     for period in [5, 10, 20, 60, 120, 240]:
         df[f"MA{period}"] = df["Close"].rolling(period).mean()
 
-    # RSI - only used as overheat filter
     df["RSI14"] = calculate_rsi(df["Close"])
-
-    # Volume
     df["VOL5"] = df["Volume"].rolling(5).mean()
     df["VOL20"] = df["Volume"].rolling(20).mean()
 
-    # Breakout
     df["HIGH20"] = df["High"].rolling(20).max().shift(1)
     df["HIGH60"] = df["High"].rolling(60).max().shift(1)
 
-    # ATR
     df["ATR14"] = calculate_atr(df)
 
-    # Recent lows / support
     df["LOW10"] = df["Low"].rolling(10).min().shift(1)
     df["LOW20"] = df["Low"].rolling(20).min().shift(1)
     df["LOW60"] = df["Low"].rolling(60).min().shift(1)
 
-    # Returns
     df["RET5"] = df["Close"].pct_change(5) * 100
     df["RET20"] = df["Close"].pct_change(20) * 100
     df["RET60"] = df["Close"].pct_change(60) * 100
@@ -167,50 +147,103 @@ def add_indicators(df):
 
 
 # ============================================================
+# YFINANCE NORMALIZER
+# ============================================================
+
+def normalize_yfinance_df(df):
+    if df is None or df.empty:
+        return None
+
+    df = df.copy()
+
+    if isinstance(df.columns, pd.MultiIndex):
+        df.columns = df.columns.get_level_values(0)
+
+    df = df.loc[:, ~df.columns.duplicated()]
+
+    required = ["Open", "High", "Low", "Close", "Volume"]
+
+    if not set(required).issubset(df.columns):
+        return None
+
+    df = df[required].copy()
+
+    for col in required:
+        df[col] = pd.to_numeric(df[col], errors="coerce")
+
+    df = df.dropna(subset=["Open", "High", "Low", "Close"])
+    df = df.sort_index()
+
+    return df
+
+
+# ============================================================
 # MARKET DATA
 # ============================================================
 
-def download_history(code):
-    """
-    先嘗試上市 .TW，再嘗試上櫃 .TWO
-    """
-
+def download_history(code, max_retries=MAX_DOWNLOAD_RETRIES):
     candidates = [
-        (f"{code}.TW", "上市"),
-        (f"{code}.TWO", "上櫃"),
+        (f"{code}.TW", "ä¸å¸"),
+        (f"{code}.TWO", "ä¸æ«"),
     ]
 
     for ticker, market in candidates:
-        try:
-            df = yf.download(
-                ticker,
-                period="18mo",
-                interval="1d",
-                auto_adjust=True,
-                repair=True,
-                progress=False,
-                threads=False,
-            )
+        for attempt in range(1, max_retries + 1):
+            try:
+                print(
+                    f"[DOWNLOAD] {ticker} "
+                    f"attempt {attempt}/{max_retries}"
+                )
 
-            if df is None or df.empty:
-                continue
+                df = yf.download(
+                    ticker,
+                    period="18mo",
+                    interval="1d",
+                    auto_adjust=True,
+                    repair=True,
+                    progress=False,
+                    threads=False,
+                    timeout=20,
+                )
 
-            if isinstance(df.columns, pd.MultiIndex):
-                df.columns = df.columns.get_level_values(0)
+                df = normalize_yfinance_df(df)
 
-            required = {"Open", "High", "Low", "Close", "Volume"}
+                if df is None or df.empty:
+                    raise RuntimeError("empty/invalid dataframe")
 
-            if not required.issubset(df.columns):
-                continue
+                if len(df) < 80:
+                    raise RuntimeError(
+                        f"insufficient history: {len(df)} days"
+                    )
 
-            df = df.dropna(subset=["Open", "High", "Low", "Close"])
+                last_close = safe_float(df["Close"].iloc[-1])
 
-            if len(df) >= 80:
+                if last_close <= 0:
+                    raise RuntimeError("invalid last close")
+
+                print(
+                    f"[OK] {ticker}: {len(df)} days, "
+                    f"close={last_close:.2f}"
+                )
+
                 return ticker, market, df
 
-        except Exception as e:
-            print(f"[WARN] {ticker}: {e}")
+            except Exception as e:
+                print(
+                    f"[WARN] {ticker} attempt "
+                    f"{attempt}/{max_retries} failed: {e}"
+                )
 
+                if attempt < max_retries:
+                    wait_seconds = (
+                        (2 ** attempt) + random.uniform(0.5, 1.5)
+                    )
+                    print(f"[WAIT] {wait_seconds:.1f}s")
+                    time.sleep(wait_seconds)
+
+        print(f"[FAIL] {ticker}: all retries failed")
+
+    print(f"[FAIL] {code}: TW and TWO both unavailable")
     return None, None, None
 
 
@@ -220,7 +253,6 @@ def download_history(code):
 
 def build_chart_data(df):
     out = []
-
     use = df.tail(CHART_DAYS)
 
     for idx, row in use.iterrows():
@@ -246,42 +278,69 @@ def build_chart_data(df):
 # MARKET RELATIVE STRENGTH
 # ============================================================
 
-def get_market_reference():
-    """
-    台灣加權指數，用來計算 Relative Strength。
-    """
+def get_market_reference(max_retries=MAX_DOWNLOAD_RETRIES):
+    ticker = "^TWII"
 
-    try:
-        df = yf.download(
-            "^TWII",
-            period="18mo",
-            interval="1d",
-            auto_adjust=True,
-            repair=True,
-            progress=False,
-            threads=False,
-        )
+    for attempt in range(1, max_retries + 1):
+        try:
+            print(
+                f"[MARKET] Download {ticker} "
+                f"attempt {attempt}/{max_retries}"
+            )
 
-        if isinstance(df.columns, pd.MultiIndex):
-            df.columns = df.columns.get_level_values(0)
+            df = yf.download(
+                ticker,
+                period="18mo",
+                interval="1d",
+                auto_adjust=True,
+                repair=True,
+                progress=False,
+                threads=False,
+                timeout=20,
+            )
 
-        if df is None or len(df) < 60:
-            return {}
+            df = normalize_yfinance_df(df)
 
-        close = df["Close"]
+            if df is None or df.empty:
+                raise RuntimeError("empty market dataframe")
 
-        return {
-            "ret5": safe_float(close.pct_change(5).iloc[-1] * 100),
-            "ret20": safe_float(close.pct_change(20).iloc[-1] * 100),
-            "ret60": safe_float(close.pct_change(60).iloc[-1] * 100),
-            "ma20": safe_float(close.rolling(20).mean().iloc[-1]),
-            "ma60": safe_float(close.rolling(60).mean().iloc[-1]),
-            "price": safe_float(close.iloc[-1]),
-        }
+            if len(df) < 60:
+                raise RuntimeError(
+                    f"insufficient market history: {len(df)}"
+                )
 
-    except Exception as e:
-        print("[WARN] Market reference failed:", e)
-        return {}
+            close = df["Close"].dropna()
+
+            if len(close) < 60:
+                raise RuntimeError("insufficient valid Close history")
+
+            result = {
+                "ret5": safe_float(close.pct_change(5).iloc[-1] * 100),
+                "ret20": safe_float(close.pct_change(20).iloc[-1] * 100),
+                "ret60": safe_float(close.pct_change(60).iloc[-1] * 100),
+                "ma20": safe_float(close.rolling(20).mean().iloc[-1]),
+                "ma60": safe_float(close.rolling(60).mean().iloc[-1]),
+                "price": safe_float(close.iloc[-1]),
+            }
+
+            print("[MARKET OK]", result)
+            return result
+
+        except Exception as e:
+            print(
+                f"[MARKET WARN] attempt "
+                f"{attempt}/{max_retries} failed: {e}"
+            )
+
+            if attempt < max_retries:
+                wait_seconds = (
+                    (2 ** attempt) + random.uniform(0.5, 1.5)
+                )
+                print(f"[MARKET WAIT] {wait_seconds:.1f}s")
+                time.sleep(wait_seconds)
+
+    print("[MARKET ERROR] All attempts failed")
+    return {}
 
 
 # ============================================================
@@ -289,10 +348,6 @@ def get_market_reference():
 # ============================================================
 
 def calculate_trend_score(row):
-    """
-    25 points
-    """
-
     score = 0
     reasons = []
 
@@ -304,28 +359,24 @@ def calculate_trend_score(row):
 
     if price > ma20:
         score += 6
-        reasons.append("股價站上20日均線")
+        reasons.append("è¡å¹ç«ä¸20æ¥åç·")
 
     if ma5 > ma10 > ma20:
         score += 8
-        reasons.append("MA5 > MA10 > MA20，多頭排列")
+        reasons.append("MA5 > MA10 > MA20ï¼å¤é ­æå")
 
     if ma20 > ma60:
         score += 6
-        reasons.append("MA20位於MA60之上")
+        reasons.append("MA20ä½æ¼MA60ä¹ä¸")
 
     if ma20 > 0:
         score += 5
-        reasons.append("中短期趨勢維持偏多")
+        reasons.append("ä¸­ç­æè¶¨å¢ç¶­æåå¤")
 
     return min(score, 25), reasons
 
 
 def calculate_breakout_score(row):
-    """
-    25 points
-    """
-
     price = safe_float(row["Close"])
     high20 = safe_float(row["HIGH20"])
 
@@ -333,41 +384,31 @@ def calculate_breakout_score(row):
         return 0, [], 999
 
     distance = (high20 - price) / high20 * 100
-
     score = 0
     reasons = []
 
     if price >= high20:
         score = 25
-        reasons.append("已突破20日高點")
-
+        reasons.append("å·²çªç ´20æ¥é«é»")
     elif distance <= 1:
         score = 23
-        reasons.append("距20日突破價不到1%")
-
+        reasons.append("è·20æ¥çªç ´å¹ä¸å°1%")
     elif distance <= 2:
         score = 21
-        reasons.append("非常接近20日突破")
-
+        reasons.append("éå¸¸æ¥è¿20æ¥çªç ´")
     elif distance <= 4:
         score = 17
-        reasons.append("接近20日突破區")
-
+        reasons.append("æ¥è¿20æ¥çªç ´å")
     elif distance <= 7:
         score = 10
-        reasons.append("距突破位置尚可")
+        reasons.append("è·çªç ´ä½ç½®å°å¯")
 
     return score, reasons, distance
 
 
 def calculate_volume_score(row):
-    """
-    20 points
-    """
-
     volume = safe_float(row["Volume"])
     vol20 = safe_float(row["VOL20"])
-
     ratio = volume / vol20 if vol20 else 0
 
     score = 0
@@ -375,20 +416,16 @@ def calculate_volume_score(row):
 
     if ratio >= 2:
         score = 20
-        reasons.append("成交量超過20日均量2倍")
-
+        reasons.append("æäº¤éè¶é20æ¥åé2å")
     elif ratio >= 1.5:
         score = 18
-        reasons.append("成交量明顯放大")
-
+        reasons.append("æäº¤éæé¡¯æ¾å¤§")
     elif ratio >= 1.2:
         score = 15
-        reasons.append("量能開始擴張")
-
+        reasons.append("éè½éå§æ´å¼µ")
     elif ratio >= 1:
         score = 10
-        reasons.append("成交量高於20日均量")
-
+        reasons.append("æäº¤éé«æ¼20æ¥åé")
     elif ratio >= 0.75:
         score = 5
 
@@ -396,11 +433,6 @@ def calculate_volume_score(row):
 
 
 def calculate_rs_score(row, market):
-    """
-    Relative Strength
-    15 points
-    """
-
     stock20 = safe_float(row["RET20"])
     stock60 = safe_float(row["RET60"])
 
@@ -430,7 +462,7 @@ def calculate_rs_score(row, market):
         score += 3
 
     if rs20 > 0:
-        reasons.append(f"近20日表現優於大盤 {rs20:.1f}%")
+        reasons.append(f"è¿20æ¥è¡¨ç¾åªæ¼å¤§ç¤ {rs20:.1f}%")
 
     return min(score, 15), rs20, rs60, reasons
 
@@ -449,7 +481,6 @@ def build_sector_strength(stocks):
     results = {}
 
     for group, members in groups.items():
-
         if not members:
             continue
 
@@ -494,10 +525,7 @@ def build_sector_strength(stocks):
             percentile = 1 - ((rank - 1) / (len(ordered) - 1))
             item["score"] = round(percentile * 100)
 
-    return {
-        item["group"]: item
-        for item in ordered
-    }
+    return {item["group"]: item for item in ordered}
 
 
 def apply_sector_score(stock, sector_map):
@@ -515,7 +543,6 @@ def apply_sector_score(stock, sector_map):
     if best is None:
         return 0, "", None
 
-    # V6 sector component max = 15
     sector_component = round(best["score"] / 100 * 15)
 
     return sector_component, best["group"], best
@@ -526,17 +553,6 @@ def apply_sector_score(stock, sector_map):
 # ============================================================
 
 def calculate_trade_plan(stock):
-    """
-    產生：
-    - pullback entry
-    - breakout trigger
-    - chase limit
-    - short stop
-    - mid/long stop
-    - target
-    - R/R
-    """
-
     price = stock["price"]
     ma10 = stock["ma10"]
     ma20 = stock["ma20"]
@@ -548,10 +564,6 @@ def calculate_trade_plan(stock):
     low10 = stock["low10"]
     low20 = stock["low20"]
     low60 = stock["low60"]
-
-    # ----------------------------
-    # Pullback entry zone
-    # ----------------------------
 
     supports = [
         x for x in [ma10, ma20]
@@ -568,24 +580,13 @@ def calculate_trade_plan(stock):
         price - atr * 0.8 if atr else price * 0.97,
     )
 
-    entry_high = min(
-        price,
-        support * 1.015,
-    )
+    entry_high = min(price, support * 1.015)
 
     if entry_low > entry_high:
         entry_low = price * 0.98
         entry_high = price
 
-    # ----------------------------
-    # Breakout trigger
-    # ----------------------------
-
     breakout = high20 if high20 > 0 else price
-
-    # ----------------------------
-    # Chase limit
-    # ----------------------------
 
     chase_by_pct = breakout * 1.03
 
@@ -594,10 +595,6 @@ def calculate_trade_plan(stock):
         chase_limit = min(chase_by_pct, chase_by_atr)
     else:
         chase_limit = chase_by_pct
-
-    # ----------------------------
-    # Short-term stop
-    # ----------------------------
 
     stop_candidates = []
 
@@ -620,13 +617,8 @@ def calculate_trade_plan(stock):
     else:
         short_stop = entry_low * 0.94
 
-    # Stop不能離買入區過近
     max_stop = entry_low * 0.985
     short_stop = min(short_stop, max_stop)
-
-    # ----------------------------
-    # Mid / long-term stop
-    # ----------------------------
 
     long_candidates = []
 
@@ -648,10 +640,6 @@ def calculate_trade_plan(stock):
         long_stop = max(valid_long)
     else:
         long_stop = price * 0.88
-
-    # ----------------------------
-    # Target / R:R
-    # ----------------------------
 
     risk = entry_high - short_stop
 
@@ -679,16 +667,12 @@ def calculate_trade_plan(stock):
         "entry_high": r2(entry_high),
         "breakout_price": r2(breakout),
         "chase_limit": r2(chase_limit),
-
         "short_stop": r2(short_stop),
         "long_stop": r2(long_stop),
-
         "short_risk_pct": r2(short_risk_pct),
         "long_risk_pct": r2(long_risk_pct),
-
         "target1": r2(target1),
         "target2": r2(target2),
-
         "risk_reward": r2(rr),
     }
 
@@ -698,17 +682,6 @@ def calculate_trade_plan(stock):
 # ============================================================
 
 def calculate_next_day_score(stock):
-    """
-    明日進場分數
-    0-100
-
-    Trend      25
-    Breakout   25
-    Volume     20
-    RS         15
-    Sector     15
-    """
-
     score = (
         stock["trend_score"]
         + stock["breakout_score"]
@@ -717,7 +690,6 @@ def calculate_next_day_score(stock):
         + stock["sector_score"]
     )
 
-    # RSI only as overheat filter
     rsi = stock["rsi"]
 
     if rsi >= 80:
@@ -727,7 +699,6 @@ def calculate_next_day_score(stock):
     elif rsi >= 72:
         score -= 7
 
-    # Price too far from MA20
     distance_ma20 = stock["distance_ma20_pct"]
 
     if distance_ma20 >= 15:
@@ -745,11 +716,6 @@ def calculate_next_day_score(stock):
 # ============================================================
 
 def calculate_ready_score(stock):
-    """
-    準備進場：
-    還沒完全突破，但位置接近、趨勢健康。
-    """
-
     score = 0
 
     if stock["price"] > stock["ma20"]:
@@ -789,14 +755,7 @@ def calculate_ready_score(stock):
 # ============================================================
 
 def calculate_mid_long_score(stock):
-    """
-    中長期趨勢分數。
-    目前 V6 先用 price trend + RS + sector。
-    基本面資料之後可在 V6.1 加入。
-    """
-
     score = 0
-
     price = stock["price"]
 
     if price > stock["ma20"]:
@@ -834,46 +793,46 @@ def classify_next_day(stock):
         stock["rsi"] >= 75
         or stock["distance_ma20_pct"] >= 12
     ):
-        return "過熱／不追價"
+        return "éç±ï¼ä¸è¿½å¹"
 
     if (
         score >= 80
         and stock["breakout_distance_pct"] <= 2
         and stock["volume_ratio"] >= 1.2
     ):
-        return "明日進場候選"
+        return "ææ¥é²å ´åé¸"
 
     if score >= 68:
-        return "等待明日確認"
+        return "ç­å¾ææ¥ç¢ºèª"
 
-    return "暫不考慮"
+    return "æ«ä¸èæ®"
 
 
 def classify_ready(stock):
     score = stock["ready_score"]
 
     if stock["rsi"] >= 75:
-        return "過熱"
+        return "éç±"
 
     if score >= 80:
-        return "準備進場"
+        return "æºåé²å ´"
 
     if score >= 65:
-        return "持續觀察"
+        return "æçºè§å¯"
 
-    return "尚未成熟"
+    return "å°æªæç"
 
 
 def classify_mid_long(stock):
     score = stock["mid_long_score"]
 
     if score >= 80:
-        return "中長期趨勢強"
+        return "ä¸­é·æè¶¨å¢å¼·"
 
     if score >= 65:
-        return "中長期持續追蹤"
+        return "ä¸­é·ææçºè¿½è¹¤"
 
-    return "中長期一般"
+    return "ä¸­é·æä¸è¬"
 
 
 # ============================================================
@@ -885,55 +844,52 @@ def build_reasons(stock):
     risks = []
 
     if stock["ma5"] > stock["ma10"] > stock["ma20"]:
-        reasons.append("短期均線呈多頭排列")
+        reasons.append("ç­æåç·åå¤é ­æå")
 
     if stock["ma20"] > stock["ma60"]:
-        reasons.append("中期趨勢維持向上")
+        reasons.append("ä¸­æè¶¨å¢ç¶­æåä¸")
 
     if stock["breakout_distance_pct"] <= 2:
-        reasons.append("已非常接近20日突破位置")
-
+        reasons.append("å·²éå¸¸æ¥è¿20æ¥çªç ´ä½ç½®")
     elif stock["breakout_distance_pct"] <= 5:
-        reasons.append("正在接近20日壓力區")
+        reasons.append("æ­£å¨æ¥è¿20æ¥å£åå")
 
     if stock["volume_ratio"] >= 1.5:
         reasons.append(
-            f"成交量放大至20日均量 {stock['volume_ratio']:.2f} 倍"
+            f"æäº¤éæ¾å¤§è³20æ¥åé {stock['volume_ratio']:.2f} å"
         )
-
     elif stock["volume_ratio"] >= 1.2:
-        reasons.append("成交量開始擴張")
+        reasons.append("æäº¤ééå§æ´å¼µ")
 
     if stock["rs20"] > 0:
         reasons.append(
-            f"近20日相對大盤強 {stock['rs20']:.1f}%"
+            f"è¿20æ¥ç¸å°å¤§ç¤å¼· {stock['rs20']:.1f}%"
         )
 
     if stock["best_sector"]:
         reasons.append(
-            f"{stock['best_sector']}族群相對強勢"
+            f"{stock['best_sector']}æç¾¤ç¸å°å¼·å¢"
         )
 
     if stock["rsi"] >= 75:
-        risks.append("RSI進入過熱區，不適合追價")
-
+        risks.append("RSIé²å¥éç±åï¼ä¸é©åè¿½å¹")
     elif stock["rsi"] >= 70:
-        risks.append("RSI偏高，注意隔日追價風險")
+        risks.append("RSIåé«ï¼æ³¨æéæ¥è¿½å¹é¢¨éª")
 
     if stock["distance_ma20_pct"] >= 12:
-        risks.append("股價與MA20乖離過大")
+        risks.append("è¡å¹èMA20ä¹é¢éå¤§")
 
     if stock["volume_ratio"] < 0.8:
-        risks.append("目前量能仍不足")
+        risks.append("ç®åéè½ä»ä¸è¶³")
 
     if stock["breakout_distance_pct"] > 7:
-        risks.append("距離突破位置仍較遠")
+        risks.append("è·é¢çªç ´ä½ç½®ä»è¼é ")
 
     if not reasons:
-        reasons.append("目前以技術結構觀察為主")
+        reasons.append("ç®åä»¥æè¡çµæ§è§å¯çºä¸»")
 
     if not risks:
-        risks.append("仍需觀察隔日開盤與成交量確認")
+        risks.append("ä»éè§å¯éæ¥éç¤èæäº¤éç¢ºèª")
 
     return reasons[:5], risks[:4]
 
@@ -949,9 +905,9 @@ def build_next_day_action(stock):
     chase = p["chase_limit"]
 
     return (
-        f"明日若突破 {breakout:.2f} 且量能同步放大，"
-        f"可視為進場觸發；"
-        f"若直接跳空高於 {chase:.2f}，不建議追價。"
+        f"ææ¥è¥çªç ´ {breakout:.2f} ä¸éè½åæ­¥æ¾å¤§ï¼"
+        f"å¯è¦çºé²å ´è§¸ç¼ï¼"
+        f"è¥ç´æ¥è·³ç©ºé«æ¼ {chase:.2f}ï¼ä¸å»ºè­°è¿½å¹ã"
     )
 
 
@@ -966,9 +922,7 @@ def scan_one(code, market_ref):
         return None
 
     df = add_indicators(df)
-
     row = df.iloc[-1]
-
     price = safe_float(row["Close"])
 
     if price <= 0:
@@ -980,7 +934,6 @@ def scan_one(code, market_ref):
         (df["Close"] * df["Volume"]).tail(20).mean()
     )
 
-    # 基本流動性過濾
     if not is_etf:
         if price < MIN_PRICE:
             return None
@@ -989,14 +942,8 @@ def scan_one(code, market_ref):
             return None
 
     info = get_stock_info(code)
-
     market = info["market"] or detected_market
-
     groups = get_groups(code)
-
-    # ----------------------------
-    # Indicators
-    # ----------------------------
 
     ma5 = safe_float(row["MA5"])
     ma10 = safe_float(row["MA10"])
@@ -1031,65 +978,46 @@ def scan_one(code, market_ref):
         calculate_rs_score(row, market_ref)
     )
 
-    distance_ma20 = (
-        pct(price, ma20)
-        if ma20 else 0
-    )
+    distance_ma20 = pct(price, ma20) if ma20 else 0
 
     stock = {
         "code": code,
         "name": info["name"],
         "market": market,
         "industry": info["industry"],
-
         "ticker": ticker,
         "groups": groups,
         "is_etf": is_etf,
-
         "date": df.index[-1].strftime("%Y-%m-%d"),
-
         "price": r2(price),
-
         "ma5": r2(ma5),
         "ma10": r2(ma10),
         "ma20": r2(ma20),
         "ma60": r2(ma60),
         "ma120": r2(ma120),
         "ma240": r2(ma240),
-
         "rsi": r2(rsi),
         "atr14": r2(atr),
-
         "high20": r2(high20),
-
         "low10": r2(low10),
         "low20": r2(low20),
         "low60": r2(low60),
-
         "ret20": r2(ret20),
         "ret60": r2(ret60),
-
         "volume_ratio": r2(volume_ratio),
-
         "distance_ma20_pct": r2(distance_ma20),
         "breakout_distance_pct": r2(breakout_distance),
-
         "trend_score": trend_score,
         "breakout_score": breakout_score,
         "volume_score": volume_score,
         "rs_score": rs_score,
-
         "rs20": r2(rs20),
         "rs60": r2(rs60),
-
         "trend_reasons": trend_reasons,
         "breakout_reasons": breakout_reasons,
         "volume_reasons": volume_reasons,
         "rs_reasons": rs_reasons,
-
         "chart": build_chart_data(df),
-
-        # V6.1 可接新聞
         "news": [],
     }
 
@@ -1104,7 +1032,7 @@ def calculate_market_regime(market):
     if not market:
         return {
             "status": "Neutral",
-            "label": "🟡 Neutral",
+            "label": "ð¡ Neutral",
         }
 
     price = safe_float(market.get("price"))
@@ -1115,19 +1043,63 @@ def calculate_market_regime(market):
     if price > ma20 > ma60 and ret20 > 0:
         return {
             "status": "Risk-On",
-            "label": "🟢 Risk-On",
+            "label": "ð¢ Risk-On",
         }
 
     if price < ma20 and ret20 < -3:
         return {
             "status": "Risk-Off",
-            "label": "🔴 Risk-Off",
+            "label": "ð´ Risk-Off",
         }
 
     return {
         "status": "Neutral",
-        "label": "🟡 Neutral",
+        "label": "ð¡ Neutral",
     }
+
+
+# ============================================================
+# DATA SAFETY
+# ============================================================
+
+def validate_scan_result(universe_count, valid_count, market_ref):
+    print()
+    print("=" * 60)
+    print("DATA VALIDATION")
+    print("=" * 60)
+    print(f"Universe : {universe_count}")
+    print(f"Valid    : {valid_count}")
+
+    if universe_count <= 0:
+        raise RuntimeError(
+            "CRITICAL: Stock universe is empty. Abort publication."
+        )
+
+    if valid_count == 0:
+        raise RuntimeError(
+            "CRITICAL: 0 valid stocks. Market data download likely "
+            "failed. Existing data.json will NOT be overwritten."
+        )
+
+    success_rate = valid_count / universe_count
+
+    print(f"Success  : {success_rate:.1%}")
+
+    if success_rate < MIN_DOWNLOAD_SUCCESS_RATE:
+        raise RuntimeError(
+            f"CRITICAL: Only {valid_count}/{universe_count} "
+            f"({success_rate:.1%}) stocks survived scan. "
+            "Abort publication to protect previous data."
+        )
+
+    if not market_ref:
+        raise RuntimeError(
+            "CRITICAL: ^TWII market reference unavailable. "
+            "Abort publication."
+        )
+
+    print("[VALIDATION OK] Scan data is healthy.")
+    return success_rate
 
 
 # ============================================================
@@ -1135,27 +1107,26 @@ def calculate_market_regime(market):
 # ============================================================
 
 def main():
-
     print("=" * 60)
     print("Taiwan Stock Radar V6")
     print("=" * 60)
 
     codes = get_stock_codes()
-
     print(f"Universe: {len(codes)}")
 
     market_ref = get_market_reference()
-
     print("Market:", market_ref)
+
+    # Fail early. This prevents a Yahoo outage from creating an empty release.
+    if not market_ref:
+        raise RuntimeError(
+            "CRITICAL: Unable to download ^TWII market data. "
+            "Abort before scanning stocks."
+        )
 
     raw_stocks = []
 
-    # --------------------------------------------------------
-    # First pass
-    # --------------------------------------------------------
-
     for i, code in enumerate(codes, 1):
-
         print(f"[{i}/{len(codes)}] {code}")
 
         try:
@@ -1169,18 +1140,16 @@ def main():
 
     print(f"Valid stocks: {len(raw_stocks)}")
 
-    # --------------------------------------------------------
-    # Sector strength
-    # --------------------------------------------------------
+    # IMPORTANT: validate before creating/writing any output file.
+    validate_scan_result(
+        universe_count=len(codes),
+        valid_count=len(raw_stocks),
+        market_ref=market_ref,
+    )
 
     sector_map = build_sector_strength(raw_stocks)
 
-    # --------------------------------------------------------
-    # Second pass
-    # --------------------------------------------------------
-
     for stock in raw_stocks:
-
         sector_score, best_sector, sector_detail = (
             apply_sector_score(stock, sector_map)
         )
@@ -1189,37 +1158,27 @@ def main():
         stock["best_sector"] = best_sector
         stock["sector_detail"] = sector_detail
 
-        # Scores
         stock["next_day_score"] = calculate_next_day_score(stock)
         stock["ready_score"] = calculate_ready_score(stock)
         stock["mid_long_score"] = calculate_mid_long_score(stock)
 
-        # Signals
         stock["next_day_signal"] = classify_next_day(stock)
         stock["ready_signal"] = classify_ready(stock)
         stock["mid_long_signal"] = classify_mid_long(stock)
 
-        # Trade plan
         stock["trade_plan"] = calculate_trade_plan(stock)
 
-        # Reasons
         reasons, risks = build_reasons(stock)
 
         stock["recommendation_reasons"] = reasons
         stock["risk_reasons"] = risks
-
         stock["next_day_action"] = build_next_day_action(stock)
 
-        # Three-MA flag
         stock["above_3ma"] = (
             stock["price"] > stock["ma5"]
             and stock["price"] > stock["ma10"]
             and stock["price"] > stock["ma20"]
         )
-
-    # --------------------------------------------------------
-    # Rankings
-    # --------------------------------------------------------
 
     next_day = sorted(
         raw_stocks,
@@ -1262,7 +1221,6 @@ def main():
         reverse=True,
     )
 
-    # Ranking fields
     for rank, stock in enumerate(next_day, 1):
         stock["next_day_rank"] = rank
 
@@ -1272,23 +1230,18 @@ def main():
     for rank, stock in enumerate(mid_long, 1):
         stock["mid_long_rank"] = rank
 
-    # --------------------------------------------------------
-    # Top lists
-    # --------------------------------------------------------
-
     next_day_top = [
         x for x in next_day
-        if x["next_day_signal"] == "明日進場候選"
+        if x["next_day_signal"] == "ææ¥é²å ´åé¸"
     ][:NEXT_DAY_TOP]
 
-    # 如果不足10檔，補最高分等待確認
     if len(next_day_top) < NEXT_DAY_TOP:
         used = {x["code"] for x in next_day_top}
 
         extras = [
             x for x in next_day
             if x["code"] not in used
-            and x["next_day_signal"] != "過熱／不追價"
+            and x["next_day_signal"] != "éç±ï¼ä¸è¿½å¹"
         ]
 
         next_day_top += extras[
@@ -1298,49 +1251,33 @@ def main():
     ready_top = [
         x for x in ready
         if x["ready_signal"] in [
-            "準備進場",
-            "持續觀察",
+            "æºåé²å ´",
+            "æçºè§å¯",
         ]
     ][:READY_TOP]
 
     mid_long_top = [
         x for x in mid_long
         if x["mid_long_signal"] in [
-            "中長期趨勢強",
-            "中長期持續追蹤",
+            "ä¸­é·æè¶¨å¢å¼·",
+            "ä¸­é·ææçºè¿½è¹¤",
         ]
     ][:MID_LONG_TOP]
 
     radar_top = radar[:RADAR_TOP]
-
-    # --------------------------------------------------------
-    # Sector ranking
-    # --------------------------------------------------------
 
     sector_ranking = sorted(
         sector_map.values(),
         key=lambda x: x["rank"],
     )
 
-    # --------------------------------------------------------
-    # Market regime
-    # --------------------------------------------------------
-
     market_regime = calculate_market_regime(market_ref)
-
-    # --------------------------------------------------------
-    # Signal counts
-    # --------------------------------------------------------
 
     signal_counts = {}
 
     for stock in raw_stocks:
         sig = stock["next_day_signal"]
         signal_counts[sig] = signal_counts.get(sig, 0) + 1
-
-    # --------------------------------------------------------
-    # Payload
-    # --------------------------------------------------------
 
     now = datetime.now(
         ZoneInfo(TIMEZONE)
@@ -1350,43 +1287,28 @@ def main():
         "version": VERSION,
         "updated": now,
         "timezone": TIMEZONE,
-
         "strategy": (
             "V6 Entry & Position Radar: "
             "Trend + Breakout + Volume + Relative Strength "
             "+ Sector Strength + Overheat Control"
         ),
-
         "universe_count": len(codes),
         "valid_count": len(raw_stocks),
-
         "market_regime": market_regime,
         "market_reference": {
             k: r2(v)
             for k, v in market_ref.items()
         },
-
         "signal_counts": signal_counts,
-
         "sector_ranking": sector_ranking,
-
-        # 首頁雷達
         "next_day_top": next_day_top,
         "ready_top": ready_top,
         "mid_long_top": mid_long_top,
-
-        # Top 80
         "stocks": radar_top,
-
-        # Full Universe:
-        # 讓國巨等即使沒進 Top80，也能搜尋得到
         "all_stocks": raw_stocks,
     }
 
-    # --------------------------------------------------------
-    # Save JSON
-    # --------------------------------------------------------
-
+    # Only write after successful validation.
     os.makedirs("docs", exist_ok=True)
     os.makedirs("data", exist_ok=True)
 
@@ -1402,14 +1324,11 @@ def main():
             indent=2,
         )
 
-    # --------------------------------------------------------
-    # CSV
-    # --------------------------------------------------------
+    print("[SAVE OK] docs/data.json")
 
     csv_rows = []
 
     for stock in raw_stocks:
-
         row = {
             k: v
             for k, v in stock.items()
@@ -1422,9 +1341,11 @@ def main():
         }
 
         row["groups"] = ",".join(stock["groups"])
+
         row["recommendation_reasons"] = " | ".join(
             stock["recommendation_reasons"]
         )
+
         row["risk_reasons"] = " | ".join(
             stock["risk_reasons"]
         )
@@ -1440,9 +1361,7 @@ def main():
         encoding="utf-8-sig",
     )
 
-    # --------------------------------------------------------
-    # Console summary
-    # --------------------------------------------------------
+    print("[SAVE OK] data/signals.csv")
 
     print()
     print("=" * 60)
