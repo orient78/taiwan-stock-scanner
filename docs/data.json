@@ -1,8 +1,8 @@
 {
   "version": "V6.2",
-  "updated": "2026-09-28 07:49",
+  "updated": "2026-09-28 07:56",
   "timezone": "Asia/Taipei",
-  "strategy": "V6.2.1 TWSE Entry & Position Radar: Trend + Breakout + Volume + Relative Strength + Sector Strength + Overheat Control",
+  "strategy": "V6.2.2 TWSE Entry & Position Radar: Trend + Breakout + Volume + Relative Strength + Sector Strength + Overheat Control",
   "universe_count": 13,
   "valid_count": 13,
   "market_regime": {
