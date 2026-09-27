@@ -89,32 +89,60 @@ def get_stock_info(code):
 
 def get_twse_codes():
     """
-    Use twstock as the market master and keep TWSE-listed securities only.
-    Ordinary listed stocks are included. The ETF codes already used by this
-    project are also retained. OTC/TPEX securities are excluded completely.
+    V6.2.1: Build the universe from twstock.twse directly.
+    twstock.twse is the package's parsed TWSE-listed securities mapping.
+    Keep common stocks plus the project's listed ETF codes.
+    OTC/TPEX securities are excluded completely.
     """
+    twse_codes = getattr(twstock, "twse", {})
+
+    if not twse_codes:
+        raise RuntimeError(
+            "CRITICAL: twstock.twse is empty/unavailable. "
+            "Abort instead of publishing an empty universe."
+        )
+
     codes = []
 
-    for code, item in twstock.codes.items():
-        try:
-            market = str(getattr(item, "market", "") or "")
-            security_type = str(getattr(item, "type", "") or "")
+    for code in twse_codes:
+        code = str(code).strip()
+        info = twstock.codes.get(code)
 
-            if market != "ä¸å¸":
-                continue
-
-            # Taiwan common stock codes are four numeric digits.
-            # Keep the project's listed ETF universe as well.
-            is_common_stock = code.isdigit() and len(code) == 4
-            is_project_etf = code in ETF_CODES
-
-            if is_common_stock or is_project_etf:
-                codes.append(code)
-        except Exception:
+        if info is None:
             continue
 
-    return sorted(set(codes))
+        security_type = str(getattr(info, "type", "") or "")
 
+        # Common TWSE stocks: 4 numeric digits and security type è¡ç¥¨.
+        is_common_stock = (
+            code.isdigit()
+            and len(code) == 4
+            and security_type == "è¡ç¥¨"
+        )
+
+        # Retain the listed ETFs already defined by this project,
+        # but only when they are actually present in twstock.twse.
+        is_project_etf = (
+            code in ETF_CODES
+            and code in twse_codes
+        )
+
+        if is_common_stock or is_project_etf:
+            codes.append(code)
+
+    codes = sorted(set(codes))
+
+    if not codes:
+        raise RuntimeError(
+            "CRITICAL: TWSE universe resolved to zero symbols. "
+            "Abort publication."
+        )
+
+    print(f"[UNIVERSE] TWSE only: {len(codes)} symbols")
+    print(f"[CHECK] 2330 in universe: {'2330' in codes}")
+    print(f"[CHECK] 6223 in universe: {'6223' in codes} (expected False)")
+
+    return codes
 
 # ============================================================
 # INDICATORS
@@ -1122,7 +1150,7 @@ def validate_scan_result(universe_count, valid_count, market_ref):
 
 def main():
     print("=" * 60)
-    print("Taiwan Stock Radar V6.2 - TWSE Only")
+    print("Taiwan Stock Radar V6.2.1 - TWSE Only")
     print("=" * 60)
 
     codes = get_twse_codes()
@@ -1298,7 +1326,7 @@ def main():
         "updated": now,
         "timezone": TIMEZONE,
         "strategy": (
-            "V6.2 TWSE Entry & Position Radar: "
+            "V6.2.1 TWSE Entry & Position Radar: "
             "Trend + Breakout + Volume + Relative Strength "
             "+ Sector Strength + Overheat Control"
         ),
@@ -1376,7 +1404,7 @@ def main():
 
     print()
     print("=" * 60)
-    print("V6.2 COMPLETE")
+    print("V6.2.1 COMPLETE")
     print("=" * 60)
 
     print("Updated:", now)
