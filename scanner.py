@@ -18,7 +18,7 @@ from stock_pool import get_stock_codes, get_groups
 # V6 CONFIG
 # ============================================================
 
-VERSION = "V6"
+VERSION = "V6.1"
 TIMEZONE = "Asia/Taipei"
 
 MIN_PRICE = 10
@@ -182,10 +182,21 @@ def normalize_yfinance_df(df):
 # ============================================================
 
 def download_history(code, max_retries=MAX_DOWNLOAD_RETRIES):
-    candidates = [
-        (f"{code}.TW", "ä¸å¸"),
-        (f"{code}.TWO", "ä¸æ«"),
-    ]
+    # Prefer the suffix implied by twstock metadata, then fallback once needed.
+    # This avoids wasting three retries on .TW for known OTC stocks.
+    info = get_stock_info(code)
+    market_hint = str(info.get("market", "") or "")
+
+    if "ä¸æ«" in market_hint:
+        candidates = [
+            (f"{code}.TWO", "ä¸æ«"),
+            (f"{code}.TW", "ä¸å¸"),
+        ]
+    else:
+        candidates = [
+            (f"{code}.TW", "ä¸å¸"),
+            (f"{code}.TWO", "ä¸æ«"),
+        ]
 
     for ticker, market in candidates:
         for attempt in range(1, max_retries + 1):
@@ -1235,18 +1246,14 @@ def main():
         if x["next_day_signal"] == "ææ¥é²å ´åé¸"
     ][:NEXT_DAY_TOP]
 
-    if len(next_day_top) < NEXT_DAY_TOP:
-        used = {x["code"] for x in next_day_top}
-
-        extras = [
-            x for x in next_day
-            if x["code"] not in used
-            and x["next_day_signal"] != "éç±ï¼ä¸è¿½å¹"
-        ]
-
-        next_day_top += extras[
-            : NEXT_DAY_TOP - len(next_day_top)
-        ]
+    # V6.1: do not pad strict next-day entries just to reach 10 names.
+    # Keep a separate watchlist for the strongest non-overheated candidates.
+    used = {x["code"] for x in next_day_top}
+    next_day_watch = [
+        x for x in next_day
+        if x["code"] not in used
+        and x["next_day_signal"] != "éç±ï¼ä¸è¿½å¹"
+    ][:NEXT_DAY_TOP]
 
     ready_top = [
         x for x in ready
@@ -1288,7 +1295,7 @@ def main():
         "updated": now,
         "timezone": TIMEZONE,
         "strategy": (
-            "V6 Entry & Position Radar: "
+            "V6.1 Entry & Position Radar: "
             "Trend + Breakout + Volume + Relative Strength "
             "+ Sector Strength + Overheat Control"
         ),
@@ -1302,6 +1309,7 @@ def main():
         "signal_counts": signal_counts,
         "sector_ranking": sector_ranking,
         "next_day_top": next_day_top,
+        "next_day_watch": next_day_watch,
         "ready_top": ready_top,
         "mid_long_top": mid_long_top,
         "stocks": radar_top,
