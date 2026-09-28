@@ -74,7 +74,7 @@ def pct(a, b):
 
 
 # ============================================================
-# ä¸­æåç¨± / å¸å ´
+# 中文名稱 / 市場
 # ============================================================
 
 def get_stock_info(code):
@@ -273,7 +273,7 @@ def download_history(code, max_retries=MAX_DOWNLOAD_RETRIES):
                 raise RuntimeError("invalid last close")
 
             print(f"[OK] {ticker}: {len(df)} days, close={last_close:.2f}")
-            return ticker, "ä¸å¸", df, None
+            return ticker, "上市", df, None
 
         except Exception as e:
             print(f"[WARN] {ticker} attempt {attempt}/{max_retries} failed: {e}")
@@ -387,15 +387,15 @@ def calculate_trend_score(row):
 
     if ma20 > 0 and price > ma20:
         score += 6
-        reasons.append("è¡å¹ç«ä¸20æ¥åç·")
+        reasons.append("股價站上20日均線")
 
     if ma5 > 0 and ma10 > 0 and ma20 > 0 and ma5 > ma10 > ma20:
         score += 8
-        reasons.append("MA5 > MA10 > MA20ï¼å¤é ­æå")
+        reasons.append("MA5 > MA10 > MA20，多頭排列")
 
     if ma20 > 0 and ma60 > 0 and ma20 > ma60:
         score += 6
-        reasons.append("MA20ä½æ¼MA60ä¹ä¸")
+        reasons.append("MA20位於MA60之上")
 
     # V6.4 FIX: no unconditional +5 merely because MA20 exists.
     if (
@@ -403,7 +403,7 @@ def calculate_trend_score(row):
         and ma5 > ma10 > ma20
     ):
         score += 5
-        reasons.append("ç­ä¸­æè¶¨å¢çµæ§å®æ´åå¤")
+        reasons.append("短中期趨勢結構完整偏多")
 
     return min(score, 25), reasons
 
@@ -425,31 +425,31 @@ def calculate_breakout_score(row):
     if price >= high20:
         if extension <= 1.5:
             score = 25
-            reasons.append("åçªç ´20æ¥é«é»ï¼å»¶ä¼¸å¹åº¦ä»å°")
+            reasons.append("剛突破20日高點，延伸幅度仍小")
         elif extension <= 3:
             score = 22
-            reasons.append("å·²çªç ´20æ¥é«é»ï¼ä»å¨å¯æ§å»¶ä¼¸å")
+            reasons.append("已突破20日高點，仍在可控延伸區")
         elif extension <= 5:
             score = 16
-            reasons.append("å·²çªç ´20æ¥é«é»ï¼ä½ç­ç·å·²æå»¶ä¼¸")
+            reasons.append("已突破20日高點，但短線已有延伸")
         elif extension <= 8:
             score = 8
-            reasons.append("çªç ´å¾æ¼²å¹åå¤§ï¼è¿½å¹é¢¨éªæé«")
+            reasons.append("突破後漲幅偏大，追價風險提高")
         else:
             score = 0
-            reasons.append("çªç ´å¾å»¶ä¼¸éå¤§ï¼ä¸çµ¦çªç ´è¿½å¹å")
+            reasons.append("突破後延伸過大，不給突破追價分")
     elif 0 < distance <= 1:
         score = 23
-        reasons.append("è·20æ¥çªç ´å¹ä¸å°1%")
+        reasons.append("距20日突破價不到1%")
     elif 1 < distance <= 2:
         score = 21
-        reasons.append("éå¸¸æ¥è¿20æ¥çªç ´")
+        reasons.append("非常接近20日突破")
     elif 2 < distance <= 4:
         score = 17
-        reasons.append("æ¥è¿20æ¥çªç ´å")
+        reasons.append("接近20日突破區")
     elif 4 < distance <= 7:
         score = 10
-        reasons.append("è·çªç ´ä½ç½®å°å¯")
+        reasons.append("距突破位置尚可")
 
     return score, reasons, distance, extension
 
@@ -464,16 +464,16 @@ def calculate_volume_score(row):
 
     if ratio >= 2:
         score = 20
-        reasons.append("æäº¤éè¶é20æ¥åé2å")
+        reasons.append("成交量超過20日均量2倍")
     elif ratio >= 1.5:
         score = 18
-        reasons.append("æäº¤éæé¡¯æ¾å¤§")
+        reasons.append("成交量明顯放大")
     elif ratio >= 1.2:
         score = 15
-        reasons.append("éè½éå§æ´å¼µ")
+        reasons.append("量能開始擴張")
     elif ratio >= 1:
         score = 10
-        reasons.append("æäº¤éé«æ¼20æ¥åé")
+        reasons.append("成交量高於20日均量")
     elif ratio >= 0.75:
         score = 5
 
@@ -504,7 +504,7 @@ def calculate_rs_score(row, market):
         score += 3
 
     if rs20 > 0:
-        reasons.append(f"è¿20æ¥è¡¨ç¾åªæ¼å¤§ç¤ {rs20:.1f}%")
+        reasons.append(f"近20日表現優於大盤 {rs20:.1f}%")
 
     return min(score, 15), rs20, rs60, reasons
 
@@ -1032,17 +1032,17 @@ def get_next_day_failed_gates(stock):
     if stock["rsi"] >= 75:
         failed.append("RSI>=75")
     if stock["distance_ma20_pct"] >= 12:
-        failed.append("MA20ä¹é¢>=12%")
+        failed.append("MA20乖離>=12%")
     if stock["breakout_extension_pct"] > 8:
-        failed.append("çªç ´å»¶ä¼¸>8%")
+        failed.append("突破延伸>8%")
     if stock["next_day_score"] < 80:
         failed.append("Score<80")
     if stock["entry_quality_score"] < MIN_ENTRY_QUALITY:
         failed.append(f"EntryQ<{MIN_ENTRY_QUALITY}")
     if not (-3 <= stock["breakout_distance_pct"] <= 2):
-        failed.append("çªç ´ä½ç½®ä¸ä½³")
+        failed.append("突破位置不佳")
     if stock["volume_ratio"] < 1.2:
-        failed.append("éæ¯<1.2")
+        failed.append("量比<1.2")
     if stock["rs20"] <= 0:
         failed.append("RS20<=0")
     if not (
@@ -1051,7 +1051,7 @@ def get_next_day_failed_gates(stock):
         <= MAX_SHORT_RISK_PCT
     ):
         failed.append(
-            f"StopRiskä¸å¨{MIN_SHORT_RISK_PCT:.1f}-{MAX_SHORT_RISK_PCT:.1f}%"
+            f"StopRisk不在{MIN_SHORT_RISK_PCT:.1f}-{MAX_SHORT_RISK_PCT:.1f}%"
         )
 
     # RR intentionally remains a warning/quality factor, not a hard gate.
@@ -1063,106 +1063,106 @@ def classify_next_day(stock):
 
     hard_overheat = any(
         gate in failed
-        for gate in ["RSI>=75", "MA20ä¹é¢>=12%", "çªç ´å»¶ä¼¸>8%"]
+        for gate in ["RSI>=75", "MA20乖離>=12%", "突破延伸>8%"]
     )
     if hard_overheat:
-        return "éç±ï¼ä¸è¿½å¹"
+        return "過熱／不追價"
 
     if not failed:
-        return "ææ¥é²å ´åé¸"
+        return "明日進場候選"
 
     if (
         stock["next_day_score"] >= 68
         and stock["entry_quality_score"] >= 45
         and len(failed) <= 2
     ):
-        return "ç­å¾ææ¥ç¢ºèª"
+        return "等待明日確認"
 
-    return "æ«ä¸èæ®"
+    return "暫不考慮"
 
 def classify_ready(stock):
     if stock["rsi"] >= 75:
-        return "éç±"
+        return "過熱"
     if stock["ready_score"] >= 80:
-        return "æºåé²å ´"
+        return "準備進場"
     if stock["ready_score"] >= 65:
-        return "æçºè§å¯"
-    return "å°æªæç"
+        return "持續觀察"
+    return "尚未成熟"
 
 
 def classify_mid_long(stock):
     if stock["mid_long_score"] >= 80:
-        return "ä¸­é·æè¶¨å¢å¼·"
+        return "中長期趨勢強"
     if stock["mid_long_score"] >= 65:
-        return "ä¸­é·ææçºè¿½è¹¤"
-    return "ä¸­é·æä¸è¬"
+        return "中長期持續追蹤"
+    return "中長期一般"
 
 
 def build_reasons(stock):
     reasons, risks = [], []
 
     if stock["ma5"] > stock["ma10"] > stock["ma20"] > 0:
-        reasons.append("ç­æåç·åå¤é ­æå")
+        reasons.append("短期均線呈多頭排列")
 
     if stock["ma20"] > stock["ma60"] > 0:
-        reasons.append("ä¸­æè¶¨å¢ç¶­æåä¸")
+        reasons.append("中期趨勢維持向上")
 
     d = stock["breakout_distance_pct"]
 
     if -1.5 <= d <= 2:
-        reasons.append("ä½æ¼20æ¥çªç ´éè¿çè¼ä½³è§å¯å")
+        reasons.append("位於20日突破附近的較佳觀察區")
     elif 2 < d <= 5:
-        reasons.append("æ­£å¨æ¥è¿20æ¥å£åå")
+        reasons.append("正在接近20日壓力區")
 
     if stock["volume_ratio"] >= 1.5:
         reasons.append(
-            f"æäº¤éæ¾å¤§è³20æ¥åé {stock['volume_ratio']:.2f} å"
+            f"成交量放大至20日均量 {stock['volume_ratio']:.2f} 倍"
         )
     elif stock["volume_ratio"] >= 1.2:
-        reasons.append("æäº¤ééå§æ´å¼µ")
+        reasons.append("成交量開始擴張")
 
     if stock["rs20"] > 0:
-        reasons.append(f"è¿20æ¥ç¸å°å¤§ç¤å¼· {stock['rs20']:.1f}%")
+        reasons.append(f"近20日相對大盤強 {stock['rs20']:.1f}%")
 
     if stock["best_sector"]:
-        reasons.append(f"{stock['best_sector']}æç¾¤ç¸å°å¼·å¢")
+        reasons.append(f"{stock['best_sector']}族群相對強勢")
 
     if stock["rsi"] >= 75:
-        risks.append("RSIé²å¥éç±åï¼ä¸é©åè¿½å¹")
+        risks.append("RSI進入過熱區，不適合追價")
     elif stock["rsi"] >= 70:
-        risks.append("RSIåé«ï¼æ³¨æéæ¥è¿½å¹é¢¨éª")
+        risks.append("RSI偏高，注意隔日追價風險")
 
     if stock["distance_ma20_pct"] >= 12:
-        risks.append("è¡å¹èMA20ä¹é¢éå¤§")
+        risks.append("股價與MA20乖離過大")
 
     if stock["breakout_extension_pct"] > 5:
         risks.append(
-            f"çªç ´å¾å·²å»¶ä¼¸ {stock['breakout_extension_pct']:.1f}%"
+            f"突破後已延伸 {stock['breakout_extension_pct']:.1f}%"
         )
 
     if stock["volume_ratio"] < 0.8:
-        risks.append("ç®åéè½ä»ä¸è¶³")
+        risks.append("目前量能仍不足")
 
     if stock["breakout_distance_pct"] > 7:
-        risks.append("è·é¢çªç ´ä½ç½®ä»è¼é ")
+        risks.append("距離突破位置仍較遠")
 
     plan = stock["trade_plan"]
 
     if plan["short_risk_pct"] > MAX_SHORT_RISK_PCT:
         risks.append(
-            f"ç­ç·åæè·é¢ {plan['short_risk_pct']:.1f}% åå¤§"
+            f"短線停損距離 {plan['short_risk_pct']:.1f}% 偏大"
         )
 
     if plan["real_risk_reward"] < MIN_REAL_RR:
         risks.append(
-            f"ç®åé¢¨éªå ±é¬æ¯ {plan['real_risk_reward']:.2f} åä½"
+            f"目前風險報酬比 {plan['real_risk_reward']:.2f} 偏低"
         )
 
     if not reasons:
-        reasons.append("ç®åä»¥æè¡çµæ§è§å¯çºä¸»")
+        reasons.append("目前以技術結構觀察為主")
 
     if not risks:
-        risks.append("ä»éè§å¯éæ¥éç¤èæäº¤éç¢ºèª")
+        risks.append("仍需觀察隔日開盤與成交量確認")
 
     return reasons[:5], risks[:4]
 
@@ -1182,47 +1182,47 @@ def build_trade_strategy(stock):
         or stock["breakout_extension_pct"] > 8
         or price > chase
     ):
-        kind = "ä¸è¿½å¹"
+        kind = "不追價"
         action = (
-            f"ç¾å¹ {price:.2f} å·²åé¢çæ³é¢¨éªå ±é¬åï¼"
-            "ç­å¾åæªæéæ°å½¢æè²·é»ã"
+            f"現價 {price:.2f} 已偏離理想風險報酬區，"
+            "等待回檔或重新形成買點。"
         )
     elif p["short_risk_pct"] > MAX_SHORT_RISK_PCT:
-        kind = "é¢¨éªéé«"
+        kind = "風險過高"
         action = (
-            f"ç®åæè¡åæè·é¢ç´ {p['short_risk_pct']:.1f}%ï¼"
-            "è¶éç­ç·é¢¨éªä¸éï¼åä¸é²å ´ã"
+            f"目前技術停損距離約 {p['short_risk_pct']:.1f}%，"
+            "超過短線風險上限，先不進場。"
         )
     elif p["real_risk_reward"] < MIN_REAL_RR:
-        kind = "å ±é¬ç©ºéä¸è¶³"
+        kind = "報酬空間不足"
         action = (
-            f"ç®åé¢¨éªå ±é¬æ¯ç´ {p['real_risk_reward']:.2f}ï¼"
-            "ç­å¾æ´å¥½çå¹æ ¼ææ°ççªç ´çµæ§ã"
+            f"目前風險報酬比約 {p['real_risk_reward']:.2f}，"
+            "等待更好的價格或新的突破結構。"
         )
     elif lo <= price <= hi:
-        kind = "åæªè²·é²"
+        kind = "回檔買進"
         action = (
-            f"ç¾å¹ {price:.2f} ä½æ¼çæ³è²·å¥å "
-            f"{lo:.2f}â{hi:.2f}ï¼éå¹çµæ§æªè½å¼±æå¯åæ¹è©ä¼°ã"
+            f"現價 {price:.2f} 位於理想買入區 "
+            f"{lo:.2f}–{hi:.2f}；量價結構未轉弱時可分批評估。"
         )
     elif price < lo:
-        kind = "ç­å¾è½å¼·"
+        kind = "等待轉強"
         action = (
-            f"ç¾å¹ {price:.2f} ä½æ¼çæ³è²·å¥å "
-            f"{lo:.2f}â{hi:.2f}ï¼åç­å¾æ­¢è·è½å¼·ã"
+            f"現價 {price:.2f} 低於理想買入區 "
+            f"{lo:.2f}–{hi:.2f}；先等待止跌轉強。"
         )
     elif price < breakout:
-        kind = "ç­å¾åæª"
+        kind = "等待回檔"
         action = (
-            f"ç¾å¹ {price:.2f} é«æ¼çæ³è²·å¥å "
-            f"{lo:.2f}â{hi:.2f}ï¼ä¸è¿½å¹ï¼ç­å¾åæªï¼"
-            f"æçªç ´ {breakout:.2f} ä¸æ¾éå¾åè©ä¼°ã"
+            f"現價 {price:.2f} 高於理想買入區 "
+            f"{lo:.2f}–{hi:.2f}；不追價，等待回檔，"
+            f"或突破 {breakout:.2f} 且放量後再評估。"
         )
     else:
-        kind = "çªç ´è²·é²"
+        kind = "突破買進"
         action = (
-            f"å·²ç«ä¸çªç ´å¹ {breakout:.2f}ï¼è¥æäº¤éåæ­¥æ¾å¤§ä¸"
-            f"å¹æ ¼ä¸é«æ¼ {chase:.2f}ï¼å¯è¦çºçªç ´åé²å ´è§å¯ã"
+            f"已站上突破價 {breakout:.2f}；若成交量同步放大且"
+            f"價格不高於 {chase:.2f}，可視為突破型進場觀察。"
         )
 
     return {"type": kind, "action": action}
@@ -1620,7 +1620,7 @@ def main():
 
     next_day_top = [
         x for x in next_day
-        if x["next_day_signal"] == "ææ¥é²å ´åé¸"
+        if x["next_day_signal"] == "明日進場候選"
     ][:NEXT_DAY_TOP]
 
     # Do not pad strict next-day entries just to reach 10 names.
@@ -1629,17 +1629,17 @@ def main():
     next_day_watch = [
         x for x in next_day
         if x["code"] not in used
-        and x["next_day_signal"] == "ç­å¾ææ¥ç¢ºèª"
+        and x["next_day_signal"] == "等待明日確認"
     ][:NEXT_DAY_TOP]
 
     ready_top = [
         x for x in ready
-        if x["ready_signal"] in ["æºåé²å ´", "æçºè§å¯"]
+        if x["ready_signal"] in ["準備進場", "持續觀察"]
     ][:READY_TOP]
 
     mid_long_top = [
         x for x in mid_long
-        if x["mid_long_signal"] in ["ä¸­é·æè¶¨å¢å¼·", "ä¸­é·ææçºè¿½è¹¤"]
+        if x["mid_long_signal"] in ["中長期趨勢強", "中長期持續追蹤"]
     ][:MID_LONG_TOP]
 
     radar_top = radar[:RADAR_TOP]
