@@ -11,14 +11,14 @@ import pandas as pd
 import yfinance as yf
 import twstock
 
-from stock_pool import get_stock_codes, get_groups
+from stock_pool import get_groups
 
 
 # ============================================================
-# V6 CONFIG
+# V6.4 CONFIG
 # ============================================================
 
-VERSION = "V6.3"
+VERSION = "V6.4"
 TIMEZONE = "Asia/Taipei"
 
 MIN_PRICE = 10
@@ -31,7 +31,16 @@ MID_LONG_TOP = 20
 RADAR_TOP = 80
 
 MAX_DOWNLOAD_RETRIES = 3
-MIN_DOWNLOAD_SUCCESS_RATE = 0.50
+MIN_DOWNLOAD_SUCCESS_RATE = 0.85
+
+# Sector statistics: avoid tiny groups receiving extreme scores.
+MIN_SECTOR_MEMBERS = 5
+
+# Tomorrow-entry risk controls.
+MIN_SHORT_RISK_PCT = 1.5
+MAX_SHORT_RISK_PCT = 7.0
+MIN_REAL_RR = 1.35
+MIN_ENTRY_QUALITY = 60
 
 ETF_CODES = {
     "0050", "006208", "0052", "0053",
@@ -84,16 +93,10 @@ def get_stock_info(code):
 
 
 # ============================================================
-# V6.2 TWSE-ONLY UNIVERSE
+# TWSE-ONLY UNIVERSE
 # ============================================================
 
 def get_twse_codes():
-    """
-    V6.2.3: Build the universe from twstock.twse directly.
-    twstock.twse is the package's parsed TWSE-listed securities mapping.
-    Keep common stocks plus the project's listed ETF codes.
-    OTC/TPEX securities are excluded completely.
-    """
     twse_codes = getattr(twstock, "twse", {})
 
     if not twse_codes:
@@ -111,22 +114,8 @@ def get_twse_codes():
         if info is None:
             continue
 
-        # twstock.twse is already the official TWSE-side collection.
-        # Four numeric digits are treated as listed common-stock codes.
-        # Do not filter by StockCodeInfo.type: versions of twstock may
-        # represent this field differently and can accidentally remove
-        # the whole listed-stock universe.
-        is_common_stock = (
-            code.isdigit()
-            and len(code) == 4
-        )
-
-        # Retain the listed ETFs already defined by this project,
-        # but only when they are actually present in twstock.twse.
-        is_project_etf = (
-            code in ETF_CODES
-            and code in twse_codes
-        )
+        is_common_stock = code.isdigit() and len(code) == 4
+        is_project_etf = code in ETF_CODES and code in twse_codes
 
         if is_common_stock or is_project_etf:
             codes.append(code)
@@ -151,6 +140,7 @@ def get_twse_codes():
     print("[CHECK] Download suffix: .TW only")
 
     return codes
+
 
 # ============================================================
 # INDICATORS
@@ -198,8 +188,10 @@ def add_indicators(df):
     df["VOL5"] = df["Volume"].rolling(5).mean()
     df["VOL20"] = df["Volume"].rolling(20).mean()
 
+    # Previous highs/lows only: avoids using today's high/low as the breakout reference.
     df["HIGH20"] = df["High"].rolling(20).max().shift(1)
     df["HIGH60"] = df["High"].rolling(60).max().shift(1)
+    df["HIGH120"] = df["High"].rolling(120).max().shift(1)
 
     df["ATR14"] = calculate_atr(df)
 
@@ -251,7 +243,6 @@ def normalize_yfinance_df(df):
 # ============================================================
 
 def download_history(code, max_retries=MAX_DOWNLOAD_RETRIES):
-    """Download TWSE data only. V6.2 never queries .TWO."""
     ticker = f"{code}.TW"
 
     for attempt in range(1, max_retries + 1):
@@ -282,7 +273,7 @@ def download_history(code, max_retries=MAX_DOWNLOAD_RETRIES):
                 raise RuntimeError("invalid last close")
 
             print(f"[OK] {ticker}: {len(df)} days, close={last_close:.2f}")
-            return ticker, "ä¸å¸", df
+            return ticker, "ä¸å¸", df, None
 
         except Exception as e:
             print(f"[WARN] {ticker} attempt {attempt}/{max_retries} failed: {e}")
@@ -292,7 +283,7 @@ def download_history(code, max_retries=MAX_DOWNLOAD_RETRIES):
                 time.sleep(wait_seconds)
 
     print(f"[FAIL] {ticker}: all retries failed")
-    return None, None, None
+    return None, None, None, "download_failed"
 
 
 # ============================================================
@@ -331,10 +322,7 @@ def get_market_reference(max_retries=MAX_DOWNLOAD_RETRIES):
 
     for attempt in range(1, max_retries + 1):
         try:
-            print(
-                f"[MARKET] Download {ticker} "
-                f"attempt {attempt}/{max_retries}"
-            )
+            print(f"[MARKET] Download {ticker} attempt {attempt}/{max_retries}")
 
             df = yf.download(
                 ticker,
@@ -353,9 +341,7 @@ def get_market_reference(max_retries=MAX_DOWNLOAD_RETRIES):
                 raise RuntimeError("empty market dataframe")
 
             if len(df) < 60:
-                raise RuntimeError(
-                    f"insufficient market history: {len(df)}"
-                )
+                raise RuntimeError(f"insufficient market history: {len(df)}")
 
             close = df["Close"].dropna()
 
@@ -375,15 +361,10 @@ def get_market_reference(max_retries=MAX_DOWNLOAD_RETRIES):
             return result
 
         except Exception as e:
-            print(
-                f"[MARKET WARN] attempt "
-                f"{attempt}/{max_retries} failed: {e}"
-            )
+            print(f"[MARKET WARN] attempt {attempt}/{max_retries} failed: {e}")
 
             if attempt < max_retries:
-                wait_seconds = (
-                    (2 ** attempt) + random.uniform(0.5, 1.5)
-                )
+                wait_seconds = (2 ** attempt) + random.uniform(0.5, 1.5)
                 print(f"[MARKET WAIT] {wait_seconds:.1f}s")
                 time.sleep(wait_seconds)
 
@@ -392,57 +373,145 @@ def get_market_reference(max_retries=MAX_DOWNLOAD_RETRIES):
 
 
 # ============================================================
-# CORE V6 SCORES
+# CORE SCORES
 # ============================================================
 
 def calculate_trend_score(row):
     score, reasons = 0, []
+
     price = safe_float(row["Close"])
-    ma5, ma10, ma20, ma60 = [safe_float(row[x]) for x in ["MA5","MA10","MA20","MA60"]]
-    if price > ma20: score += 6; reasons.append("è¡å¹ç«ä¸20æ¥åç·")
-    if ma5 > ma10 > ma20: score += 8; reasons.append("MA5 > MA10 > MA20ï¼å¤é ­æå")
-    if ma20 > ma60: score += 6; reasons.append("MA20ä½æ¼MA60ä¹ä¸")
-    if ma20 > 0: score += 5; reasons.append("ä¸­ç­æè¶¨å¢ç¶­æåå¤")
+    ma5 = safe_float(row["MA5"])
+    ma10 = safe_float(row["MA10"])
+    ma20 = safe_float(row["MA20"])
+    ma60 = safe_float(row["MA60"])
+
+    if ma20 > 0 and price > ma20:
+        score += 6
+        reasons.append("è¡å¹ç«ä¸20æ¥åç·")
+
+    if ma5 > 0 and ma10 > 0 and ma20 > 0 and ma5 > ma10 > ma20:
+        score += 8
+        reasons.append("MA5 > MA10 > MA20ï¼å¤é ­æå")
+
+    if ma20 > 0 and ma60 > 0 and ma20 > ma60:
+        score += 6
+        reasons.append("MA20ä½æ¼MA60ä¹ä¸")
+
+    # V6.4 FIX: no unconditional +5 merely because MA20 exists.
+    if (
+        price > ma20 > ma60 > 0
+        and ma5 > ma10 > ma20
+    ):
+        score += 5
+        reasons.append("ç­ä¸­æè¶¨å¢çµæ§å®æ´åå¤")
+
     return min(score, 25), reasons
 
 
 def calculate_breakout_score(row):
-    price, high20 = safe_float(row["Close"]), safe_float(row["HIGH20"])
-    if not high20: return 0, [], 999
-    distance=(high20-price)/high20*100; score=0; reasons=[]
-    if price >= high20: score=25; reasons.append("å·²çªç ´20æ¥é«é»")
-    elif distance <= 1: score=23; reasons.append("è·20æ¥çªç ´å¹ä¸å°1%")
-    elif distance <= 2: score=21; reasons.append("éå¸¸æ¥è¿20æ¥çªç ´")
-    elif distance <= 4: score=17; reasons.append("æ¥è¿20æ¥çªç ´å")
-    elif distance <= 7: score=10; reasons.append("è·çªç ´ä½ç½®å°å¯")
-    return score, reasons, distance
+    price = safe_float(row["Close"])
+    high20 = safe_float(row["HIGH20"])
+
+    if high20 <= 0:
+        return 0, [], 999, 0
+
+    distance = (high20 - price) / high20 * 100
+    extension = max(0.0, (price / high20 - 1.0) * 100)
+
+    score = 0
+    reasons = []
+
+    # V6.4 FIX: a stock far above the breakout level no longer gets 25/25.
+    if price >= high20:
+        if extension <= 1.5:
+            score = 25
+            reasons.append("åçªç ´20æ¥é«é»ï¼å»¶ä¼¸å¹åº¦ä»å°")
+        elif extension <= 3:
+            score = 22
+            reasons.append("å·²çªç ´20æ¥é«é»ï¼ä»å¨å¯æ§å»¶ä¼¸å")
+        elif extension <= 5:
+            score = 16
+            reasons.append("å·²çªç ´20æ¥é«é»ï¼ä½ç­ç·å·²æå»¶ä¼¸")
+        elif extension <= 8:
+            score = 8
+            reasons.append("çªç ´å¾æ¼²å¹åå¤§ï¼è¿½å¹é¢¨éªæé«")
+        else:
+            score = 0
+            reasons.append("çªç ´å¾å»¶ä¼¸éå¤§ï¼ä¸çµ¦çªç ´è¿½å¹å")
+    elif 0 < distance <= 1:
+        score = 23
+        reasons.append("è·20æ¥çªç ´å¹ä¸å°1%")
+    elif 1 < distance <= 2:
+        score = 21
+        reasons.append("éå¸¸æ¥è¿20æ¥çªç ´")
+    elif 2 < distance <= 4:
+        score = 17
+        reasons.append("æ¥è¿20æ¥çªç ´å")
+    elif 4 < distance <= 7:
+        score = 10
+        reasons.append("è·çªç ´ä½ç½®å°å¯")
+
+    return score, reasons, distance, extension
 
 
 def calculate_volume_score(row):
-    volume, vol20 = safe_float(row["Volume"]), safe_float(row["VOL20"])
-    ratio=volume/vol20 if vol20 else 0; score=0; reasons=[]
-    if ratio >= 2: score=20; reasons.append("æäº¤éè¶é20æ¥åé2å")
-    elif ratio >= 1.5: score=18; reasons.append("æäº¤éæé¡¯æ¾å¤§")
-    elif ratio >= 1.2: score=15; reasons.append("éè½éå§æ´å¼µ")
-    elif ratio >= 1: score=10; reasons.append("æäº¤éé«æ¼20æ¥åé")
-    elif ratio >= .75: score=5
+    volume = safe_float(row["Volume"])
+    vol20 = safe_float(row["VOL20"])
+
+    ratio = volume / vol20 if vol20 else 0
+    score = 0
+    reasons = []
+
+    if ratio >= 2:
+        score = 20
+        reasons.append("æäº¤éè¶é20æ¥åé2å")
+    elif ratio >= 1.5:
+        score = 18
+        reasons.append("æäº¤éæé¡¯æ¾å¤§")
+    elif ratio >= 1.2:
+        score = 15
+        reasons.append("éè½éå§æ´å¼µ")
+    elif ratio >= 1:
+        score = 10
+        reasons.append("æäº¤éé«æ¼20æ¥åé")
+    elif ratio >= 0.75:
+        score = 5
+
     return score, ratio, reasons
 
 
 def calculate_rs_score(row, market):
-    rs20=safe_float(row["RET20"])-safe_float(market.get("ret20"))
-    rs60=safe_float(row["RET60"])-safe_float(market.get("ret60"))
-    score=0; reasons=[]
-    if rs20>=10: score+=9
-    elif rs20>=5: score+=7
-    elif rs20>=0: score+=5
-    elif rs20>=-3: score+=2
-    if rs60>=15: score+=6
-    elif rs60>=8: score+=5
-    elif rs60>=0: score+=3
-    if rs20>0: reasons.append(f"è¿20æ¥è¡¨ç¾åªæ¼å¤§ç¤ {rs20:.1f}%")
-    return min(score,15), rs20, rs60, reasons
+    rs20 = safe_float(row["RET20"]) - safe_float(market.get("ret20"))
+    rs60 = safe_float(row["RET60"]) - safe_float(market.get("ret60"))
 
+    score = 0
+    reasons = []
+
+    if rs20 >= 10:
+        score += 9
+    elif rs20 >= 5:
+        score += 7
+    elif rs20 >= 0:
+        score += 5
+    elif rs20 >= -3:
+        score += 2
+
+    if rs60 >= 15:
+        score += 6
+    elif rs60 >= 8:
+        score += 5
+    elif rs60 >= 0:
+        score += 3
+
+    if rs20 > 0:
+        reasons.append(f"è¿20æ¥è¡¨ç¾åªæ¼å¤§ç¤ {rs20:.1f}%")
+
+    return min(score, 15), rs20, rs60, reasons
+
+
+# ============================================================
+# SECTOR STRENGTH
+# ============================================================
 
 def build_sector_strength(stocks):
     groups = {}
@@ -451,7 +520,7 @@ def build_sector_strength(stocks):
         for group in stock["groups"]:
             groups.setdefault(group, []).append(stock)
 
-    results = {}
+    raw_results = []
 
     for group, members in groups.items():
         if not members:
@@ -459,14 +528,14 @@ def build_sector_strength(stocks):
 
         rs_values = [x["rs20"] for x in members]
         trend_values = [
-            1 if x["price"] > x["ma20"] else 0
+            1 if x["price"] > x["ma20"] > 0 else 0
             for x in members
         ]
         ret20_values = [x["ret20"] for x in members]
 
-        avg_rs = np.mean(rs_values)
-        avg_ret20 = np.mean(ret20_values)
-        trend_ratio = np.mean(trend_values)
+        avg_rs = safe_float(np.mean(rs_values))
+        avg_ret20 = safe_float(np.mean(ret20_values))
+        trend_ratio = safe_float(np.mean(trend_values))
 
         raw = (
             avg_rs * 0.45
@@ -474,18 +543,27 @@ def build_sector_strength(stocks):
             + trend_ratio * 20 * 0.30
         )
 
-        results[group] = {
-            "group": group,
-            "raw_score": safe_float(raw),
-            "avg_rs20": r2(avg_rs),
-            "avg_ret20": r2(avg_ret20),
-            "trend_ratio": r2(trend_ratio * 100),
-            "count": len(members),
-        }
+        # V6.4 FIX: shrink tiny groups toward neutral instead of allowing
+        # one or two stocks to create a "top sector".
+        reliability = min(1.0, len(members) / MIN_SECTOR_MEMBERS)
+        adjusted_raw = raw * reliability
+
+        raw_results.append(
+            {
+                "group": group,
+                "raw_score": safe_float(raw),
+                "adjusted_raw_score": safe_float(adjusted_raw),
+                "avg_rs20": r2(avg_rs),
+                "avg_ret20": r2(avg_ret20),
+                "trend_ratio": r2(trend_ratio * 100),
+                "count": len(members),
+                "reliability": r2(reliability),
+            }
+        )
 
     ordered = sorted(
-        results.values(),
-        key=lambda x: x["raw_score"],
+        raw_results,
+        key=lambda x: x["adjusted_raw_score"],
         reverse=True,
     )
 
@@ -493,36 +571,100 @@ def build_sector_strength(stocks):
         item["rank"] = rank
 
         if len(ordered) <= 1:
-            item["score"] = 100
+            percentile_score = 100
         else:
             percentile = 1 - ((rank - 1) / (len(ordered) - 1))
-            item["score"] = round(percentile * 100)
+            percentile_score = round(percentile * 100)
+
+        # Tiny sectors cannot receive a full-strength sector score.
+        item["score"] = round(percentile_score * item["reliability"])
 
     return {item["group"]: item for item in ordered}
 
 
-def apply_sector_score(stock, sector_map):
-    best = None
+def calculate_sector_detail_ex_self(stock, group, members):
+    """
+    V6.4: calculate sector contribution excluding the current stock.
+    This prevents a strong stock from making its own sector strong and
+    then receiving that strength back as an extra score.
+    """
+    peers = [x for x in members if x["code"] != stock["code"]]
+
+    if not peers:
+        return None
+
+    rs_values = [x["rs20"] for x in peers]
+    ret20_values = [x["ret20"] for x in peers]
+    trend_values = [
+        1 if x["price"] > x["ma20"] > 0 else 0
+        for x in peers
+    ]
+
+    avg_rs = safe_float(np.mean(rs_values))
+    avg_ret20 = safe_float(np.mean(ret20_values))
+    trend_ratio = safe_float(np.mean(trend_values))
+
+    raw = (
+        avg_rs * 0.45
+        + avg_ret20 * 0.25
+        + trend_ratio * 20 * 0.30
+    )
+
+    reliability = min(1.0, len(peers) / MIN_SECTOR_MEMBERS)
+
+    return {
+        "group": group,
+        "raw_score": raw,
+        "adjusted_raw_score": raw * reliability,
+        "peer_count": len(peers),
+        "reliability": reliability,
+    }
+
+
+def apply_sector_score(stock, sector_map, group_members):
+    candidates = []
 
     for group in stock["groups"]:
-        data = sector_map.get(group)
+        published = sector_map.get(group)
+        members = group_members.get(group, [])
 
-        if not data:
+        if not published or not members:
             continue
 
-        if best is None or data["score"] > best["score"]:
-            best = data
+        ex_self = calculate_sector_detail_ex_self(stock, group, members)
 
-    if best is None:
+        if not ex_self:
+            continue
+
+        # Use the published percentile as a base, but attenuate it with
+        # ex-self reliability. This preserves V6 output scale (0..15)
+        # while preventing self-contribution and tiny-group inflation.
+        effective_score = published["score"] * ex_self["reliability"]
+
+        candidates.append(
+            (effective_score, group, published, ex_self)
+        )
+
+    if not candidates:
         return 0, "", None
 
-    sector_component = round(best["score"] / 100 * 15)
+    candidates.sort(key=lambda x: x[0], reverse=True)
+    effective_score, group, published, ex_self = candidates[0]
 
-    return sector_component, best["group"], best
+    sector_component = round(effective_score / 100 * 15)
+
+    detail = dict(published)
+    detail["ex_self"] = {
+        "peer_count": ex_self["peer_count"],
+        "reliability": r2(ex_self["reliability"]),
+        "adjusted_raw_score": r2(ex_self["adjusted_raw_score"]),
+    }
+
+    return sector_component, group, detail
 
 
 # ============================================================
-# ENTRY / STOP LOSS ENGINE
+# ENTRY / STOP LOSS / REAL RR ENGINE
 # ============================================================
 
 def calculate_trade_plan(stock):
@@ -532,10 +674,11 @@ def calculate_trade_plan(stock):
     ma60 = stock["ma60"]
 
     high20 = stock["high20"]
+    high60 = stock["high60"]
+    high120 = stock["high120"]
     atr = stock["atr14"]
 
     low10 = stock["low10"]
-    low20 = stock["low20"]
     low60 = stock["low60"]
 
     supports = [
@@ -590,8 +733,9 @@ def calculate_trade_plan(stock):
     else:
         short_stop = entry_low * 0.94
 
-    max_stop = entry_low * 0.985
-    short_stop = min(short_stop, max_stop)
+    # Ensure stop is not unrealistically close to the entry zone.
+    closest_allowed_stop = entry_low * (1 - MIN_SHORT_RISK_PCT / 100)
+    short_stop = min(short_stop, closest_allowed_stop)
 
     long_candidates = []
 
@@ -616,24 +760,43 @@ def calculate_trade_plan(stock):
 
     risk = entry_high - short_stop
 
-    if risk > 0:
-        target1 = entry_high + risk * 2
-        target2 = entry_high + risk * 3
-        rr = 2.0
-    else:
-        target1 = price * 1.08
-        target2 = price * 1.12
-        rr = 0
-
     short_risk_pct = (
-        (entry_high - short_stop) / entry_high * 100
-        if entry_high else 0
+        risk / entry_high * 100
+        if entry_high > 0 and risk > 0 else 0
     )
 
     long_risk_pct = (
         (price - long_stop) / price * 100
         if price else 0
     )
+
+    # Find a real technical resistance above the proposed entry.
+    resistances = sorted({
+        r2(x)
+        for x in [high60, high120]
+        if x > entry_high * 1.005
+    })
+
+    resistance = resistances[0] if resistances else 0.0
+
+    if risk > 0 and resistance > entry_high:
+        real_reward = resistance - entry_high
+        real_rr = real_reward / risk
+        target1 = resistance
+        target2 = max(resistance, entry_high + risk * 2)
+        target_source = "technical_resistance"
+    elif risk > 0:
+        # No visible historical resistance above entry. Keep projected
+        # targets for display, but mark RR as estimated rather than "real".
+        target1 = entry_high + risk * 2
+        target2 = entry_high + risk * 3
+        real_rr = 2.0
+        target_source = "projected_2R"
+    else:
+        target1 = price * 1.08
+        target2 = price * 1.12
+        real_rr = 0.0
+        target_source = "fallback"
 
     return {
         "entry_low": r2(entry_low),
@@ -646,12 +809,16 @@ def calculate_trade_plan(stock):
         "long_risk_pct": r2(long_risk_pct),
         "target1": r2(target1),
         "target2": r2(target2),
-        "risk_reward": r2(rr),
+        # Keep old field for index.html compatibility.
+        "risk_reward": r2(real_rr),
+        "real_risk_reward": r2(real_rr),
+        "target_source": target_source,
+        "resistance_price": r2(resistance),
     }
 
 
 # ============================================================
-# NEXT DAY SCORE
+# NEXT DAY / ENTRY QUALITY SCORE
 # ============================================================
 
 def calculate_next_day_score(stock):
@@ -681,6 +848,89 @@ def calculate_next_day_score(stock):
     elif distance_ma20 >= 9:
         score -= 5
 
+    extension = stock["breakout_extension_pct"]
+
+    if extension > 8:
+        score -= 15
+    elif extension > 5:
+        score -= 8
+    elif extension > 3:
+        score -= 3
+
+    return max(0, min(round(score), 100))
+
+
+def calculate_entry_quality_score(stock):
+    """
+    Separate "strong stock" from "good next-session entry".
+    """
+    score = 0
+
+    d = stock["breakout_distance_pct"]
+    extension = stock["breakout_extension_pct"]
+    volume_ratio = stock["volume_ratio"]
+    rsi = stock["rsi"]
+    ma20_dist = stock["distance_ma20_pct"]
+    plan = stock["trade_plan"]
+    risk_pct = plan["short_risk_pct"]
+    rr = plan["real_risk_reward"]
+
+    # Location vs breakout: 30
+    if 0 <= d <= 1.5:
+        score += 30
+    elif -1.5 <= d < 0:
+        score += 30
+    elif 1.5 < d <= 3:
+        score += 22
+    elif -3 <= d < -1.5:
+        score += 22
+    elif 3 < d <= 5:
+        score += 12
+
+    # Volume confirmation: 20
+    if 1.2 <= volume_ratio <= 2.5:
+        score += 20
+    elif 1.0 <= volume_ratio < 1.2:
+        score += 12
+    elif volume_ratio > 2.5:
+        score += 12
+    elif 0.8 <= volume_ratio < 1.0:
+        score += 6
+
+    # RSI quality: 15
+    if 50 <= rsi < 70:
+        score += 15
+    elif 45 <= rsi < 72:
+        score += 10
+    elif rsi < 75:
+        score += 5
+
+    # MA20 extension quality: 15
+    if 0 <= ma20_dist <= 6:
+        score += 15
+    elif 6 < ma20_dist <= 9:
+        score += 8
+    elif -3 <= ma20_dist < 0:
+        score += 5
+
+    # Stop risk: 10
+    if MIN_SHORT_RISK_PCT <= risk_pct <= 5:
+        score += 10
+    elif 5 < risk_pct <= MAX_SHORT_RISK_PCT:
+        score += 5
+
+    # Reward/risk: 10
+    if rr >= 2:
+        score += 10
+    elif rr >= MIN_REAL_RR:
+        score += 6
+
+    # Explicit penalty for excessive breakout extension.
+    if extension > 8:
+        score -= 20
+    elif extension > 5:
+        score -= 10
+
     return max(0, min(round(score), 100))
 
 
@@ -691,21 +941,26 @@ def calculate_next_day_score(stock):
 def calculate_ready_score(stock):
     score = 0
 
-    if stock["price"] > stock["ma20"]:
+    if stock["price"] > stock["ma20"] > 0:
         score += 20
 
-    if stock["ma5"] > stock["ma10"] > stock["ma20"]:
+    if stock["ma5"] > stock["ma10"] > stock["ma20"] > 0:
         score += 20
 
     d = stock["breakout_distance_pct"]
 
+    # V6.4 FIX: negative d (already broken out) must not fall into <=2.
     if 0 < d <= 1:
         score += 25
-    elif d <= 2:
+    elif 1 < d <= 2:
         score += 22
-    elif d <= 4:
+    elif 2 < d <= 4:
         score += 18
-    elif d <= 7:
+    elif 4 < d <= 7:
+        score += 10
+    elif -1.5 <= d <= 0:
+        score += 18
+    elif -3 <= d < -1.5:
         score += 10
 
     if 0.7 <= stock["volume_ratio"] <= 1.5:
@@ -720,6 +975,9 @@ def calculate_ready_score(stock):
     if stock["rsi"] >= 75:
         score -= 15
 
+    if stock["breakout_extension_pct"] > 5:
+        score -= 15
+
     return max(0, min(round(score), 100))
 
 
@@ -731,10 +989,10 @@ def calculate_mid_long_score(stock):
     score = 0
     price = stock["price"]
 
-    if price > stock["ma20"]:
+    if price > stock["ma20"] > 0:
         score += 10
 
-    if stock["ma20"] > stock["ma60"]:
+    if stock["ma20"] > stock["ma60"] > 0:
         score += 20
 
     if stock["ma60"] > stock["ma120"] > 0:
@@ -760,78 +1018,223 @@ def calculate_mid_long_score(stock):
 # ============================================================
 
 def classify_next_day(stock):
-    score=stock["next_day_score"]
-    if stock["rsi"]>=75 or stock["distance_ma20_pct"]>=12: return "éç±ï¼ä¸è¿½å¹"
-    if score>=80 and stock["breakout_distance_pct"]<=2 and stock["volume_ratio"]>=1.2: return "ææ¥é²å ´åé¸"
-    if score>=68: return "ç­å¾ææ¥ç¢ºèª"
+    score = stock["next_day_score"]
+    plan = stock["trade_plan"]
+
+    hard_overheat = (
+        stock["rsi"] >= 75
+        or stock["distance_ma20_pct"] >= 12
+        or stock["breakout_extension_pct"] > 8
+    )
+
+    if hard_overheat:
+        return "éç±ï¼ä¸è¿½å¹"
+
+    risk_ok = (
+        MIN_SHORT_RISK_PCT
+        <= plan["short_risk_pct"]
+        <= MAX_SHORT_RISK_PCT
+    )
+
+    rr_ok = plan["real_risk_reward"] >= MIN_REAL_RR
+
+    location_ok = (
+        -3 <= stock["breakout_distance_pct"] <= 2
+    )
+
+    if (
+        score >= 80
+        and stock["entry_quality_score"] >= MIN_ENTRY_QUALITY
+        and location_ok
+        and stock["volume_ratio"] >= 1.2
+        and stock["rs20"] > 0
+        and risk_ok
+        and rr_ok
+    ):
+        return "ææ¥é²å ´åé¸"
+
+    if score >= 68 and stock["entry_quality_score"] >= 45:
+        return "ç­å¾ææ¥ç¢ºèª"
+
     return "æ«ä¸èæ®"
 
 
 def classify_ready(stock):
-    if stock["rsi"]>=75: return "éç±"
-    if stock["ready_score"]>=80: return "æºåé²å ´"
-    if stock["ready_score"]>=65: return "æçºè§å¯"
+    if stock["rsi"] >= 75:
+        return "éç±"
+    if stock["ready_score"] >= 80:
+        return "æºåé²å ´"
+    if stock["ready_score"] >= 65:
+        return "æçºè§å¯"
     return "å°æªæç"
 
 
 def classify_mid_long(stock):
-    if stock["mid_long_score"]>=80: return "ä¸­é·æè¶¨å¢å¼·"
-    if stock["mid_long_score"]>=65: return "ä¸­é·ææçºè¿½è¹¤"
+    if stock["mid_long_score"] >= 80:
+        return "ä¸­é·æè¶¨å¢å¼·"
+    if stock["mid_long_score"] >= 65:
+        return "ä¸­é·ææçºè¿½è¹¤"
     return "ä¸­é·æä¸è¬"
 
 
 def build_reasons(stock):
-    reasons,risks=[],[]
-    if stock["ma5"]>stock["ma10"]>stock["ma20"]: reasons.append("ç­æåç·åå¤é ­æå")
-    if stock["ma20"]>stock["ma60"]: reasons.append("ä¸­æè¶¨å¢ç¶­æåä¸")
-    if stock["breakout_distance_pct"]<=2: reasons.append("å·²éå¸¸æ¥è¿20æ¥çªç ´ä½ç½®")
-    elif stock["breakout_distance_pct"]<=5: reasons.append("æ­£å¨æ¥è¿20æ¥å£åå")
-    if stock["volume_ratio"]>=1.5: reasons.append(f"æäº¤éæ¾å¤§è³20æ¥åé {stock['volume_ratio']:.2f} å")
-    elif stock["volume_ratio"]>=1.2: reasons.append("æäº¤ééå§æ´å¼µ")
-    if stock["rs20"]>0: reasons.append(f"è¿20æ¥ç¸å°å¤§ç¤å¼· {stock['rs20']:.1f}%")
-    if stock["best_sector"]: reasons.append(f"{stock['best_sector']}æç¾¤ç¸å°å¼·å¢")
-    if stock["rsi"]>=75: risks.append("RSIé²å¥éç±åï¼ä¸é©åè¿½å¹")
-    elif stock["rsi"]>=70: risks.append("RSIåé«ï¼æ³¨æéæ¥è¿½å¹é¢¨éª")
-    if stock["distance_ma20_pct"]>=12: risks.append("è¡å¹èMA20ä¹é¢éå¤§")
-    if stock["volume_ratio"]<.8: risks.append("ç®åéè½ä»ä¸è¶³")
-    if stock["breakout_distance_pct"]>7: risks.append("è·é¢çªç ´ä½ç½®ä»è¼é ")
-    if not reasons: reasons.append("ç®åä»¥æè¡çµæ§è§å¯çºä¸»")
-    if not risks: risks.append("ä»éè§å¯éæ¥éç¤èæäº¤éç¢ºèª")
-    return reasons[:5],risks[:4]
+    reasons, risks = [], []
+
+    if stock["ma5"] > stock["ma10"] > stock["ma20"] > 0:
+        reasons.append("ç­æåç·åå¤é ­æå")
+
+    if stock["ma20"] > stock["ma60"] > 0:
+        reasons.append("ä¸­æè¶¨å¢ç¶­æåä¸")
+
+    d = stock["breakout_distance_pct"]
+
+    if -1.5 <= d <= 2:
+        reasons.append("ä½æ¼20æ¥çªç ´éè¿çè¼ä½³è§å¯å")
+    elif 2 < d <= 5:
+        reasons.append("æ­£å¨æ¥è¿20æ¥å£åå")
+
+    if stock["volume_ratio"] >= 1.5:
+        reasons.append(
+            f"æäº¤éæ¾å¤§è³20æ¥åé {stock['volume_ratio']:.2f} å"
+        )
+    elif stock["volume_ratio"] >= 1.2:
+        reasons.append("æäº¤ééå§æ´å¼µ")
+
+    if stock["rs20"] > 0:
+        reasons.append(f"è¿20æ¥ç¸å°å¤§ç¤å¼· {stock['rs20']:.1f}%")
+
+    if stock["best_sector"]:
+        reasons.append(f"{stock['best_sector']}æç¾¤ç¸å°å¼·å¢")
+
+    if stock["rsi"] >= 75:
+        risks.append("RSIé²å¥éç±åï¼ä¸é©åè¿½å¹")
+    elif stock["rsi"] >= 70:
+        risks.append("RSIåé«ï¼æ³¨æéæ¥è¿½å¹é¢¨éª")
+
+    if stock["distance_ma20_pct"] >= 12:
+        risks.append("è¡å¹èMA20ä¹é¢éå¤§")
+
+    if stock["breakout_extension_pct"] > 5:
+        risks.append(
+            f"çªç ´å¾å·²å»¶ä¼¸ {stock['breakout_extension_pct']:.1f}%"
+        )
+
+    if stock["volume_ratio"] < 0.8:
+        risks.append("ç®åéè½ä»ä¸è¶³")
+
+    if stock["breakout_distance_pct"] > 7:
+        risks.append("è·é¢çªç ´ä½ç½®ä»è¼é ")
+
+    plan = stock["trade_plan"]
+
+    if plan["short_risk_pct"] > MAX_SHORT_RISK_PCT:
+        risks.append(
+            f"ç­ç·åæè·é¢ {plan['short_risk_pct']:.1f}% åå¤§"
+        )
+
+    if plan["real_risk_reward"] < MIN_REAL_RR:
+        risks.append(
+            f"ç®åé¢¨éªå ±é¬æ¯ {plan['real_risk_reward']:.2f} åä½"
+        )
+
+    if not reasons:
+        reasons.append("ç®åä»¥æè¡çµæ§è§å¯çºä¸»")
+
+    if not risks:
+        risks.append("ä»éè§å¯éæ¥éç¤èæäº¤éç¢ºèª")
+
+    return reasons[:5], risks[:4]
 
 
 def build_trade_strategy(stock):
-    p=stock["trade_plan"]; price=stock["price"]
-    lo,hi=p["entry_low"],p["entry_high"]; breakout=p["breakout_price"]; chase=p["chase_limit"]
-    if stock["rsi"]>=75 or stock["distance_ma20_pct"]>=12 or price>chase:
-        kind="ä¸è¿½å¹"; action=f"ç¾å¹ {price:.2f} å·²åé¢çæ³é¢¨éªå ±é¬åï¼ç­å¾åæªæéæ°å½¢æè²·é»ã"
-    elif lo<=price<=hi:
-        kind="åæªè²·é²"; action=f"ç¾å¹ {price:.2f} ä½æ¼çæ³è²·å¥å {lo:.2f}â{hi:.2f}ï¼éå¹çµæ§æªè½å¼±æå¯åæ¹è©ä¼°ã"
-    elif price<lo:
-        kind="ç­å¾è½å¼·"; action=f"ç¾å¹ {price:.2f} ä½æ¼çæ³è²·å¥å {lo:.2f}â{hi:.2f}ï¼åç­å¾æ­¢è·è½å¼·ã"
-    elif price<breakout:
-        kind="ç­å¾åæª"; action=f"ç¾å¹ {price:.2f} é«æ¼çæ³è²·å¥å {lo:.2f}â{hi:.2f}ï¼ä¸è¿½å¹ï¼ç­å¾åæªï¼æçªç ´ {breakout:.2f} ä¸æ¾éå¾åè©ä¼°ã"
+    p = stock["trade_plan"]
+    price = stock["price"]
+
+    lo = p["entry_low"]
+    hi = p["entry_high"]
+    breakout = p["breakout_price"]
+    chase = p["chase_limit"]
+
+    if (
+        stock["rsi"] >= 75
+        or stock["distance_ma20_pct"] >= 12
+        or stock["breakout_extension_pct"] > 8
+        or price > chase
+    ):
+        kind = "ä¸è¿½å¹"
+        action = (
+            f"ç¾å¹ {price:.2f} å·²åé¢çæ³é¢¨éªå ±é¬åï¼"
+            "ç­å¾åæªæéæ°å½¢æè²·é»ã"
+        )
+    elif p["short_risk_pct"] > MAX_SHORT_RISK_PCT:
+        kind = "é¢¨éªéé«"
+        action = (
+            f"ç®åæè¡åæè·é¢ç´ {p['short_risk_pct']:.1f}%ï¼"
+            "è¶éç­ç·é¢¨éªä¸éï¼åä¸é²å ´ã"
+        )
+    elif p["real_risk_reward"] < MIN_REAL_RR:
+        kind = "å ±é¬ç©ºéä¸è¶³"
+        action = (
+            f"ç®åé¢¨éªå ±é¬æ¯ç´ {p['real_risk_reward']:.2f}ï¼"
+            "ç­å¾æ´å¥½çå¹æ ¼ææ°ççªç ´çµæ§ã"
+        )
+    elif lo <= price <= hi:
+        kind = "åæªè²·é²"
+        action = (
+            f"ç¾å¹ {price:.2f} ä½æ¼çæ³è²·å¥å "
+            f"{lo:.2f}â{hi:.2f}ï¼éå¹çµæ§æªè½å¼±æå¯åæ¹è©ä¼°ã"
+        )
+    elif price < lo:
+        kind = "ç­å¾è½å¼·"
+        action = (
+            f"ç¾å¹ {price:.2f} ä½æ¼çæ³è²·å¥å "
+            f"{lo:.2f}â{hi:.2f}ï¼åç­å¾æ­¢è·è½å¼·ã"
+        )
+    elif price < breakout:
+        kind = "ç­å¾åæª"
+        action = (
+            f"ç¾å¹ {price:.2f} é«æ¼çæ³è²·å¥å "
+            f"{lo:.2f}â{hi:.2f}ï¼ä¸è¿½å¹ï¼ç­å¾åæªï¼"
+            f"æçªç ´ {breakout:.2f} ä¸æ¾éå¾åè©ä¼°ã"
+        )
     else:
-        kind="çªç ´è²·é²"; action=f"å·²ç«ä¸çªç ´å¹ {breakout:.2f}ï¼è¥æäº¤éåæ­¥æ¾å¤§ä¸å¹æ ¼ä¸é«æ¼ {chase:.2f}ï¼å¯è¦çºçªç ´åé²å ´ã"
-    return {"type":kind,"action":action}
+        kind = "çªç ´è²·é²"
+        action = (
+            f"å·²ç«ä¸çªç ´å¹ {breakout:.2f}ï¼è¥æäº¤éåæ­¥æ¾å¤§ä¸"
+            f"å¹æ ¼ä¸é«æ¼ {chase:.2f}ï¼å¯è¦çºçªç ´åé²å ´è§å¯ã"
+        )
+
+    return {"type": kind, "action": action}
 
 
 def build_next_day_action(stock):
     return stock["trade_strategy"]["action"]
 
 
+# ============================================================
+# SCAN
+# ============================================================
+
 def scan_one(code, market_ref):
-    ticker, detected_market, df = download_history(code)
+    ticker, detected_market, df, download_error = download_history(code)
 
     if df is None:
-        return None
+        return None, {
+            "code": code,
+            "download_status": "failed",
+            "filter_reason": download_error or "download_failed",
+        }
 
     df = add_indicators(df)
     row = df.iloc[-1]
     price = safe_float(row["Close"])
 
     if price <= 0:
-        return None
+        return None, {
+            "code": code,
+            "download_status": "ok",
+            "filter_reason": "invalid_price",
+        }
 
     is_etf = code in ETF_CODES
 
@@ -839,16 +1242,24 @@ def scan_one(code, market_ref):
         (df["Close"] * df["Volume"]).tail(20).mean()
     )
 
-    if not is_etf:
-        if price < MIN_PRICE:
-            return None
+    if not is_etf and price < MIN_PRICE:
+        return None, {
+            "code": code,
+            "download_status": "ok",
+            "filter_reason": "price_below_min",
+        }
 
-        if avg_value < MIN_AVG_DAILY_VALUE:
-            return None
+    if not is_etf and avg_value < MIN_AVG_DAILY_VALUE:
+        return None, {
+            "code": code,
+            "download_status": "ok",
+            "filter_reason": "liquidity_below_min",
+        }
 
     info = get_stock_info(code)
     market = info["market"] or detected_market
     groups = get_groups(code)
+
     if not groups and info.get("industry"):
         groups = [info["industry"]]
 
@@ -863,6 +1274,8 @@ def scan_one(code, market_ref):
     atr = safe_float(row["ATR14"])
 
     high20 = safe_float(row["HIGH20"])
+    high60 = safe_float(row["HIGH60"])
+    high120 = safe_float(row["HIGH120"])
 
     low10 = safe_float(row["LOW10"])
     low20 = safe_float(row["LOW20"])
@@ -873,17 +1286,16 @@ def scan_one(code, market_ref):
 
     trend_score, trend_reasons = calculate_trend_score(row)
 
-    breakout_score, breakout_reasons, breakout_distance = (
-        calculate_breakout_score(row)
-    )
+    (
+        breakout_score,
+        breakout_reasons,
+        breakout_distance,
+        breakout_extension,
+    ) = calculate_breakout_score(row)
 
-    volume_score, volume_ratio, volume_reasons = (
-        calculate_volume_score(row)
-    )
+    volume_score, volume_ratio, volume_reasons = calculate_volume_score(row)
 
-    rs_score, rs20, rs60, rs_reasons = (
-        calculate_rs_score(row, market_ref)
-    )
+    rs_score, rs20, rs60, rs_reasons = calculate_rs_score(row, market_ref)
 
     distance_ma20 = pct(price, ma20) if ma20 else 0
 
@@ -906,6 +1318,8 @@ def scan_one(code, market_ref):
         "rsi": r2(rsi),
         "atr14": r2(atr),
         "high20": r2(high20),
+        "high60": r2(high60),
+        "high120": r2(high120),
         "low10": r2(low10),
         "low20": r2(low20),
         "low60": r2(low60),
@@ -914,6 +1328,7 @@ def scan_one(code, market_ref):
         "volume_ratio": r2(volume_ratio),
         "distance_ma20_pct": r2(distance_ma20),
         "breakout_distance_pct": r2(breakout_distance),
+        "breakout_extension_pct": r2(breakout_extension),
         "trend_score": trend_score,
         "breakout_score": breakout_score,
         "volume_score": volume_score,
@@ -924,11 +1339,18 @@ def scan_one(code, market_ref):
         "breakout_reasons": breakout_reasons,
         "volume_reasons": volume_reasons,
         "rs_reasons": rs_reasons,
+        "avg_daily_value_20": r2(avg_value),
+        "download_status": "ok",
+        "filter_reason": "",
         "chart": build_chart_data(df),
         "news": [],
     }
 
-    return stock
+    return stock, {
+        "code": code,
+        "download_status": "ok",
+        "filter_reason": "",
+    }
 
 
 # ============================================================
@@ -937,10 +1359,7 @@ def scan_one(code, market_ref):
 
 def calculate_market_regime(market):
     if not market:
-        return {
-            "status": "Neutral",
-            "label": "Neutral",
-        }
+        return {"status": "Neutral", "label": "Neutral"}
 
     price = safe_float(market.get("price"))
     ma20 = safe_float(market.get("ma20"))
@@ -948,55 +1367,59 @@ def calculate_market_regime(market):
     ret20 = safe_float(market.get("ret20"))
 
     if price > ma20 > ma60 and ret20 > 0:
-        return {
-            "status": "Risk-On",
-            "label": "Risk-On",
-        }
+        return {"status": "Risk-On", "label": "Risk-On"}
 
     if price < ma20 and ret20 < -3:
-        return {
-            "status": "Risk-Off",
-            "label": "Risk-Off",
-        }
+        return {"status": "Risk-Off", "label": "Risk-Off"}
 
-    return {
-        "status": "Neutral",
-        "label": "Neutral",
-    }
+    return {"status": "Neutral", "label": "Neutral"}
 
 
 # ============================================================
 # DATA SAFETY
 # ============================================================
 
-def validate_scan_result(universe_count, valid_count, market_ref):
+def validate_scan_result(
+    universe_count,
+    download_ok_count,
+    download_failed_count,
+    valid_count,
+    market_ref,
+):
     print()
     print("=" * 60)
     print("DATA VALIDATION")
     print("=" * 60)
-    print(f"Universe : {universe_count}")
-    print(f"Valid    : {valid_count}")
+    print(f"Universe        : {universe_count}")
+    print(f"Download OK     : {download_ok_count}")
+    print(f"Download Failed : {download_failed_count}")
+    print(f"Eligible        : {valid_count}")
 
     if universe_count <= 0:
         raise RuntimeError(
             "CRITICAL: Stock universe is empty. Abort publication."
         )
 
-    if valid_count == 0:
+    if download_ok_count <= 0:
         raise RuntimeError(
-            "CRITICAL: 0 valid stocks. Market data download likely "
-            "failed. Existing data.json will NOT be overwritten."
+            "CRITICAL: No stock market data downloaded successfully."
         )
 
-    success_rate = valid_count / universe_count
+    download_success_rate = download_ok_count / universe_count
 
-    print(f"Success  : {success_rate:.1%}")
+    print(f"Download Success: {download_success_rate:.1%}")
 
-    if success_rate < MIN_DOWNLOAD_SUCCESS_RATE:
+    if download_success_rate < MIN_DOWNLOAD_SUCCESS_RATE:
         raise RuntimeError(
-            f"CRITICAL: Only {valid_count}/{universe_count} "
-            f"({success_rate:.1%}) stocks survived scan. "
+            f"CRITICAL: Yahoo download success only "
+            f"{download_ok_count}/{universe_count} "
+            f"({download_success_rate:.1%}). "
             "Abort publication to protect previous data."
+        )
+
+    if valid_count == 0:
+        raise RuntimeError(
+            "CRITICAL: 0 eligible stocks after price/liquidity filters."
         )
 
     if not market_ref:
@@ -1005,8 +1428,8 @@ def validate_scan_result(universe_count, valid_count, market_ref):
             "Abort publication."
         )
 
-    print("[VALIDATION OK] Scan data is healthy.")
-    return success_rate
+    print("[VALIDATION OK] Market data is healthy.")
+    return download_success_rate
 
 
 # ============================================================
@@ -1015,7 +1438,7 @@ def validate_scan_result(universe_count, valid_count, market_ref):
 
 def main():
     print("=" * 60)
-    print("Taiwan Stock Radar V6.3 - TWSE Only")
+    print("Taiwan Stock Radar V6.4 - TWSE Only")
     print("=" * 60)
 
     codes = get_twse_codes()
@@ -1024,7 +1447,6 @@ def main():
     market_ref = get_market_reference()
     print("Market:", market_ref)
 
-    # Fail early. This prevents a Yahoo outage from creating an empty release.
     if not market_ref:
         raise RuntimeError(
             "CRITICAL: Unable to download ^TWII market data. "
@@ -1032,40 +1454,75 @@ def main():
         )
 
     raw_stocks = []
+    scan_audit = []
 
     for i, code in enumerate(codes, 1):
         print(f"[{i}/{len(codes)}] {code}")
 
         try:
-            stock = scan_one(code, market_ref)
+            stock, audit = scan_one(code, market_ref)
+            scan_audit.append(audit)
 
             if stock:
                 raw_stocks.append(stock)
 
         except Exception as e:
             print(f"[ERROR] {code}: {e}")
+            scan_audit.append(
+                {
+                    "code": code,
+                    "download_status": "failed",
+                    "filter_reason": f"scan_exception:{type(e).__name__}",
+                }
+            )
 
-    print(f"Valid stocks: {len(raw_stocks)}")
+    download_ok_count = sum(
+        1 for x in scan_audit
+        if x["download_status"] == "ok"
+    )
 
-    # IMPORTANT: validate before creating/writing any output file.
-    validate_scan_result(
+    download_failed_count = len(codes) - download_ok_count
+
+    filter_counts = {}
+    for x in scan_audit:
+        reason = x.get("filter_reason", "")
+        if reason:
+            filter_counts[reason] = filter_counts.get(reason, 0) + 1
+
+    print(f"Eligible stocks: {len(raw_stocks)}")
+
+    download_success_rate = validate_scan_result(
         universe_count=len(codes),
+        download_ok_count=download_ok_count,
+        download_failed_count=download_failed_count,
         valid_count=len(raw_stocks),
         market_ref=market_ref,
     )
 
+    # Sector membership map.
+    group_members = {}
+    for stock in raw_stocks:
+        for group in stock["groups"]:
+            group_members.setdefault(group, []).append(stock)
+
     sector_map = build_sector_strength(raw_stocks)
 
     for stock in raw_stocks:
-        sector_score, best_sector, sector_detail = (
-            apply_sector_score(stock, sector_map)
+        sector_score, best_sector, sector_detail = apply_sector_score(
+            stock,
+            sector_map,
+            group_members,
         )
 
         stock["sector_score"] = sector_score
         stock["best_sector"] = best_sector
         stock["sector_detail"] = sector_detail
 
+        # Trade plan must exist before entry-quality and classification.
+        stock["trade_plan"] = calculate_trade_plan(stock)
+
         stock["next_day_score"] = calculate_next_day_score(stock)
+        stock["entry_quality_score"] = calculate_entry_quality_score(stock)
         stock["ready_score"] = calculate_ready_score(stock)
         stock["mid_long_score"] = calculate_mid_long_score(stock)
 
@@ -1073,7 +1530,6 @@ def main():
         stock["ready_signal"] = classify_ready(stock)
         stock["mid_long_signal"] = classify_mid_long(stock)
 
-        stock["trade_plan"] = calculate_trade_plan(stock)
         stock["trade_strategy"] = build_trade_strategy(stock)
 
         reasons, risks = build_reasons(stock)
@@ -1092,6 +1548,7 @@ def main():
         raw_stocks,
         key=lambda x: (
             x["next_day_score"],
+            x["entry_quality_score"],
             x["volume_ratio"],
             x["rs20"],
         ),
@@ -1125,6 +1582,7 @@ def main():
                 x["mid_long_score"],
             ),
             x["next_day_score"],
+            x["entry_quality_score"],
         ),
         reverse=True,
     )
@@ -1143,9 +1601,9 @@ def main():
         if x["next_day_signal"] == "ææ¥é²å ´åé¸"
     ][:NEXT_DAY_TOP]
 
-    # V6.1: do not pad strict next-day entries just to reach 10 names.
-    # Keep a separate watchlist for the strongest non-overheated candidates.
+    # Do not pad strict next-day entries just to reach 10 names.
     used = {x["code"] for x in next_day_top}
+
     next_day_watch = [
         x for x in next_day
         if x["code"] not in used
@@ -1181,17 +1639,28 @@ def main():
         ZoneInfo(TIMEZONE)
     ).strftime("%Y-%m-%d %H:%M")
 
+    data_quality = {
+        "universe_count": len(codes),
+        "download_ok_count": download_ok_count,
+        "download_failed_count": download_failed_count,
+        "download_success_rate": r2(download_success_rate * 100),
+        "eligible_count": len(raw_stocks),
+        "filter_counts": filter_counts,
+    }
+
     payload = {
         "version": VERSION,
         "updated": now,
         "timezone": TIMEZONE,
         "strategy": (
-            "V6.3 TWSE Entry & Position Radar: "
+            "V6.4 TWSE Entry & Position Radar: "
             "Trend + Breakout + Volume + Relative Strength "
-            "+ Sector Strength + Overheat Control"
+            "+ Sector Strength + Entry Quality + Risk/Reward "
+            "+ Overheat Control"
         ),
         "universe_count": len(codes),
         "valid_count": len(raw_stocks),
+        "data_quality": data_quality,
         "market_regime": market_regime,
         "market_reference": {
             k: r2(v)
@@ -1207,7 +1676,6 @@ def main():
         "all_stocks": raw_stocks,
     }
 
-    # Only write after successful validation.
     os.makedirs("docs", exist_ok=True)
     os.makedirs("data", exist_ok=True)
 
@@ -1264,15 +1732,22 @@ def main():
 
     print()
     print("=" * 60)
-    print("V6.3 COMPLETE")
+    print("V6.4 COMPLETE")
     print("=" * 60)
 
     print("Updated:", now)
     print("Market:", market_regime["label"])
-    print("Valid stocks:", len(raw_stocks))
+    print("Universe:", len(codes))
+    print("Download OK:", download_ok_count)
+    print("Download Failed:", download_failed_count)
+    print("Eligible stocks:", len(raw_stocks))
+    print(f"Download Success: {download_success_rate:.1%}")
 
     print()
     print("Tomorrow Top Picks:")
+
+    if not next_day_top:
+        print("No stock passed all strict V6.4 tomorrow-entry gates.")
 
     for stock in next_day_top:
         plan = stock["trade_plan"]
@@ -1281,9 +1756,12 @@ def main():
             f"{stock['code']} "
             f"{stock['name']} "
             f"Score={stock['next_day_score']} "
+            f"EntryQ={stock['entry_quality_score']} "
             f"Entry={plan['entry_low']}-{plan['entry_high']} "
             f"Breakout={plan['breakout_price']} "
-            f"Stop={plan['short_stop']}"
+            f"Stop={plan['short_stop']} "
+            f"Risk={plan['short_risk_pct']}% "
+            f"RR={plan['real_risk_reward']}"
         )
 
     print()
@@ -1293,7 +1771,8 @@ def main():
         print(
             f"#{sector['rank']} "
             f"{sector['group']} "
-            f"Score={sector['score']}"
+            f"Score={sector['score']} "
+            f"Members={sector['count']}"
         )
 
 
