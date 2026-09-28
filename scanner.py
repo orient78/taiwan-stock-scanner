@@ -88,7 +88,7 @@ def get_stock_info(code):
 
 
 # ============================================================
-# TWSE + TPEx Taiwan common-stock universe (ETF/ETN excluded).
+# Full TWSE-listed + TPEx-OTC common-stock universe (ETF/ETN excluded).
 # ============================================================
 
 TWSE_CODES = set()
