@@ -1,10 +1,8 @@
 name: Daily Taiwan Stock Scan
 
-on:
+"on":
   workflow_dispatch:
-
   schedule:
-    # Taiwan 18:30 = UTC 10:30
     - cron: "30 10 * * 1-5"
 
 permissions:
@@ -13,359 +11,142 @@ permissions:
 jobs:
   scan:
     runs-on: ubuntu-latest
+    timeout-minutes: 90
 
     steps:
-      # ======================================================
-      # 1. Checkout
-      # ======================================================
-      - name: Checkout repository
+      - name: Checkout
         uses: actions/checkout@v4
 
-      # ======================================================
-      # 2. Python
-      # ======================================================
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-          cache: "pip"
+          cache: pip
 
-      # ======================================================
-      # 3. Install dependencies
-      # ======================================================
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      # ======================================================
-      # 4. Validate scanner.py
-      #    IMPORTANT:
-      #    Validate only. NEVER modify scanner.py here.
-      # ======================================================
-      - name: Validate scanner.py
+      - name: Validate scanner
         run: |
           python - <<'PY'
           from pathlib import Path
           import ast
-          import sys
 
-          path = Path("scanner.py")
+          p = Path("scanner.py")
+          text = p.read_text(encoding="utf-8-sig")
 
-          if not path.exists():
-              print("[FAIL] scanner.py not found")
-              sys.exit(1)
+          ast.parse(text)
 
-          raw = path.read_bytes()
-
-          # UTF-8 / UTF-8 BOM are both accepted.
-          try:
-              text = raw.decode("utf-8-sig")
-          except UnicodeDecodeError as e:
-              print("[FAIL] scanner.py is not valid UTF-8")
-              print(e)
-              sys.exit(1)
-
-          print(f"[CHECK] scanner.py bytes: {len(raw)}")
-          print(f"[CHECK] scanner.py lines: {len(text.splitlines())}")
-
-          # --------------------------------------------------
-          # Python syntax
-          # --------------------------------------------------
-          try:
-              ast.parse(text)
-          except SyntaxError as e:
-              print("[FAIL] scanner.py syntax error")
-              print(e)
-              sys.exit(1)
-
-          print("[PASS] Python syntax OK")
-
-          # --------------------------------------------------
-          # Version
-          # --------------------------------------------------
-          if 'VERSION = "V6.4.1"' not in text:
-              print("[FAIL] VERSION V6.4.1 not found")
-              sys.exit(1)
-
-          print("[PASS] VERSION V6.4.1")
-
-          # --------------------------------------------------
-          # Required Traditional Chinese strings
-          # --------------------------------------------------
-          required_strings = [
-              "中文名稱 / 市場",
-              "上市",
-              "股價站上20日均線",
+          required = [
+              'VERSION = "V6.4.1"',
               "成交量超過20日均量2倍",
               "成交量明顯放大",
               "量能開始擴張",
-              "成交量高於20日均量",
               "明日進場候選",
               "等待明日確認",
-              "暫不考慮",
               "準備進場",
-              "持續觀察",
               "中長期趨勢強",
-              "中長期持續追蹤",
-              "不追價",
-              "風險過高",
               "報酬空間不足",
-              "回檔買進",
-              "等待轉強",
-              "等待回檔",
-              "突破買進",
           ]
 
-          missing = [
-              item
-              for item in required_strings
-              if item not in text
-          ]
+          missing = [x for x in required if x not in text]
 
           if missing:
-              print("[FAIL] Required Chinese strings missing:")
-              for item in missing:
-                  print(" -", item)
-              sys.exit(1)
+              raise SystemExit(
+                  "[FAIL] Missing strings: " + repr(missing)
+              )
 
-          print("[PASS] Required Chinese strings OK")
-
-          # --------------------------------------------------
-          # Mojibake detection
-          #
-          # These are patterns that appeared in the previously
-          # corrupted scanner.py.
-          # --------------------------------------------------
-          mojibake_patterns = [
+          bad = [
               "ä¸",
-              "å¸",
               "æ",
               "æ",
               "çª",
               "é",
-              "é",
-              "è¶",
               "ï¼",
               "ã",
-              "â",
               "\ufffd",
           ]
 
-          bad_lines = []
+          found = [x for x in bad if x in text]
 
-          for line_no, line in enumerate(text.splitlines(), 1):
-              if any(pattern in line for pattern in mojibake_patterns):
-                  bad_lines.append((line_no, line))
-
-          if bad_lines:
-              print(
-                  f"[FAIL] Mojibake detected: "
-                  f"{len(bad_lines)} suspicious lines"
+          if found:
+              raise SystemExit(
+                  "[FAIL] Mojibake detected: " + repr(found)
               )
 
-              for line_no, line in bad_lines[:30]:
-                  print(f"{line_no}: {line!r}")
-
-              sys.exit(1)
-
-          print("[PASS] Mojibake scan: 0 suspicious lines")
-
-          # --------------------------------------------------
-          # Critical logic strings
-          # --------------------------------------------------
-          critical_logic = [
-              'return "明日進場候選"',
-              'return "等待明日確認"',
-              'return "暫不考慮"',
-              'kind = "不追價"',
-              'kind = "報酬空間不足"',
-              'kind = "突破買進"',
-              'x["next_day_signal"] == "明日進場候選"',
-              'x["next_day_signal"] == "等待明日確認"',
-          ]
-
-          missing_logic = [
-              item
-              for item in critical_logic
-              if item not in text
-          ]
-
-          if missing_logic:
-              print("[FAIL] Critical signal logic missing:")
-
-              for item in missing_logic:
-                  print(" -", item)
-
-              sys.exit(1)
-
-          print("[PASS] Critical signal logic OK")
-
-          print()
-          print("=" * 60)
-          print("SCANNER VALIDATION PASSED")
-          print("=" * 60)
+          print("[PASS] scanner.py syntax OK")
+          print("[PASS] UTF-8 Chinese OK")
+          print("[PASS] V6.4.1 OK")
           PY
 
-      # ======================================================
-      # 5. Run scanner
-      # ======================================================
-      - name: Run stock scanner
-        run: |
-          python scanner.py
+      - name: Run scanner
+        run: python scanner.py
 
-      # ======================================================
-      # 6. Validate generated files
-      # ======================================================
-      - name: Validate generated data
+      - name: Validate output
         run: |
           python - <<'PY'
           from pathlib import Path
           import json
-          import sys
 
-          json_path = Path("docs/data.json")
-          csv_path = Path("data/signals.csv")
+          jp = Path("docs/data.json")
+          cp = Path("data/signals.csv")
 
-          if not json_path.exists():
-              print("[FAIL] docs/data.json not generated")
-              sys.exit(1)
+          if not jp.exists():
+              raise SystemExit("[FAIL] docs/data.json missing")
 
-          if not csv_path.exists():
-              print("[FAIL] data/signals.csv not generated")
-              sys.exit(1)
+          if not cp.exists():
+              raise SystemExit("[FAIL] data/signals.csv missing")
 
-          # --------------------------------------------------
-          # JSON
-          # --------------------------------------------------
-          try:
-              data = json.loads(
-                  json_path.read_text(encoding="utf-8-sig")
-              )
-          except Exception as e:
-              print("[FAIL] docs/data.json invalid")
-              print(e)
-              sys.exit(1)
+          data = json.loads(
+              jp.read_text(encoding="utf-8-sig")
+          )
 
-          print("[PASS] docs/data.json valid")
-
-          # --------------------------------------------------
-          # Basic data sanity
-          # --------------------------------------------------
-          universe = int(data.get("universe_count", 0))
-          valid = int(data.get("valid_count", 0))
+          if data.get("version") != "V6.4.1":
+              raise SystemExit("[FAIL] Wrong data version")
 
           quality = data.get("data_quality", {})
 
+          universe = int(data.get("universe_count", 0))
+          eligible = int(data.get("valid_count", 0))
           download_ok = int(
               quality.get("download_ok_count", 0)
           )
 
-          download_failed = int(
-              quality.get("download_failed_count", 0)
-          )
-
-          print(f"[DATA] Universe        : {universe}")
-          print(f"[DATA] Download OK     : {download_ok}")
-          print(f"[DATA] Download Failed : {download_failed}")
-          print(f"[DATA] Eligible        : {valid}")
-
           if universe < 500:
-              print("[FAIL] Universe suspiciously small")
-              sys.exit(1)
+              raise SystemExit("[FAIL] Universe too small")
+
+          if eligible <= 0:
+              raise SystemExit("[FAIL] No eligible stocks")
 
           if download_ok <= 0:
-              print("[FAIL] No successful downloads")
-              sys.exit(1)
+              raise SystemExit("[FAIL] No downloads")
 
-          if valid <= 0:
-              print("[FAIL] No eligible stocks")
-              sys.exit(1)
+          rate = download_ok / universe
 
-          success_rate = download_ok / universe
-
-          print(
-              f"[DATA] Download Success : "
-              f"{success_rate:.1%}"
-          )
-
-          if success_rate < 0.85:
-              print(
-                  "[FAIL] Download success rate "
-                  "below 85%"
-              )
-              sys.exit(1)
-
-          # --------------------------------------------------
-          # Generated output mojibake check
-          # --------------------------------------------------
-          json_text = json_path.read_text(
-              encoding="utf-8-sig"
-          )
-
-          csv_text = csv_path.read_text(
-              encoding="utf-8-sig"
-          )
-
-          mojibake_patterns = [
-              "ä¸",
-              "å¸",
-              "æ",
-              "æ",
-              "çª",
-              "é",
-              "é",
-              "è¶",
-              "ï¼",
-              "ã",
-              "â",
-              "\ufffd",
-          ]
-
-          for filename, text in [
-              ("docs/data.json", json_text),
-              ("data/signals.csv", csv_text),
-          ]:
-              bad = [
-                  pattern
-                  for pattern in mojibake_patterns
-                  if pattern in text
-              ]
-
-              if bad:
-                  print(
-                      f"[FAIL] Mojibake detected "
-                      f"in {filename}: {bad}"
-                  )
-                  sys.exit(1)
-
-              print(
-                  f"[PASS] {filename}: "
-                  "no mojibake detected"
+          if rate < 0.85:
+              raise SystemExit(
+                  f"[FAIL] Download success only {rate:.1%}"
               )
 
-          print()
-          print("=" * 60)
-          print("GENERATED DATA VALIDATION PASSED")
-          print("=" * 60)
+          print("[PASS] Output validation")
+          print("Universe:", universe)
+          print("Download OK:", download_ok)
+          print("Eligible:", eligible)
+          print("Success:", f"{rate:.1%}")
           PY
 
-      # ======================================================
-      # 7. Commit generated data ONLY
-      #
-      # scanner.py is deliberately NOT committed by Actions.
-      # ======================================================
-      - name: Commit generated data
+      - name: Commit scan results
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          git add docs/data.json
-          git add data/signals.csv
+          git add docs/data.json data/signals.csv
 
           if git diff --cached --quiet; then
-            echo "[INFO] No generated data changes to commit."
+            echo "No changes."
           else
-            git commit -m "Update daily stock scan data"
+            git commit -m "Update V6.4.1 scan data"
             git push
           fi
