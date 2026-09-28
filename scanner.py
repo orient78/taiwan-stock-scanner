@@ -3,7 +3,9 @@ import json
 import math
 import time
 import random
-from datetime import datetime
+import urllib.parse
+import urllib.request
+from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
 
 import numpy as np
@@ -15,17 +17,16 @@ from stock_pool import get_groups
 
 
 # ============================================================
-# V6.4 CONFIG
+# V6.5 CONFIG
 # ============================================================
 
-VERSION = "V6.4.1"
+VERSION = "V6.5"
 TIMEZONE = "Asia/Taipei"
 
 MIN_PRICE = 10
 MIN_AVG_DAILY_VALUE = 20_000_000
 CHART_DAYS = 120
 
-NEXT_DAY_TOP = 10
 READY_TOP = 20
 MID_LONG_TOP = 20
 RADAR_TOP = 80
@@ -41,12 +42,6 @@ MIN_SHORT_RISK_PCT = 1.5
 MAX_SHORT_RISK_PCT = 7.0
 MIN_REAL_RR = 1.35
 MIN_ENTRY_QUALITY = 60
-
-ETF_CODES = {
-    "0050", "006208", "0052", "0053",
-    "00881", "00891", "00927", "00935",
-    "0056", "00878", "00919", "00929", "00940",
-}
 
 
 # ============================================================
@@ -114,10 +109,10 @@ def get_twse_codes():
         if info is None:
             continue
 
-        is_common_stock = code.isdigit() and len(code) == 4
-        is_project_etf = code in ETF_CODES and code in twse_codes
+        # V6.5: TWSE 上市普通股，排除 ETF / ETN。
+        is_common_stock = code.isdigit() and len(code) == 4 and not code.startswith("0")
 
-        if is_common_stock or is_project_etf:
+        if is_common_stock:
             codes.append(code)
 
     codes = sorted(set(codes))
@@ -142,7 +137,119 @@ def get_twse_codes():
     return codes
 
 
+
 # ============================================================
+# TWSE T86 法人資料
+# ============================================================
+
+def _t86_int(value):
+    try:
+        return int(str(value).replace(",", "").strip())
+    except (TypeError, ValueError):
+        return 0
+
+
+def fetch_t86(date_string):
+    query = urllib.parse.urlencode(
+        {
+            "response": "json",
+            "date": date_string,
+            "selectType": "ALLBUT0999",
+        }
+    )
+    url = "https://www.twse.com.tw/rwd/zh/fund/T86?" + query
+    request = urllib.request.Request(
+        url,
+        headers={"User-Agent": "Mozilla/5.0"},
+    )
+
+    with urllib.request.urlopen(request, timeout=25) as response:
+        payload = json.loads(response.read().decode("utf-8-sig"))
+
+    fields = payload.get("fields") or []
+    rows = payload.get("data") or []
+    if not fields or not rows:
+        return {}
+
+    field_index = {name: index for index, name in enumerate(fields)}
+    source_fields = {
+        "foreign_net_shares": "外陸資買賣超股數(不含外資自營商)",
+        "trust_net_shares": "投信買賣超股數",
+        "dealer_net_shares": "自營商買賣超股數",
+        "institutional_net_shares": "三大法人買賣超股數",
+    }
+    required = ["證券代號", *source_fields.values()]
+    if any(name not in field_index for name in required):
+        raise RuntimeError("TWSE T86 schema changed")
+
+    result = {}
+    for row in rows:
+        code = str(row[field_index["證券代號"]]).strip()
+        if not (code.isdigit() and len(code) == 4 and not code.startswith("0")):
+            continue
+        result[code] = {
+            key: _t86_int(row[field_index[field]])
+            for key, field in source_fields.items()
+        }
+
+    return result
+
+
+def get_t86_history(days=5):
+    today = datetime.now(ZoneInfo(TIMEZONE)).date()
+    history = []
+
+    for offset in range(14):
+        date = today - timedelta(days=offset)
+        if date.weekday() >= 5:
+            continue
+
+        try:
+            daily = fetch_t86(date.strftime("%Y%m%d"))
+            if daily:
+                history.append((date.strftime("%Y-%m-%d"), daily))
+                if len(history) >= days:
+                    break
+        except Exception as error:
+            print("[T86 WARN]", date, error)
+
+    if not history:
+        return {}, {"status": "unavailable", "date": "", "days": 0}
+
+    latest_date, latest_data = history[0]
+    result = {}
+
+    for code, latest in latest_data.items():
+        stock_data = dict(latest)
+        for key, value in latest.items():
+            stock_data[key.replace("_shares", "_lots")] = r2(value / 1000)
+
+        streak_types = {
+            "foreign": "foreign_net_shares",
+            "trust": "trust_net_shares",
+            "institutional": "institutional_net_shares",
+        }
+        for name, key in streak_types.items():
+            for direction, positive in (("buy", True), ("sell", False)):
+                streak = 0
+                for _, daily_data in history:
+                    if code not in daily_data:
+                        break
+                    value = daily_data[code][key]
+                    matches = value > 0 if positive else value < 0
+                    if not matches:
+                        break
+                    streak += 1
+                stock_data[f"{name}_{direction}_streak"] = streak
+
+        result[code] = stock_data
+
+    return result, {
+        "status": "ok",
+        "date": latest_date,
+        "days": len(history),
+    }
+
 # INDICATORS
 # ============================================================
 
@@ -816,6 +923,23 @@ def calculate_trade_plan(stock):
         "long_risk_pct": r2(long_risk_pct),
         "target1": r2(target1),
         "target2": r2(target2),
+        "target1_return_pct": r2(pct(target1, price)),
+        "target2_return_pct": r2(pct(target2, price)),
+        "previous_high": r2(high20),
+        "previous_low": r2(stock.get("low20",0)),
+        "support": r2(support),
+        "major_support": r2(
+            max(
+                [
+                    value
+                    for value in [ma60, stock.get("low20", 0), low60]
+                    if 0 < value <= price
+                ]
+                or [price * 0.90]
+            )
+        ),
+        "distance_support_pct": r2(pct(price,support)) if support else 0,
+        "distance_previous_high_pct": r2(pct(price,high20)) if high20 else 0,
         # Keep old field for index.html compatibility.
         "risk_reward": r2(real_rr),
         "real_risk_reward": r2(real_rr),
@@ -1257,20 +1381,18 @@ def scan_one(code, market_ref):
             "filter_reason": "invalid_price",
         }
 
-    is_etf = code in ETF_CODES
-
     avg_value = safe_float(
         (df["Close"] * df["Volume"]).tail(20).mean()
     )
 
-    if not is_etf and price < MIN_PRICE:
+    if price < MIN_PRICE:
         return None, {
             "code": code,
             "download_status": "ok",
             "filter_reason": "price_below_min",
         }
 
-    if not is_etf and avg_value < MIN_AVG_DAILY_VALUE:
+    if avg_value < MIN_AVG_DAILY_VALUE:
         return None, {
             "code": code,
             "download_status": "ok",
@@ -1327,7 +1449,7 @@ def scan_one(code, market_ref):
         "industry": info["industry"],
         "ticker": ticker,
         "groups": groups,
-        "is_etf": is_etf,
+        "is_etf": False,
         "date": df.index[-1].strftime("%Y-%m-%d"),
         "price": r2(price),
         "ma5": r2(ma5),
@@ -1347,6 +1469,13 @@ def scan_one(code, market_ref):
         "ret20": r2(ret20),
         "ret60": r2(ret60),
         "volume_ratio": r2(volume_ratio),
+        "volume": int(safe_float(row["Volume"])),
+        "volume_status": (
+            "爆量" if volume_ratio >= 2
+            else "放量" if volume_ratio >= 1.2
+            else "正常" if volume_ratio >= 0.8
+            else "量縮"
+        ),
         "distance_ma20_pct": r2(distance_ma20),
         "breakout_distance_pct": r2(breakout_distance),
         "breakout_extension_pct": r2(breakout_extension),
@@ -1459,7 +1588,7 @@ def validate_scan_result(
 
 def main():
     print("=" * 60)
-    print("Taiwan Stock Radar V6.4 - TWSE Only")
+    print("Taiwan Stock Radar V6.5 - TWSE Common Stocks Only")
     print("=" * 60)
 
     codes = get_twse_codes()
@@ -1520,6 +1649,9 @@ def main():
         market_ref=market_ref,
     )
 
+    institutional_map, institutional_meta = get_t86_history()
+    print("[T86]", institutional_meta)
+
     # Sector membership map.
     group_members = {}
     for stock in raw_stocks:
@@ -1538,6 +1670,36 @@ def main():
         stock["sector_score"] = sector_score
         stock["best_sector"] = best_sector
         stock["sector_detail"] = sector_detail
+
+        institutional = institutional_map.get(stock["code"], {})
+        stock["institutional_date"] = institutional_meta.get("date", "")
+        stock["institutional_available"] = bool(institutional)
+
+        institutional_fields = [
+            "foreign_net_shares",
+            "foreign_net_lots",
+            "trust_net_shares",
+            "trust_net_lots",
+            "dealer_net_shares",
+            "dealer_net_lots",
+            "institutional_net_shares",
+            "institutional_net_lots",
+            "foreign_buy_streak",
+            "foreign_sell_streak",
+            "trust_buy_streak",
+            "trust_sell_streak",
+            "institutional_buy_streak",
+            "institutional_sell_streak",
+        ]
+        for key in institutional_fields:
+            stock[key] = institutional.get(key, 0)
+
+        volume = stock.get("volume", 0)
+        stock["institutional_volume_pct"] = (
+            r2(stock["institutional_net_shares"] / volume * 100)
+            if volume
+            else 0
+        )
 
         # Trade plan must exist before entry-quality and classification.
         stock["trade_plan"] = calculate_trade_plan(stock)
@@ -1621,7 +1783,7 @@ def main():
     next_day_top = [
         x for x in next_day
         if x["next_day_signal"] == "明日進場候選"
-    ][:NEXT_DAY_TOP]
+    ]
 
     # Do not pad strict next-day entries just to reach 10 names.
     used = {x["code"] for x in next_day_top}
@@ -1630,7 +1792,7 @@ def main():
         x for x in next_day
         if x["code"] not in used
         and x["next_day_signal"] == "等待明日確認"
-    ][:NEXT_DAY_TOP]
+    ][:20]
 
     ready_top = [
         x for x in ready
@@ -1675,7 +1837,7 @@ def main():
         "updated": now,
         "timezone": TIMEZONE,
         "strategy": (
-            "V6.4 TWSE Entry & Position Radar: "
+            "V6.5 TWSE Common-Stock Entry & Position Radar: "
             "Trend + Breakout + Volume + Relative Strength "
             "+ Sector Strength + Entry Quality + Risk/Reward "
             "+ Overheat Control"
@@ -1684,6 +1846,7 @@ def main():
         "valid_count": len(raw_stocks),
         "data_quality": data_quality,
         "market_regime": market_regime,
+        "institutional_data": institutional_meta,
         "market_reference": {
             k: r2(v)
             for k, v in market_ref.items()
@@ -1824,3 +1987,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
