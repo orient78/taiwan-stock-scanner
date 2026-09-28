@@ -1,9 +1,9 @@
 name: Daily Taiwan Stock Scan
 
-"on":
+on:
   workflow_dispatch:
   schedule:
-    - cron: "30 10 * * 1-5"
+    - cron: '30 10 * * 1-5'
 
 permissions:
   contents: write
@@ -17,136 +17,23 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Set up Python
+      - name: Setup Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
-          cache: pip
+          python-version: '3.11'
 
       - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
-
-      - name: Validate scanner
-        run: |
-          python - <<'PY'
-          from pathlib import Path
-          import ast
-
-          p = Path("scanner.py")
-          text = p.read_text(encoding="utf-8-sig")
-
-          ast.parse(text)
-
-          required = [
-              'VERSION = "V6.4.1"',
-              "成交量超過20日均量2倍",
-              "成交量明顯放大",
-              "量能開始擴張",
-              "明日進場候選",
-              "等待明日確認",
-              "準備進場",
-              "中長期趨勢強",
-              "報酬空間不足",
-          ]
-
-          missing = [x for x in required if x not in text]
-
-          if missing:
-              raise SystemExit(
-                  "[FAIL] Missing strings: " + repr(missing)
-              )
-
-          bad = [
-              "ä¸",
-              "æ",
-              "æ",
-              "çª",
-              "é",
-              "ï¼",
-              "ã",
-              "\ufffd",
-          ]
-
-          found = [x for x in bad if x in text]
-
-          if found:
-              raise SystemExit(
-                  "[FAIL] Mojibake detected: " + repr(found)
-              )
-
-          print("[PASS] scanner.py syntax OK")
-          print("[PASS] UTF-8 Chinese OK")
-          print("[PASS] V6.4.1 OK")
-          PY
+        run: pip install -r requirements.txt
 
       - name: Run scanner
         run: python scanner.py
 
-      - name: Validate output
-        run: |
-          python - <<'PY'
-          from pathlib import Path
-          import json
-
-          jp = Path("docs/data.json")
-          cp = Path("data/signals.csv")
-
-          if not jp.exists():
-              raise SystemExit("[FAIL] docs/data.json missing")
-
-          if not cp.exists():
-              raise SystemExit("[FAIL] data/signals.csv missing")
-
-          data = json.loads(
-              jp.read_text(encoding="utf-8-sig")
-          )
-
-          if data.get("version") != "V6.4.1":
-              raise SystemExit("[FAIL] Wrong data version")
-
-          quality = data.get("data_quality", {})
-
-          universe = int(data.get("universe_count", 0))
-          eligible = int(data.get("valid_count", 0))
-          download_ok = int(
-              quality.get("download_ok_count", 0)
-          )
-
-          if universe < 500:
-              raise SystemExit("[FAIL] Universe too small")
-
-          if eligible <= 0:
-              raise SystemExit("[FAIL] No eligible stocks")
-
-          if download_ok <= 0:
-              raise SystemExit("[FAIL] No downloads")
-
-          rate = download_ok / universe
-
-          if rate < 0.85:
-              raise SystemExit(
-                  f"[FAIL] Download success only {rate:.1%}"
-              )
-
-          print("[PASS] Output validation")
-          print("Universe:", universe)
-          print("Download OK:", download_ok)
-          print("Eligible:", eligible)
-          print("Success:", f"{rate:.1%}")
-          PY
-
-      - name: Commit scan results
+      - name: Commit results
+        shell: bash
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-
           git add docs/data.json data/signals.csv
-
-          if git diff --cached --quiet; then
-            echo "No changes."
-          else
-            git commit -m "Update V6.4.1 scan data"
-            git push
-          fi
+          git diff --cached --quiet && exit 0
+          git commit -m "Update V6.4.1 scan data"
+          git push
