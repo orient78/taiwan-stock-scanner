@@ -1832,6 +1832,14 @@ def main():
         "filter_counts": filter_counts,
     }
 
+    # Keep the dashboard payload small enough for mobile browsers. 120-day
+    # candles are written separately and fetched only when a chart is opened.
+    def public_stocks(items):
+        return [
+            {key: value for key, value in stock.items() if key != "chart"}
+            for stock in items
+        ]
+
     payload = {
         "version": VERSION,
         "updated": now,
@@ -1853,16 +1861,33 @@ def main():
         },
         "signal_counts": signal_counts,
         "sector_ranking": sector_ranking,
-        "next_day_top": next_day_top,
-        "next_day_watch": next_day_watch,
-        "ready_top": ready_top,
-        "mid_long_top": mid_long_top,
-        "stocks": radar_top,
-        "all_stocks": raw_stocks,
+        "next_day_top": public_stocks(next_day_top),
+        "next_day_watch": public_stocks(next_day_watch),
+        "ready_top": public_stocks(ready_top),
+        "mid_long_top": public_stocks(mid_long_top),
+        "stocks": public_stocks(radar_top),
+        "all_stocks": public_stocks(raw_stocks),
     }
 
     os.makedirs("docs", exist_ok=True)
+    os.makedirs("docs/charts", exist_ok=True)
     os.makedirs("data", exist_ok=True)
+
+    for stock in raw_stocks:
+        code = str(stock["code"])
+        if not code.isdigit():
+            continue
+        with open(
+            os.path.join("docs", "charts", f"{code}.json"),
+            "w",
+            encoding="utf-8",
+        ) as chart_file:
+            json.dump(
+                stock.get("chart", []),
+                chart_file,
+                ensure_ascii=False,
+                separators=(",", ":"),
+            )
 
     with open(
         "docs/data.json",
@@ -1873,7 +1898,7 @@ def main():
             payload,
             f,
             ensure_ascii=False,
-            indent=2,
+            separators=(",", ":"),
         )
 
     print("[SAVE OK] docs/data.json")
