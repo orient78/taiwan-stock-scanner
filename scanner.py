@@ -18,7 +18,7 @@ from stock_pool import get_stock_codes, get_groups
 # V6 CONFIG
 # ============================================================
 
-VERSION = "V6.2"
+VERSION = "V6.3"
 TIMEZONE = "Asia/Taipei"
 
 MIN_PRICE = 10
@@ -396,128 +396,53 @@ def get_market_reference(max_retries=MAX_DOWNLOAD_RETRIES):
 # ============================================================
 
 def calculate_trend_score(row):
-    score = 0
-    reasons = []
-
+    score, reasons = 0, []
     price = safe_float(row["Close"])
-    ma5 = safe_float(row["MA5"])
-    ma10 = safe_float(row["MA10"])
-    ma20 = safe_float(row["MA20"])
-    ma60 = safe_float(row["MA60"])
-
-    if price > ma20:
-        score += 6
-        reasons.append("è¡å¹ç«ä¸20æ¥åç·")
-
-    if ma5 > ma10 > ma20:
-        score += 8
-        reasons.append("MA5 > MA10 > MA20ï¼å¤é ­æå")
-
-    if ma20 > ma60:
-        score += 6
-        reasons.append("MA20ä½æ¼MA60ä¹ä¸")
-
-    if ma20 > 0:
-        score += 5
-        reasons.append("ä¸­ç­æè¶¨å¢ç¶­æåå¤")
-
+    ma5, ma10, ma20, ma60 = [safe_float(row[x]) for x in ["MA5","MA10","MA20","MA60"]]
+    if price > ma20: score += 6; reasons.append("è¡å¹ç«ä¸20æ¥åç·")
+    if ma5 > ma10 > ma20: score += 8; reasons.append("MA5 > MA10 > MA20ï¼å¤é ­æå")
+    if ma20 > ma60: score += 6; reasons.append("MA20ä½æ¼MA60ä¹ä¸")
+    if ma20 > 0: score += 5; reasons.append("ä¸­ç­æè¶¨å¢ç¶­æåå¤")
     return min(score, 25), reasons
 
 
 def calculate_breakout_score(row):
-    price = safe_float(row["Close"])
-    high20 = safe_float(row["HIGH20"])
-
-    if not high20:
-        return 0, [], 999
-
-    distance = (high20 - price) / high20 * 100
-    score = 0
-    reasons = []
-
-    if price >= high20:
-        score = 25
-        reasons.append("å·²çªç ´20æ¥é«é»")
-    elif distance <= 1:
-        score = 23
-        reasons.append("è·20æ¥çªç ´å¹ä¸å°1%")
-    elif distance <= 2:
-        score = 21
-        reasons.append("éå¸¸æ¥è¿20æ¥çªç ´")
-    elif distance <= 4:
-        score = 17
-        reasons.append("æ¥è¿20æ¥çªç ´å")
-    elif distance <= 7:
-        score = 10
-        reasons.append("è·çªç ´ä½ç½®å°å¯")
-
+    price, high20 = safe_float(row["Close"]), safe_float(row["HIGH20"])
+    if not high20: return 0, [], 999
+    distance=(high20-price)/high20*100; score=0; reasons=[]
+    if price >= high20: score=25; reasons.append("å·²çªç ´20æ¥é«é»")
+    elif distance <= 1: score=23; reasons.append("è·20æ¥çªç ´å¹ä¸å°1%")
+    elif distance <= 2: score=21; reasons.append("éå¸¸æ¥è¿20æ¥çªç ´")
+    elif distance <= 4: score=17; reasons.append("æ¥è¿20æ¥çªç ´å")
+    elif distance <= 7: score=10; reasons.append("è·çªç ´ä½ç½®å°å¯")
     return score, reasons, distance
 
 
 def calculate_volume_score(row):
-    volume = safe_float(row["Volume"])
-    vol20 = safe_float(row["VOL20"])
-    ratio = volume / vol20 if vol20 else 0
-
-    score = 0
-    reasons = []
-
-    if ratio >= 2:
-        score = 20
-        reasons.append("æäº¤éè¶é20æ¥åé2å")
-    elif ratio >= 1.5:
-        score = 18
-        reasons.append("æäº¤éæé¡¯æ¾å¤§")
-    elif ratio >= 1.2:
-        score = 15
-        reasons.append("éè½éå§æ´å¼µ")
-    elif ratio >= 1:
-        score = 10
-        reasons.append("æäº¤éé«æ¼20æ¥åé")
-    elif ratio >= 0.75:
-        score = 5
-
+    volume, vol20 = safe_float(row["Volume"]), safe_float(row["VOL20"])
+    ratio=volume/vol20 if vol20 else 0; score=0; reasons=[]
+    if ratio >= 2: score=20; reasons.append("æäº¤éè¶é20æ¥åé2å")
+    elif ratio >= 1.5: score=18; reasons.append("æäº¤éæé¡¯æ¾å¤§")
+    elif ratio >= 1.2: score=15; reasons.append("éè½éå§æ´å¼µ")
+    elif ratio >= 1: score=10; reasons.append("æäº¤éé«æ¼20æ¥åé")
+    elif ratio >= .75: score=5
     return score, ratio, reasons
 
 
 def calculate_rs_score(row, market):
-    stock20 = safe_float(row["RET20"])
-    stock60 = safe_float(row["RET60"])
+    rs20=safe_float(row["RET20"])-safe_float(market.get("ret20"))
+    rs60=safe_float(row["RET60"])-safe_float(market.get("ret60"))
+    score=0; reasons=[]
+    if rs20>=10: score+=9
+    elif rs20>=5: score+=7
+    elif rs20>=0: score+=5
+    elif rs20>=-3: score+=2
+    if rs60>=15: score+=6
+    elif rs60>=8: score+=5
+    elif rs60>=0: score+=3
+    if rs20>0: reasons.append(f"è¿20æ¥è¡¨ç¾åªæ¼å¤§ç¤ {rs20:.1f}%")
+    return min(score,15), rs20, rs60, reasons
 
-    market20 = safe_float(market.get("ret20"))
-    market60 = safe_float(market.get("ret60"))
-
-    rs20 = stock20 - market20
-    rs60 = stock60 - market60
-
-    score = 0
-    reasons = []
-
-    if rs20 >= 10:
-        score += 9
-    elif rs20 >= 5:
-        score += 7
-    elif rs20 >= 0:
-        score += 5
-    elif rs20 >= -3:
-        score += 2
-
-    if rs60 >= 15:
-        score += 6
-    elif rs60 >= 8:
-        score += 5
-    elif rs60 >= 0:
-        score += 3
-
-    if rs20 > 0:
-        reasons.append(f"è¿20æ¥è¡¨ç¾åªæ¼å¤§ç¤ {rs20:.1f}%")
-
-    return min(score, 15), rs20, rs60, reasons
-
-
-# ============================================================
-# SECTOR STRENGTH
-# ============================================================
 
 def build_sector_strength(stocks):
     groups = {}
@@ -835,133 +760,65 @@ def calculate_mid_long_score(stock):
 # ============================================================
 
 def classify_next_day(stock):
-    score = stock["next_day_score"]
-
-    if (
-        stock["rsi"] >= 75
-        or stock["distance_ma20_pct"] >= 12
-    ):
-        return "éç±ï¼ä¸è¿½å¹"
-
-    if (
-        score >= 80
-        and stock["breakout_distance_pct"] <= 2
-        and stock["volume_ratio"] >= 1.2
-    ):
-        return "ææ¥é²å ´åé¸"
-
-    if score >= 68:
-        return "ç­å¾ææ¥ç¢ºèª"
-
+    score=stock["next_day_score"]
+    if stock["rsi"]>=75 or stock["distance_ma20_pct"]>=12: return "éç±ï¼ä¸è¿½å¹"
+    if score>=80 and stock["breakout_distance_pct"]<=2 and stock["volume_ratio"]>=1.2: return "ææ¥é²å ´åé¸"
+    if score>=68: return "ç­å¾ææ¥ç¢ºèª"
     return "æ«ä¸èæ®"
 
 
 def classify_ready(stock):
-    score = stock["ready_score"]
-
-    if stock["rsi"] >= 75:
-        return "éç±"
-
-    if score >= 80:
-        return "æºåé²å ´"
-
-    if score >= 65:
-        return "æçºè§å¯"
-
+    if stock["rsi"]>=75: return "éç±"
+    if stock["ready_score"]>=80: return "æºåé²å ´"
+    if stock["ready_score"]>=65: return "æçºè§å¯"
     return "å°æªæç"
 
 
 def classify_mid_long(stock):
-    score = stock["mid_long_score"]
-
-    if score >= 80:
-        return "ä¸­é·æè¶¨å¢å¼·"
-
-    if score >= 65:
-        return "ä¸­é·ææçºè¿½è¹¤"
-
+    if stock["mid_long_score"]>=80: return "ä¸­é·æè¶¨å¢å¼·"
+    if stock["mid_long_score"]>=65: return "ä¸­é·ææçºè¿½è¹¤"
     return "ä¸­é·æä¸è¬"
 
 
-# ============================================================
-# REASONS
-# ============================================================
-
 def build_reasons(stock):
-    reasons = []
-    risks = []
-
-    if stock["ma5"] > stock["ma10"] > stock["ma20"]:
-        reasons.append("ç­æåç·åå¤é ­æå")
-
-    if stock["ma20"] > stock["ma60"]:
-        reasons.append("ä¸­æè¶¨å¢ç¶­æåä¸")
-
-    if stock["breakout_distance_pct"] <= 2:
-        reasons.append("å·²éå¸¸æ¥è¿20æ¥çªç ´ä½ç½®")
-    elif stock["breakout_distance_pct"] <= 5:
-        reasons.append("æ­£å¨æ¥è¿20æ¥å£åå")
-
-    if stock["volume_ratio"] >= 1.5:
-        reasons.append(
-            f"æäº¤éæ¾å¤§è³20æ¥åé {stock['volume_ratio']:.2f} å"
-        )
-    elif stock["volume_ratio"] >= 1.2:
-        reasons.append("æäº¤ééå§æ´å¼µ")
-
-    if stock["rs20"] > 0:
-        reasons.append(
-            f"è¿20æ¥ç¸å°å¤§ç¤å¼· {stock['rs20']:.1f}%"
-        )
-
-    if stock["best_sector"]:
-        reasons.append(
-            f"{stock['best_sector']}æç¾¤ç¸å°å¼·å¢"
-        )
-
-    if stock["rsi"] >= 75:
-        risks.append("RSIé²å¥éç±åï¼ä¸é©åè¿½å¹")
-    elif stock["rsi"] >= 70:
-        risks.append("RSIåé«ï¼æ³¨æéæ¥è¿½å¹é¢¨éª")
-
-    if stock["distance_ma20_pct"] >= 12:
-        risks.append("è¡å¹èMA20ä¹é¢éå¤§")
-
-    if stock["volume_ratio"] < 0.8:
-        risks.append("ç®åéè½ä»ä¸è¶³")
-
-    if stock["breakout_distance_pct"] > 7:
-        risks.append("è·é¢çªç ´ä½ç½®ä»è¼é ")
-
-    if not reasons:
-        reasons.append("ç®åä»¥æè¡çµæ§è§å¯çºä¸»")
-
-    if not risks:
-        risks.append("ä»éè§å¯éæ¥éç¤èæäº¤éç¢ºèª")
-
-    return reasons[:5], risks[:4]
+    reasons,risks=[],[]
+    if stock["ma5"]>stock["ma10"]>stock["ma20"]: reasons.append("ç­æåç·åå¤é ­æå")
+    if stock["ma20"]>stock["ma60"]: reasons.append("ä¸­æè¶¨å¢ç¶­æåä¸")
+    if stock["breakout_distance_pct"]<=2: reasons.append("å·²éå¸¸æ¥è¿20æ¥çªç ´ä½ç½®")
+    elif stock["breakout_distance_pct"]<=5: reasons.append("æ­£å¨æ¥è¿20æ¥å£åå")
+    if stock["volume_ratio"]>=1.5: reasons.append(f"æäº¤éæ¾å¤§è³20æ¥åé {stock['volume_ratio']:.2f} å")
+    elif stock["volume_ratio"]>=1.2: reasons.append("æäº¤ééå§æ´å¼µ")
+    if stock["rs20"]>0: reasons.append(f"è¿20æ¥ç¸å°å¤§ç¤å¼· {stock['rs20']:.1f}%")
+    if stock["best_sector"]: reasons.append(f"{stock['best_sector']}æç¾¤ç¸å°å¼·å¢")
+    if stock["rsi"]>=75: risks.append("RSIé²å¥éç±åï¼ä¸é©åè¿½å¹")
+    elif stock["rsi"]>=70: risks.append("RSIåé«ï¼æ³¨æéæ¥è¿½å¹é¢¨éª")
+    if stock["distance_ma20_pct"]>=12: risks.append("è¡å¹èMA20ä¹é¢éå¤§")
+    if stock["volume_ratio"]<.8: risks.append("ç®åéè½ä»ä¸è¶³")
+    if stock["breakout_distance_pct"]>7: risks.append("è·é¢çªç ´ä½ç½®ä»è¼é ")
+    if not reasons: reasons.append("ç®åä»¥æè¡çµæ§è§å¯çºä¸»")
+    if not risks: risks.append("ä»éè§å¯éæ¥éç¤èæäº¤éç¢ºèª")
+    return reasons[:5],risks[:4]
 
 
-# ============================================================
-# NEXT DAY ACTION
-# ============================================================
+def build_trade_strategy(stock):
+    p=stock["trade_plan"]; price=stock["price"]
+    lo,hi=p["entry_low"],p["entry_high"]; breakout=p["breakout_price"]; chase=p["chase_limit"]
+    if stock["rsi"]>=75 or stock["distance_ma20_pct"]>=12 or price>chase:
+        kind="ä¸è¿½å¹"; action=f"ç¾å¹ {price:.2f} å·²åé¢çæ³é¢¨éªå ±é¬åï¼ç­å¾åæªæéæ°å½¢æè²·é»ã"
+    elif lo<=price<=hi:
+        kind="åæªè²·é²"; action=f"ç¾å¹ {price:.2f} ä½æ¼çæ³è²·å¥å {lo:.2f}â{hi:.2f}ï¼éå¹çµæ§æªè½å¼±æå¯åæ¹è©ä¼°ã"
+    elif price<lo:
+        kind="ç­å¾è½å¼·"; action=f"ç¾å¹ {price:.2f} ä½æ¼çæ³è²·å¥å {lo:.2f}â{hi:.2f}ï¼åç­å¾æ­¢è·è½å¼·ã"
+    elif price<breakout:
+        kind="ç­å¾åæª"; action=f"ç¾å¹ {price:.2f} é«æ¼çæ³è²·å¥å {lo:.2f}â{hi:.2f}ï¼ä¸è¿½å¹ï¼ç­å¾åæªï¼æçªç ´ {breakout:.2f} ä¸æ¾éå¾åè©ä¼°ã"
+    else:
+        kind="çªç ´è²·é²"; action=f"å·²ç«ä¸çªç ´å¹ {breakout:.2f}ï¼è¥æäº¤éåæ­¥æ¾å¤§ä¸å¹æ ¼ä¸é«æ¼ {chase:.2f}ï¼å¯è¦çºçªç ´åé²å ´ã"
+    return {"type":kind,"action":action}
+
 
 def build_next_day_action(stock):
-    p = stock["trade_plan"]
+    return stock["trade_strategy"]["action"]
 
-    breakout = p["breakout_price"]
-    chase = p["chase_limit"]
-
-    return (
-        f"ææ¥è¥çªç ´ {breakout:.2f} ä¸éè½åæ­¥æ¾å¤§ï¼"
-        f"å¯è¦çºé²å ´è§¸ç¼ï¼"
-        f"è¥ç´æ¥è·³ç©ºé«æ¼ {chase:.2f}ï¼ä¸å»ºè­°è¿½å¹ã"
-    )
-
-
-# ============================================================
-# SCAN ONE
-# ============================================================
 
 def scan_one(code, market_ref):
     ticker, detected_market, df = download_history(code)
@@ -1158,7 +1015,7 @@ def validate_scan_result(universe_count, valid_count, market_ref):
 
 def main():
     print("=" * 60)
-    print("Taiwan Stock Radar V6.2.3 - TWSE Only")
+    print("Taiwan Stock Radar V6.3 - TWSE Only")
     print("=" * 60)
 
     codes = get_twse_codes()
@@ -1217,6 +1074,7 @@ def main():
         stock["mid_long_signal"] = classify_mid_long(stock)
 
         stock["trade_plan"] = calculate_trade_plan(stock)
+        stock["trade_strategy"] = build_trade_strategy(stock)
 
         reasons, risks = build_reasons(stock)
 
@@ -1296,18 +1154,12 @@ def main():
 
     ready_top = [
         x for x in ready
-        if x["ready_signal"] in [
-            "æºåé²å ´",
-            "æçºè§å¯",
-        ]
+        if x["ready_signal"] in ["æºåé²å ´", "æçºè§å¯"]
     ][:READY_TOP]
 
     mid_long_top = [
         x for x in mid_long
-        if x["mid_long_signal"] in [
-            "ä¸­é·æè¶¨å¢å¼·",
-            "ä¸­é·ææçºè¿½è¹¤",
-        ]
+        if x["mid_long_signal"] in ["ä¸­é·æè¶¨å¢å¼·", "ä¸­é·ææçºè¿½è¹¤"]
     ][:MID_LONG_TOP]
 
     radar_top = radar[:RADAR_TOP]
@@ -1334,7 +1186,7 @@ def main():
         "updated": now,
         "timezone": TIMEZONE,
         "strategy": (
-            "V6.2.3 TWSE Entry & Position Radar: "
+            "V6.3 TWSE Entry & Position Radar: "
             "Trend + Breakout + Volume + Relative Strength "
             "+ Sector Strength + Overheat Control"
         ),
@@ -1412,7 +1264,7 @@ def main():
 
     print()
     print("=" * 60)
-    print("V6.2.3 COMPLETE")
+    print("V6.3 COMPLETE")
     print("=" * 60)
 
     print("Updated:", now)
