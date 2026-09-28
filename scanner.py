@@ -89,7 +89,7 @@ def get_stock_info(code):
 
 def get_twse_codes():
     """
-    V6.2.2: Build the universe from twstock.twse directly.
+    V6.2.3: Build the universe from twstock.twse directly.
     twstock.twse is the package's parsed TWSE-listed securities mapping.
     Keep common stocks plus the project's listed ETF codes.
     OTC/TPEX securities are excluded completely.
@@ -111,13 +111,14 @@ def get_twse_codes():
         if info is None:
             continue
 
-        security_type = str(getattr(info, "type", "") or "")
-
-        # Common TWSE stocks: 4 numeric digits and security type è¡ç¥¨.
+        # twstock.twse is already the official TWSE-side collection.
+        # Four numeric digits are treated as listed common-stock codes.
+        # Do not filter by StockCodeInfo.type: versions of twstock may
+        # represent this field differently and can accidentally remove
+        # the whole listed-stock universe.
         is_common_stock = (
             code.isdigit()
             and len(code) == 4
-            and security_type == "è¡ç¥¨"
         )
 
         # Retain the listed ETFs already defined by this project,
@@ -132,15 +133,22 @@ def get_twse_codes():
 
     codes = sorted(set(codes))
 
-    if not codes:
+    if len(codes) < 500:
         raise RuntimeError(
-            "CRITICAL: TWSE universe resolved to zero symbols. "
+            f"CRITICAL: TWSE universe is suspiciously small ({len(codes)} symbols). "
             "Abort publication."
         )
 
+    if "2330" not in codes:
+        raise RuntimeError("CRITICAL: 2330 is missing from TWSE universe.")
+
+    if "6223" in codes:
+        raise RuntimeError("CRITICAL: OTC symbol 6223 leaked into TWSE universe.")
+
     print(f"[UNIVERSE] TWSE only: {len(codes)} symbols")
-    print(f"[CHECK] 2330 in universe: {'2330' in codes}")
-    print(f"[CHECK] 6223 in universe: {'6223' in codes} (expected False)")
+    print("[CHECK] 2330 in universe: True")
+    print("[CHECK] 6223 in universe: False")
+    print("[CHECK] Download suffix: .TW only")
 
     return codes
 
@@ -1074,7 +1082,7 @@ def calculate_market_regime(market):
     if not market:
         return {
             "status": "Neutral",
-            "label": "ð¡ Neutral",
+            "label": "Neutral",
         }
 
     price = safe_float(market.get("price"))
@@ -1085,18 +1093,18 @@ def calculate_market_regime(market):
     if price > ma20 > ma60 and ret20 > 0:
         return {
             "status": "Risk-On",
-            "label": "ð¢ Risk-On",
+            "label": "Risk-On",
         }
 
     if price < ma20 and ret20 < -3:
         return {
             "status": "Risk-Off",
-            "label": "ð´ Risk-Off",
+            "label": "Risk-Off",
         }
 
     return {
         "status": "Neutral",
-        "label": "ð¡ Neutral",
+        "label": "Neutral",
     }
 
 
@@ -1150,7 +1158,7 @@ def validate_scan_result(universe_count, valid_count, market_ref):
 
 def main():
     print("=" * 60)
-    print("Taiwan Stock Radar V6.2.2 - TWSE Only")
+    print("Taiwan Stock Radar V6.2.3 - TWSE Only")
     print("=" * 60)
 
     codes = get_twse_codes()
@@ -1326,7 +1334,7 @@ def main():
         "updated": now,
         "timezone": TIMEZONE,
         "strategy": (
-            "V6.2.2 TWSE Entry & Position Radar: "
+            "V6.2.3 TWSE Entry & Position Radar: "
             "Trend + Breakout + Volume + Relative Strength "
             "+ Sector Strength + Overheat Control"
         ),
@@ -1404,7 +1412,7 @@ def main():
 
     print()
     print("=" * 60)
-    print("V6.2.2 COMPLETE")
+    print("V6.2.3 COMPLETE")
     print("=" * 60)
 
     print("Updated:", now)
