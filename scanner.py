@@ -18,7 +18,7 @@ from stock_pool import get_groups
 # V6.4 CONFIG
 # ============================================================
 
-VERSION = "V6.4"
+VERSION = "V6.4.1"
 TIMEZONE = "Asia/Taipei"
 
 MIN_PRICE = 10
@@ -568,8 +568,6 @@ def build_sector_strength(stocks):
     )
 
     for rank, item in enumerate(ordered, 1):
-        item["rank"] = rank
-
         if len(ordered) <= 1:
             percentile_score = 100
         else:
@@ -578,6 +576,15 @@ def build_sector_strength(stocks):
 
         # Tiny sectors cannot receive a full-strength sector score.
         item["score"] = round(percentile_score * item["reliability"])
+
+    # V6.4.1 FIX: displayed rank follows displayed final score.
+    ordered = sorted(
+        ordered,
+        key=lambda x: (x["score"], x["adjusted_raw_score"]),
+        reverse=True,
+    )
+    for rank, item in enumerate(ordered, 1):
+        item["rank"] = rank
 
     return {item["group"]: item for item in ordered}
 
@@ -1017,47 +1024,61 @@ def calculate_mid_long_score(stock):
 # SIGNAL CLASSIFICATION
 # ============================================================
 
-def classify_next_day(stock):
-    score = stock["next_day_score"]
+def get_next_day_failed_gates(stock):
+    """Return actionable tomorrow-entry gates that are not satisfied."""
     plan = stock["trade_plan"]
+    failed = []
 
-    hard_overheat = (
-        stock["rsi"] >= 75
-        or stock["distance_ma20_pct"] >= 12
-        or stock["breakout_extension_pct"] > 8
-    )
-
-    if hard_overheat:
-        return "éç±ï¼ä¸è¿½å¹"
-
-    risk_ok = (
+    if stock["rsi"] >= 75:
+        failed.append("RSI>=75")
+    if stock["distance_ma20_pct"] >= 12:
+        failed.append("MA20ä¹é¢>=12%")
+    if stock["breakout_extension_pct"] > 8:
+        failed.append("çªç ´å»¶ä¼¸>8%")
+    if stock["next_day_score"] < 80:
+        failed.append("Score<80")
+    if stock["entry_quality_score"] < MIN_ENTRY_QUALITY:
+        failed.append(f"EntryQ<{MIN_ENTRY_QUALITY}")
+    if not (-3 <= stock["breakout_distance_pct"] <= 2):
+        failed.append("çªç ´ä½ç½®ä¸ä½³")
+    if stock["volume_ratio"] < 1.2:
+        failed.append("éæ¯<1.2")
+    if stock["rs20"] <= 0:
+        failed.append("RS20<=0")
+    if not (
         MIN_SHORT_RISK_PCT
         <= plan["short_risk_pct"]
         <= MAX_SHORT_RISK_PCT
-    )
-
-    rr_ok = plan["real_risk_reward"] >= MIN_REAL_RR
-
-    location_ok = (
-        -3 <= stock["breakout_distance_pct"] <= 2
-    )
-
-    if (
-        score >= 80
-        and stock["entry_quality_score"] >= MIN_ENTRY_QUALITY
-        and location_ok
-        and stock["volume_ratio"] >= 1.2
-        and stock["rs20"] > 0
-        and risk_ok
-        and rr_ok
     ):
+        failed.append(
+            f"StopRiskä¸å¨{MIN_SHORT_RISK_PCT:.1f}-{MAX_SHORT_RISK_PCT:.1f}%"
+        )
+
+    # RR intentionally remains a warning/quality factor, not a hard gate.
+    return failed
+
+
+def classify_next_day(stock):
+    failed = get_next_day_failed_gates(stock)
+
+    hard_overheat = any(
+        gate in failed
+        for gate in ["RSI>=75", "MA20ä¹é¢>=12%", "çªç ´å»¶ä¼¸>8%"]
+    )
+    if hard_overheat:
+        return "éç±ï¼ä¸è¿½å¹"
+
+    if not failed:
         return "ææ¥é²å ´åé¸"
 
-    if score >= 68 and stock["entry_quality_score"] >= 45:
+    if (
+        stock["next_day_score"] >= 68
+        and stock["entry_quality_score"] >= 45
+        and len(failed) <= 2
+    ):
         return "ç­å¾ææ¥ç¢ºèª"
 
     return "æ«ä¸èæ®"
-
 
 def classify_ready(stock):
     if stock["rsi"] >= 75:
@@ -1526,6 +1547,7 @@ def main():
         stock["ready_score"] = calculate_ready_score(stock)
         stock["mid_long_score"] = calculate_mid_long_score(stock)
 
+        stock["failed_gates"] = get_next_day_failed_gates(stock)
         stock["next_day_signal"] = classify_next_day(stock)
         stock["ready_signal"] = classify_ready(stock)
         stock["mid_long_signal"] = classify_mid_long(stock)
@@ -1607,7 +1629,7 @@ def main():
     next_day_watch = [
         x for x in next_day
         if x["code"] not in used
-        and x["next_day_signal"] != "éç±ï¼ä¸è¿½å¹"
+        and x["next_day_signal"] == "ç­å¾ææ¥ç¢ºèª"
     ][:NEXT_DAY_TOP]
 
     ready_top = [
@@ -1716,6 +1738,9 @@ def main():
         row["risk_reasons"] = " | ".join(
             stock["risk_reasons"]
         )
+        row["failed_gates"] = " | ".join(
+            stock.get("failed_gates", [])
+        )
 
         for key, value in stock["trade_plan"].items():
             row[key] = value
@@ -1725,14 +1750,14 @@ def main():
     pd.DataFrame(csv_rows).to_csv(
         "data/signals.csv",
         index=False,
-        encoding="utf-8-sig",
+        encoding="utf-8",
     )
 
     print("[SAVE OK] data/signals.csv")
 
     print()
     print("=" * 60)
-    print("V6.4 COMPLETE")
+    print(f"{VERSION} COMPLETE")
     print("=" * 60)
 
     print("Updated:", now)
@@ -1747,7 +1772,7 @@ def main():
     print("Tomorrow Top Picks:")
 
     if not next_day_top:
-        print("No stock passed all strict V6.4 tomorrow-entry gates.")
+        print(f"No stock passed all strict {VERSION} tomorrow-entry gates.")
 
     for stock in next_day_top:
         plan = stock["trade_plan"]
@@ -1762,6 +1787,27 @@ def main():
             f"Stop={plan['short_stop']} "
             f"Risk={plan['short_risk_pct']}% "
             f"RR={plan['real_risk_reward']}"
+        )
+
+    print()
+    print("Tomorrow Watch:")
+
+    if not next_day_watch:
+        print("No near-pass stock with only 1-2 failed gates.")
+
+    for stock in next_day_watch:
+        plan = stock["trade_plan"]
+        failed_text = ", ".join(stock.get("failed_gates", [])) or "None"
+        print(
+            f"{stock['code']} "
+            f"{stock['name']} "
+            f"Score={stock['next_day_score']} "
+            f"EntryQ={stock['entry_quality_score']} "
+            f"Entry={plan['entry_low']}-{plan['entry_high']} "
+            f"Stop={plan['short_stop']} "
+            f"Risk={plan['short_risk_pct']}% "
+            f"RR={plan['real_risk_reward']} "
+            f"Failed={failed_text}"
         )
 
     print()
