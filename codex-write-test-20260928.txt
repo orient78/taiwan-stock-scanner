@@ -1,2 +1,0 @@
-Temporary GitHub connector write-access test.
-Created 2026-09-28; will be removed after verification.
