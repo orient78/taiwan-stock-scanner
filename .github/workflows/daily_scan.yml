@@ -32,14 +32,126 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
+      # ============================================================
+      # 1. Check scanner.py before running
+      # ============================================================
+      - name: Check scanner.py encoding
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import ast
+
+          path = Path("scanner.py")
+          text = path.read_text(encoding="utf-8")
+
+          # Python syntax validation
+          ast.parse(text)
+
+          bad_markers = [
+              "Ã", "Â", "â", "ï¼",
+              "å", "æ", "ç",
+          ]
+
+          found = [x for x in bad_markers if x in text]
+
+          if found:
+              print("ERROR: scanner.py contains possible mojibake:")
+              print(found)
+              raise SystemExit(1)
+
+          print("[OK] scanner.py UTF-8")
+          print("[OK] scanner.py syntax")
+          print("[OK] No mojibake detected")
+          PY
+
+      # ============================================================
+      # 2. Run V6.4 scanner
+      # ============================================================
       - name: Run scanner
         run: python scanner.py
 
+      # ============================================================
+      # 3. Validate generated data.json
+      # ============================================================
+      - name: Validate data.json encoding
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import json
+
+          path = Path("docs/data.json")
+
+          if not path.exists():
+              raise SystemExit("ERROR: docs/data.json does not exist")
+
+          text = path.read_text(encoding="utf-8")
+
+          # Make sure JSON itself is valid
+          data = json.loads(text)
+
+          bad_markers = [
+              "Ã", "Â", "â", "ï¼",
+              "å", "æ", "ç",
+          ]
+
+          found = [x for x in bad_markers if x in text]
+
+          if found:
+              print("ERROR: data.json contains possible mojibake:")
+              print(found)
+              raise SystemExit(1)
+
+          print("[OK] data.json UTF-8")
+          print("[OK] data.json valid JSON")
+          print("[OK] No mojibake detected")
+
+          print("Version:", data.get("version"))
+          print("Updated:", data.get("updated"))
+          print("Universe:", data.get("universe_count"))
+          print("Eligible:", data.get("valid_count"))
+          PY
+
+      # ============================================================
+      # 4. Validate CSV encoding
+      # ============================================================
+      - name: Validate signals.csv encoding
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path("data/signals.csv")
+
+          if not path.exists():
+              raise SystemExit("ERROR: data/signals.csv does not exist")
+
+          text = path.read_text(encoding="utf-8")
+
+          bad_markers = [
+              "Ã", "Â", "â", "ï¼",
+              "å", "æ", "ç",
+          ]
+
+          found = [x for x in bad_markers if x in text]
+
+          if found:
+              print("ERROR: signals.csv contains possible mojibake:")
+              print(found)
+              raise SystemExit(1)
+
+          print("[OK] signals.csv UTF-8")
+          print("[OK] No mojibake detected")
+          PY
+
+      # ============================================================
+      # 5. Only publish after ALL checks pass
+      # ============================================================
       - name: Commit latest result
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
           git add docs/data.json data/signals.csv
+
           if git diff --cached --quiet; then
             echo "No changes."
           else
