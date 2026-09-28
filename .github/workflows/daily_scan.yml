@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
 
   schedule:
-    # 07:00 UTC = 台灣時間 15:00
+    # UTC 07:00 = Taiwan 15:00
     - cron: "0 7 * * 1-5"
 
 permissions:
@@ -17,7 +17,7 @@ concurrency:
 jobs:
   scan:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 60
 
     steps:
       - name: Checkout
@@ -32,129 +32,325 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      # ============================================================
-      # 1. Check scanner.py before running
-      # ============================================================
-      - name: Check scanner.py encoding
+      # ==========================================================
+      # 1. Repair scanner.py mojibake
+      # ==========================================================
+      - name: Repair scanner.py UTF-8
         run: |
           python - <<'PY'
           from pathlib import Path
           import ast
 
           path = Path("scanner.py")
-          text = path.read_text(encoding="utf-8")
 
-          # Python syntax validation
-          ast.parse(text)
+          text = path.read_text(encoding="utf-8-sig")
 
-          bad_markers = [
+          # Typical UTF-8 -> Latin-1 mojibake signatures
+          markers = (
               "Ã", "Â", "â", "ï¼",
-              "å", "æ", "ç",
+              "å", "æ", "ç", "é", "è", "ä"
+          )
+
+          def suspicious(s):
+              return (
+                  any(x in s for x in markers)
+                  or any(0x80 <= ord(c) <= 0x9F for c in s)
+              )
+
+          def repair_line(line):
+              current = line
+
+              for _ in range(3):
+                  if not suspicious(current):
+                      break
+
+                  try:
+                      candidate = (
+                          current
+                          .encode("latin-1")
+                          .decode("utf-8")
+                      )
+                  except (
+                      UnicodeEncodeError,
+                      UnicodeDecodeError,
+                  ):
+                      break
+
+                  if candidate == current:
+                      break
+
+                  current = candidate
+
+              return current
+
+          before = [
+              (i, line)
+              for i, line in enumerate(
+                  text.splitlines(), 1
+              )
+              if suspicious(line)
           ]
 
-          found = [x for x in bad_markers if x in text]
+          print(
+              "[ENCODING] suspicious lines before:",
+              len(before),
+          )
 
-          if found:
-              print("ERROR: scanner.py contains possible mojibake:")
-              print(found)
+          fixed = "".join(
+              repair_line(line)
+              for line in text.splitlines(
+                  keepends=True
+              )
+          )
+
+          # ------------------------------------------------------
+          # Python syntax gate
+          # ------------------------------------------------------
+          try:
+              ast.parse(
+                  fixed,
+                  filename="scanner.py",
+              )
+          except SyntaxError as e:
+              print(
+                  "[FAIL] Syntax error after repair:",
+                  e,
+              )
               raise SystemExit(1)
 
-          print("[OK] scanner.py UTF-8")
-          print("[OK] scanner.py syntax")
-          print("[OK] No mojibake detected")
+          # ------------------------------------------------------
+          # Mojibake gate
+          # ------------------------------------------------------
+          remaining = [
+              (i, line)
+              for i, line in enumerate(
+                  fixed.splitlines(), 1
+              )
+              if suspicious(line)
+          ]
+
+          if remaining:
+              print(
+                  "[FAIL] Mojibake still exists:",
+                  len(remaining),
+              )
+
+              for no, line in remaining[:30]:
+                  print(no, repr(line[:180]))
+
+              raise SystemExit(1)
+
+          # ------------------------------------------------------
+          # Required Traditional Chinese strings
+          # ------------------------------------------------------
+          required = [
+              "短期均線呈多頭排列",
+              "成交量",
+              "風險",
+              "明日進場候選",
+              "準備進場",
+              "中長期趨勢強",
+              "上市",
+          ]
+
+          missing = [
+              x for x in required
+              if x not in fixed
+          ]
+
+          if missing:
+              print(
+                  "[FAIL] Required Chinese strings missing:"
+              )
+              print(missing)
+              raise SystemExit(1)
+
+          # ------------------------------------------------------
+          # Preserve V6.4.1
+          # ------------------------------------------------------
+          if 'VERSION = "V6.4.1"' not in fixed:
+              raise SystemExit(
+                  "[FAIL] VERSION is not V6.4.1"
+              )
+
+          path.write_text(
+              fixed,
+              encoding="utf-8",
+              newline="\n",
+          )
+
+          # Read back
+          verify = path.read_text(
+              encoding="utf-8"
+          )
+
+          ast.parse(
+              verify,
+              filename="scanner.py",
+          )
+
+          if suspicious(verify):
+              raise SystemExit(
+                  "[FAIL] Mojibake detected after write-back"
+              )
+
+          print(
+              "[OK] scanner.py syntax passed"
+          )
+          print(
+              "[OK] scanner.py UTF-8 passed"
+          )
+          print(
+              "[OK] scanner.py mojibake = 0"
+          )
+          print(
+              "[OK] Traditional Chinese strings passed"
+          )
+          print(
+              "[OK] Version = V6.4.1"
+          )
           PY
 
-      # ============================================================
-      # 2. Run V6.4 scanner
-      # ============================================================
-      - name: Run scanner
+      # ==========================================================
+      # 2. Run scanner
+      # ==========================================================
+      - name: Run V6.4.1 scanner
         run: python scanner.py
 
-      # ============================================================
-      # 3. Validate generated data.json
-      # ============================================================
-      - name: Validate data.json encoding
+      # ==========================================================
+      # 3. Validate generated JSON + CSV
+      # ==========================================================
+      - name: Validate generated files
         run: |
           python - <<'PY'
           from pathlib import Path
           import json
 
-          path = Path("docs/data.json")
-
-          if not path.exists():
-              raise SystemExit("ERROR: docs/data.json does not exist")
-
-          text = path.read_text(encoding="utf-8")
-
-          # Make sure JSON itself is valid
-          data = json.loads(text)
-
-          bad_markers = [
+          markers = (
               "Ã", "Â", "â", "ï¼",
-              "å", "æ", "ç",
-          ]
+              "å", "æ", "ç", "é", "è", "ä"
+          )
 
-          found = [x for x in bad_markers if x in text]
+          def suspicious(s):
+              return (
+                  any(x in s for x in markers)
+                  or any(
+                      0x80 <= ord(c) <= 0x9F
+                      for c in s
+                  )
+              )
 
-          if found:
-              print("ERROR: data.json contains possible mojibake:")
-              print(found)
-              raise SystemExit(1)
+          # ------------------------------------------------------
+          # JSON
+          # ------------------------------------------------------
+          json_path = Path(
+              "docs/data.json"
+          )
 
-          print("[OK] data.json UTF-8")
-          print("[OK] data.json valid JSON")
-          print("[OK] No mojibake detected")
+          if not json_path.exists():
+              raise SystemExit(
+                  "[FAIL] docs/data.json missing"
+              )
 
-          print("Version:", data.get("version"))
-          print("Updated:", data.get("updated"))
-          print("Universe:", data.get("universe_count"))
-          print("Eligible:", data.get("valid_count"))
+          json_text = json_path.read_text(
+              encoding="utf-8"
+          )
+
+          data = json.loads(json_text)
+
+          if suspicious(json_text):
+              raise SystemExit(
+                  "[FAIL] Mojibake found in data.json"
+              )
+
+          if data.get("version") != "V6.4.1":
+              raise SystemExit(
+                  "[FAIL] data.json version mismatch"
+              )
+
+          # ------------------------------------------------------
+          # CSV
+          # ------------------------------------------------------
+          csv_path = Path(
+              "data/signals.csv"
+          )
+
+          if not csv_path.exists():
+              raise SystemExit(
+                  "[FAIL] signals.csv missing"
+              )
+
+          csv_text = csv_path.read_text(
+              encoding="utf-8"
+          )
+
+          if suspicious(csv_text):
+              raise SystemExit(
+                  "[FAIL] Mojibake found in signals.csv"
+              )
+
+          print(
+              "[OK] data.json valid UTF-8"
+          )
+          print(
+              "[OK] data.json valid JSON"
+          )
+          print(
+              "[OK] signals.csv valid UTF-8"
+          )
+          print(
+              "[OK] generated mojibake = 0"
+          )
+
+          print()
+          print(
+              "Version:",
+              data.get("version"),
+          )
+          print(
+              "Updated:",
+              data.get("updated"),
+          )
+          print(
+              "Universe:",
+              data.get("universe_count"),
+          )
+          print(
+              "Eligible:",
+              data.get("valid_count"),
+          )
+          print(
+              "Tomorrow:",
+              len(
+                  data.get(
+                      "next_day_top",
+                      [],
+                  )
+              ),
+          )
           PY
 
-      # ============================================================
-      # 4. Validate CSV encoding
-      # ============================================================
-      - name: Validate signals.csv encoding
+      # ==========================================================
+      # 4. Commit ONLY after all validation passes
+      # ==========================================================
+      - name: Commit repaired scanner and scan results
         run: |
-          python - <<'PY'
-          from pathlib import Path
+          git config user.name \
+            "github-actions[bot]"
 
-          path = Path("data/signals.csv")
+          git config user.email \
+            "41898282+github-actions[bot]@users.noreply.github.com"
 
-          if not path.exists():
-              raise SystemExit("ERROR: data/signals.csv does not exist")
-
-          text = path.read_text(encoding="utf-8")
-
-          bad_markers = [
-              "Ã", "Â", "â", "ï¼",
-              "å", "æ", "ç",
-          ]
-
-          found = [x for x in bad_markers if x in text]
-
-          if found:
-              print("ERROR: signals.csv contains possible mojibake:")
-              print(found)
-              raise SystemExit(1)
-
-          print("[OK] signals.csv UTF-8")
-          print("[OK] No mojibake detected")
-          PY
-
-      # ============================================================
-      # 5. Only publish after ALL checks pass
-      # ============================================================
-      - name: Commit latest result
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-
-          git add docs/data.json data/signals.csv
+          git add \
+            scanner.py \
+            docs/data.json \
+            data/signals.csv
 
           if git diff --cached --quiet; then
             echo "No changes."
           else
-            git commit -m "Update daily stock scan"
+            git commit \
+              -m "Fix UTF-8 and update V6.4.1 scan"
+
             git push
           fi
