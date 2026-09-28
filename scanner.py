@@ -1205,12 +1205,34 @@ def classify_next_day(stock):
     return "暫不考慮"
 
 def classify_ready(stock):
-    if stock["rsi"] >= 75:
-        return "過熱"
+    plan = stock["trade_plan"]
+
+    if (
+        stock["rsi"] >= 75
+        or stock["distance_ma20_pct"] >= 12
+        or stock["breakout_extension_pct"] > 8
+        or stock["price"] > plan["chase_limit"]
+    ):
+        return "不追價"
+
+    if plan["short_risk_pct"] > MAX_SHORT_RISK_PCT:
+        return "風險偏高"
+
+    if plan["real_risk_reward"] < MIN_REAL_RR:
+        return "報酬空間不足"
+
     if stock["ready_score"] >= 80:
+        if stock["price"] < plan["entry_low"]:
+            return "等待轉強"
+        if stock["volume_ratio"] < 1.2:
+            return "等待量能"
         return "準備進場"
+
     if stock["ready_score"] >= 65:
+        if stock["volume_ratio"] < 0.8:
+            return "等待量能"
         return "持續觀察"
+
     return "尚未成熟"
 
 
@@ -1796,7 +1818,7 @@ def main():
 
     ready_top = [
         x for x in ready
-        if x["ready_signal"] in ["準備進場", "持續觀察"]
+        if x["ready_signal"] in ["準備進場", "持續觀察", "等待量能", "等待轉強"]
     ][:READY_TOP]
 
     mid_long_top = [
