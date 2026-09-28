@@ -20,7 +20,7 @@ from stock_pool import get_groups
 # V6.5 CONFIG
 # ============================================================
 
-VERSION = "V6.5"
+VERSION = "V6.6"
 TIMEZONE = "Asia/Taipei"
 
 MIN_PRICE = 10
@@ -88,52 +88,44 @@ def get_stock_info(code):
 
 
 # ============================================================
-# TWSE-ONLY UNIVERSE
+# TWSE + TPEx Taiwan common-stock universe (ETF/ETN excluded).
 # ============================================================
 
+TWSE_CODES = set()
+TPEX_CODES = set()
+
 def get_twse_codes():
-    twse_codes = getattr(twstock, "twse", {})
+    global TWSE_CODES, TPEX_CODES
+    twse = getattr(twstock, "twse", {}) or {}
+    tpex = getattr(twstock, "tpex", {}) or {}
+    if not twse or not tpex:
+        raise RuntimeError("CRITICAL: TWSE or TPEx symbol list is unavailable.")
 
-    if not twse_codes:
+    def common_codes(exchange_codes):
+        result = set()
+        for raw_code in exchange_codes:
+            code = str(raw_code).strip()
+            if code.isdigit() and len(code) == 4 and not code.startswith("0"):
+                if code in twstock.codes:
+                    result.add(code)
+        return result
+
+    TWSE_CODES = common_codes(twse)
+    TPEX_CODES = common_codes(tpex)
+    if len(TWSE_CODES) < 500 or len(TPEX_CODES) < 300:
         raise RuntimeError(
-            "CRITICAL: twstock.twse is empty/unavailable. "
-            "Abort instead of publishing an empty universe."
+            f"CRITICAL: suspicious market universe sizes "
+            f"(TWSE={len(TWSE_CODES)}, TPEx={len(TPEX_CODES)})."
         )
-
-    codes = []
-
-    for code in twse_codes:
-        code = str(code).strip()
-        info = twstock.codes.get(code)
-
-        if info is None:
-            continue
-
-        # V6.5: TWSE 上市普通股，排除 ETF / ETN。
-        is_common_stock = code.isdigit() and len(code) == 4 and not code.startswith("0")
-
-        if is_common_stock:
-            codes.append(code)
-
-    codes = sorted(set(codes))
-
-    if len(codes) < 500:
-        raise RuntimeError(
-            f"CRITICAL: TWSE universe is suspiciously small ({len(codes)} symbols). "
-            "Abort publication."
-        )
-
-    if "2330" not in codes:
+    codes = sorted(TWSE_CODES | TPEX_CODES)
+    if "2330" not in TWSE_CODES:
         raise RuntimeError("CRITICAL: 2330 is missing from TWSE universe.")
-
-    if "6223" in codes:
-        raise RuntimeError("CRITICAL: OTC symbol 6223 leaked into TWSE universe.")
-
-    print(f"[UNIVERSE] TWSE only: {len(codes)} symbols")
-    print("[CHECK] 2330 in universe: True")
-    print("[CHECK] 6223 in universe: False")
-    print("[CHECK] Download suffix: .TW only")
-
+    if "5483" not in TPEX_CODES:
+        raise RuntimeError("CRITICAL: TPEx symbol 5483 (中美晶) is missing.")
+    print(f"[UNIVERSE] TWSE={len(TWSE_CODES)}, TPEx={len(TPEX_CODES)}, total={len(codes)}")
+    print("[CHECK] 2330 on TWSE: True")
+    print("[CHECK] 5483 on TPEx: True")
+    print("[CHECK] Yahoo suffixes: .TW and .TWO")
     return codes
 
 
@@ -350,7 +342,8 @@ def normalize_yfinance_df(df):
 # ============================================================
 
 def download_history(code, max_retries=MAX_DOWNLOAD_RETRIES):
-    ticker = f"{code}.TW"
+    ticker = f"{code}.TWO" if code in TPEX_CODES else f"{code}.TW"
+    detected_market = "上櫃" if code in TPEX_CODES else "上市"
 
     for attempt in range(1, max_retries + 1):
         try:
@@ -380,7 +373,7 @@ def download_history(code, max_retries=MAX_DOWNLOAD_RETRIES):
                 raise RuntimeError("invalid last close")
 
             print(f"[OK] {ticker}: {len(df)} days, close={last_close:.2f}")
-            return ticker, "上市", df, None
+            return ticker, detected_market, df, None
 
         except Exception as e:
             print(f"[WARN] {ticker} attempt {attempt}/{max_retries} failed: {e}")
@@ -1407,19 +1400,12 @@ def scan_one(code, market_ref):
         (df["Close"] * df["Volume"]).tail(20).mean()
     )
 
+    eligibility_reasons = []
     if price < MIN_PRICE:
-        return None, {
-            "code": code,
-            "download_status": "ok",
-            "filter_reason": "price_below_min",
-        }
-
+        eligibility_reasons.append("股價低於基本篩選門檻")
     if avg_value < MIN_AVG_DAILY_VALUE:
-        return None, {
-            "code": code,
-            "download_status": "ok",
-            "filter_reason": "liquidity_below_min",
-        }
+        eligibility_reasons.append("近20日平均成交金額低於基本篩選門檻")
+    eligible_for_trade = not eligibility_reasons
 
     info = get_stock_info(code)
     market = info["market"] or detected_market
@@ -1512,6 +1498,8 @@ def scan_one(code, market_ref):
         "volume_reasons": volume_reasons,
         "rs_reasons": rs_reasons,
         "avg_daily_value_20": r2(avg_value),
+        "eligible_for_trade": eligible_for_trade,
+        "eligibility_reasons": eligibility_reasons,
         "download_status": "ok",
         "filter_reason": "",
         "chart": build_chart_data(df),
@@ -1661,7 +1649,8 @@ def main():
         if reason:
             filter_counts[reason] = filter_counts.get(reason, 0) + 1
 
-    print(f"Eligible stocks: {len(raw_stocks)}")
+    print(f"Downloaded stocks: {len(raw_stocks)}")
+    print(f"Basic liquidity-eligible: {sum(1 for x in raw_stocks if x.get('eligible_for_trade'))}")
 
     download_success_rate = validate_scan_result(
         universe_count=len(codes),
@@ -1676,11 +1665,12 @@ def main():
 
     # Sector membership map.
     group_members = {}
-    for stock in raw_stocks:
+    trade_universe = [x for x in raw_stocks if x.get("eligible_for_trade", False)]
+    for stock in trade_universe:
         for group in stock["groups"]:
             group_members.setdefault(group, []).append(stock)
 
-    sector_map = build_sector_strength(raw_stocks)
+    sector_map = build_sector_strength(trade_universe)
 
     for stock in raw_stocks:
         sector_score, best_sector, sector_detail = apply_sector_score(
@@ -1751,7 +1741,7 @@ def main():
         )
 
     next_day = sorted(
-        raw_stocks,
+        trade_universe,
         key=lambda x: (
             x["next_day_score"],
             x["entry_quality_score"],
@@ -1762,7 +1752,7 @@ def main():
     )
 
     ready = sorted(
-        raw_stocks,
+        trade_universe,
         key=lambda x: (
             x["ready_score"],
             x["rs20"],
@@ -1771,7 +1761,7 @@ def main():
     )
 
     mid_long = sorted(
-        raw_stocks,
+        trade_universe,
         key=lambda x: (
             x["mid_long_score"],
             x["rs60"],
@@ -1780,7 +1770,7 @@ def main():
     )
 
     radar = sorted(
-        raw_stocks,
+        trade_universe,
         key=lambda x: (
             max(
                 x["next_day_score"],
@@ -1850,9 +1840,44 @@ def main():
         "download_ok_count": download_ok_count,
         "download_failed_count": download_failed_count,
         "download_success_rate": r2(download_success_rate * 100),
-        "eligible_count": len(raw_stocks),
+        "eligible_count": sum(1 for x in raw_stocks if x.get("eligible_for_trade")),
         "filter_counts": filter_counts,
     }
+
+    # Keep every TWSE/TPEx common stock searchable even when history is unavailable.
+    scanned_codes = {x["code"] for x in raw_stocks}
+    unavailable_stocks = []
+    for code in codes:
+        if code in scanned_codes:
+            continue
+        info = get_stock_info(code)
+        exchange = "上櫃" if code in TPEX_CODES else "上市"
+        unavailable_stocks.append({
+            "code": code,
+            "name": info.get("name") or code,
+            "market": info.get("market") or exchange,
+            "industry": info.get("industry") or "",
+            "ticker": f"{code}.TWO" if code in TPEX_CODES else f"{code}.TW",
+            "groups": get_groups(code) or ([info["industry"]] if info.get("industry") else []),
+            "is_etf": False,
+            "date": "",
+            "price": 0,
+            "eligible_for_trade": False,
+            "eligibility_reasons": ["本次未取得足夠行情資料，暫無法分析"],
+            "download_status": "failed",
+            "download_error": "insufficient_or_unavailable_history",
+            "next_day_score": 0,
+            "ready_score": 0,
+            "mid_long_score": 0,
+            "next_day_signal": "資料不足",
+            "ready_signal": "資料不足",
+            "mid_long_signal": "資料不足",
+            "recommendation_reasons": [],
+            "risk_reasons": ["行情資料不足，沒有可用的K線與技術判讀"],
+            "next_day_action": "本次未取得足夠行情資料，請稍後再查。",
+            "trade_plan": {},
+        })
+    all_stock_rows = raw_stocks + unavailable_stocks
 
     # Keep the dashboard payload small enough for mobile browsers. 120-day
     # candles are written separately and fetched only when a chart is opened.
@@ -1867,13 +1892,13 @@ def main():
         "updated": now,
         "timezone": TIMEZONE,
         "strategy": (
-            "V6.5 TWSE Common-Stock Entry & Position Radar: "
+            "V6.6 TWSE+TPEx Common-Stock Entry & Position Radar: "
             "Trend + Breakout + Volume + Relative Strength "
             "+ Sector Strength + Entry Quality + Risk/Reward "
             "+ Overheat Control"
         ),
         "universe_count": len(codes),
-        "valid_count": len(raw_stocks),
+        "valid_count": sum(1 for x in raw_stocks if x.get("eligible_for_trade")),
         "data_quality": data_quality,
         "market_regime": market_regime,
         "institutional_data": institutional_meta,
@@ -1888,7 +1913,7 @@ def main():
         "ready_top": public_stocks(ready_top),
         "mid_long_top": public_stocks(mid_long_top),
         "stocks": public_stocks(radar_top),
-        "all_stocks": public_stocks(raw_stocks),
+        "all_stocks": public_stocks(all_stock_rows),
     }
 
     os.makedirs("docs", exist_ok=True)
@@ -1975,7 +2000,8 @@ def main():
     print("Universe:", len(codes))
     print("Download OK:", download_ok_count)
     print("Download Failed:", download_failed_count)
-    print("Eligible stocks:", len(raw_stocks))
+    print("Scanned stocks:", len(raw_stocks))
+    print("Trade-eligible stocks:", sum(1 for x in raw_stocks if x.get("eligible_for_trade")))
     print(f"Download Success: {download_success_rate:.1%}")
 
     print()
