@@ -1,0 +1,57 @@
+name: Strategy Iterative Backtest
+
+on:
+  workflow_dispatch:
+  schedule:
+    # 02:30 UTC = 10:30 Asia/Taipei, weekdays.
+    - cron: '30 2 * * 1-5'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: strategy-iterative-backtest
+  cancel-in-progress: false
+
+jobs:
+  backtest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run iterative backtest
+        env:
+          BACKTEST_START: '2026-01-01'
+          TARGET_RETURN: '20'
+          TARGET_PASS_RATE: '80'
+          MAX_SYMBOLS: '120'
+        run: python backtest_optimizer.py
+
+      - name: Upload backtest artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: strategy-backtest-results
+          path: backtest_results/
+          retention-days: 30
+
+      - name: Commit latest results
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add backtest_results/latest.json backtest_results/latest_stocks.csv backtest_results/best_params.json
+          git diff --cached --quiet && exit 0
+          git commit -m "Update iterative backtest results"
+          git pull --rebase origin main
+          git push
