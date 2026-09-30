@@ -10,6 +10,7 @@ Rules:
 from __future__ import annotations
 import argparse, json
 from pathlib import Path
+from stock_pool import get_stock_codes
 import numpy as np
 import pandas as pd
 import yfinance as yf
@@ -81,10 +82,10 @@ def backtest(df, variant, start):
 def main():
     ap=argparse.ArgumentParser()
     ap.add_argument("--start",default="2026-01-01")
-    ap.add_argument("--codes",default="2330,2317,2382,2454,3711,3231,6669,2303,3034,2379")
+    ap.add_argument("--codes",default="all",help="Comma-separated codes or all for stock_pool.py")
     ap.add_argument("--out",default="data/backtest_results.csv")
     a=ap.parse_args()
-    codes=[x.strip() for x in a.codes.split(",") if x.strip()]
+    codes=get_stock_codes() if a.codes.strip().lower()=="all" else [x.strip() for x in a.codes.split(",") if x.strip()]
     variants=["baseline","trend","trend_slope","trend_rsi","trend_volume","trend_breakout","combo"]
     rows=[]
     for code in codes:
@@ -101,7 +102,10 @@ def main():
     summary=(pd.DataFrame(rows).groupby("variant").agg(
         avg_return_pct=("return_pct","mean"), median_return_pct=("return_pct","median"),
         avg_mdd_pct=("mdd_pct","mean"), avg_win_rate_pct=("win_rate_pct","mean"),
-        stocks=("code","count")).sort_values("avg_return_pct",ascending=False))
+        stocks=("code","count"),
+        hit_20_count=("return_pct",lambda s:int((s>=20).sum())),
+        hit_20_rate_pct=("return_pct",lambda s:round((s>=20).mean()*100,2))
+    ).sort_values(["hit_20_rate_pct","median_return_pct"],ascending=False))
     print(summary.to_string())
     Path("data/backtest_summary.json").write_text(summary.reset_index().to_json(orient="records",force_ascii=False,indent=2),encoding="utf-8")
 
