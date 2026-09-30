@@ -3,8 +3,8 @@ name: Strategy Iterative Backtest
 on:
   workflow_dispatch:
   schedule:
-    # 02:30 UTC = 10:30 Asia/Taipei, weekdays.
-    - cron: '30 2 * * 1-5'
+    # Run once every hour, every day. GitHub cron uses UTC.
+    - cron: '17 * * * *'
 
 permissions:
   contents: write
