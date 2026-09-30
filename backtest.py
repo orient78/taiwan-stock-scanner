@@ -66,7 +66,10 @@ def backtest(df, variant, start):
                 sell=shares*0.5
                 part=sell*px*(1-COST_RATE-TAX_RATE); cash+=part; realized+=part; shares-=sell; state=1
         equity.append(cash+shares*float(r["Close"]))
-    if shares>0:\n        mark=shares*float(d.iloc[-1]["Close"])*(1-COST_RATE-TAX_RATE)\n        if mark + realized > entry_value: wins+=1\n    final=cash+shares*float(d.iloc[-1]["Close"])
+    if shares>0:
+        mark=shares*float(d.iloc[-1]["Close"])*(1-COST_RATE-TAX_RATE)
+        if mark + realized > entry_value: wins+=1
+    final=cash+shares*float(d.iloc[-1]["Close"])
     eq=pd.Series(equity+[final])
     peak=eq.cummax()
     mdd=((eq/peak)-1).min()
