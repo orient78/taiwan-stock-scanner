@@ -50,7 +50,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add backtest_results/latest.json backtest_results/latest_stocks.csv backtest_results/best_params.json
+          git add backtest_results/latest.json backtest_results/latest_stocks.csv backtest_results/best_params.json backtest_results/history_best.json
           git diff --cached --quiet && exit 0
           git commit -m "Update iterative backtest results"
           git pull --rebase origin main
