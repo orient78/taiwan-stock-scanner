@@ -4,7 +4,7 @@
     "avg_return_pct":14.862,
     "median_return_pct":3.1,
     "avg_mdd_pct":-24.31,
-    "avg_win_rate_pct":3.897,
+    "avg_win_rate_pct":37.074,
     "stocks":10
   },
   {
@@ -12,7 +12,7 @@
     "avg_return_pct":6.716,
     "median_return_pct":1.33,
     "avg_mdd_pct":-21.975,
-    "avg_win_rate_pct":2.429,
+    "avg_win_rate_pct":38.652,
     "stocks":10
   },
   {
@@ -20,7 +20,7 @@
     "avg_return_pct":5.319,
     "median_return_pct":1.37,
     "avg_mdd_pct":-19.636,
-    "avg_win_rate_pct":1.667,
+    "avg_win_rate_pct":37.869,
     "stocks":10
   },
   {
@@ -28,7 +28,7 @@
     "avg_return_pct":4.513,
     "median_return_pct":-2.67,
     "avg_mdd_pct":-20.986,
-    "avg_win_rate_pct":1.667,
+    "avg_win_rate_pct":35.85,
     "stocks":10
   },
   {
@@ -36,7 +36,7 @@
     "avg_return_pct":3.839,
     "median_return_pct":-1.995,
     "avg_mdd_pct":-23.344,
-    "avg_win_rate_pct":3.159,
+    "avg_win_rate_pct":35.727,
     "stocks":10
   },
   {
@@ -44,7 +44,7 @@
     "avg_return_pct":0.206,
     "median_return_pct":-4.88,
     "avg_mdd_pct":-20.527,
-    "avg_win_rate_pct":3.361,
+    "avg_win_rate_pct":37.401,
     "stocks":10
   },
   {
@@ -52,7 +52,7 @@
     "avg_return_pct":-2.512,
     "median_return_pct":-7.815,
     "avg_mdd_pct":-20.873,
-    "avg_win_rate_pct":1.429,
+    "avg_win_rate_pct":35.298,
     "stocks":10
   }
 ]
