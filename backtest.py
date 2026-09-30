@@ -50,23 +50,23 @@ def backtest(df, variant, start):
     d=indicators(df).dropna(subset=["Open","High","Low","Close"]).copy()
     d=d.loc[d.index>=pd.Timestamp(start)]
     if len(d)<3: return None
-    cash=1.0; shares=0.0; state=0; trades=0; wins=0; entry_value=0.0
+    cash=1.0; shares=0.0; state=0; trades=0; wins=0; entry_value=0.0; realized=0.0
     equity=[]
     for i in range(len(d)-1):
         r=d.iloc[i]; nxt=d.iloc[i+1]; px=float(nxt["Open"])
         if shares==0 and entry_signal(r,variant):
             shares=(cash*(1-COST_RATE))/px; cash=0; state=2; trades+=1
-            entry_value=shares*px
+            entry_value=shares*px; realized=0.0
         elif shares>0:
             if r["Close"] < r["MA10"]:
                 proceeds=shares*px*(1-COST_RATE-TAX_RATE)
-                if proceeds > entry_value: wins+=1
+                if proceeds + realized > entry_value: wins+=1
                 cash+=proceeds; shares=0; state=0
             elif r["Close"] < r["MA5"] and state==2:
                 sell=shares*0.5
-                cash+=sell*px*(1-COST_RATE-TAX_RATE); shares-=sell; state=1
+                part=sell*px*(1-COST_RATE-TAX_RATE); cash+=part; realized+=part; shares-=sell; state=1
         equity.append(cash+shares*float(r["Close"]))
-    final=cash+shares*float(d.iloc[-1]["Close"])
+    if shares>0:\n        mark=shares*float(d.iloc[-1]["Close"])*(1-COST_RATE-TAX_RATE)\n        if mark + realized > entry_value: wins+=1\n    final=cash+shares*float(d.iloc[-1]["Close"])
     eq=pd.Series(equity+[final])
     peak=eq.cummax()
     mdd=((eq/peak)-1).min()
