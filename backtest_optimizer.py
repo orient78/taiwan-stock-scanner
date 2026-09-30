@@ -15,6 +15,8 @@ START_DATE = os.getenv("BACKTEST_START", "2026-01-01")
 TARGET_RETURN = float(os.getenv("TARGET_RETURN", "20"))
 TARGET_PASS_RATE = float(os.getenv("TARGET_PASS_RATE", "80"))
 MAX_SYMBOLS = int(os.getenv("MAX_SYMBOLS", "120"))
+RUN_ID = int(os.getenv("GITHUB_RUN_NUMBER", "0"))
+HISTORY_FILE = "backtest_results/history_best.json"
 
 # Exit rules requested by the project:
 # close < MA5 => reduce position by 50%
@@ -119,15 +121,42 @@ def backtest_one(df, p):
         "win_rate_pct": (wins / trades * 100) if trades else 0.0,
     }
 
-def parameter_grid():
-    # Deliberately bounded grid to keep scheduled Actions runtime predictable.
+def load_history_best():
+    try:
+        with open(HISTORY_FILE, "r", encoding="utf-8") as f:
+            return json.load(f)
+    except (FileNotFoundError, json.JSONDecodeError, TypeError):
+        return None
+
+def _bounded(values, low, high, digits=2):
+    return sorted({round(min(high, max(low, float(v))), digits) for v in values})
+
+def parameter_grid(previous_params=None):
+    # Each scheduled run explores a different neighborhood. The GitHub run
+    # number changes the search radius, so hourly executions are not identical.
+    phase = RUN_ID % 6
+    if previous_params:
+        rsi_min0 = previous_params.get("rsi_min", 47)
+        rsi_max0 = previous_params.get("rsi_max", 72)
+        vol0 = previous_params.get("vol_ratio", 1.0)
+        br0 = previous_params.get("breakout_pct")
+        br0 = -1.0 if br0 is None else br0
+        rsi_mins = _bounded([rsi_min0 - 4 + phase, rsi_min0 - 2, rsi_min0, rsi_min0 + 2], 35, 65, 0)
+        rsi_maxs = _bounded([rsi_max0 - 4, rsi_max0, rsi_max0 + 2 + phase], 55, 85, 0)
+        vols = _bounded([vol0 - .25, vol0 - .1, vol0, vol0 + .15 + .05 * phase], .5, 2.0)
+        breakouts = _bounded([br0 - 2, br0 - 1, br0, br0 + 1 + .5 * phase], -6, 5)
+        breakouts = [None if abs(v + 1.0) < 1e-9 else v for v in breakouts]
+    else:
+        rsi_mins = [40, 45, 50, 55]
+        rsi_maxs = [65, 70, 75, 80]
+        vols = [0.7, 0.9, 1.1, 1.3]
+        breakouts = [None, -3.0, -1.0, 0.0, 2.0]
+
     for ma_order, rsi_min, rsi_max, vol_ratio, breakout_pct in product(
-        [False, True],
-        [45, 50],
-        [68, 72, 76],
-        [0.8, 1.0, 1.2],
-        [None, -2.0, 0.0],
+        [False, True], rsi_mins, rsi_maxs, vols, breakouts
     ):
+        if rsi_min >= rsi_max:
+            continue
         yield {
             "ma_order": ma_order,
             "rsi_min": rsi_min,
@@ -170,12 +199,14 @@ def main():
     if len(data) < 20:
         raise RuntimeError(f"Too few usable symbols: {len(data)}")
 
+    history_best = load_history_best()
+    previous_params = history_best.get("best_params") if history_best else None
     candidates = []
     best_details = None
     best_summary = None
     best_params = None
 
-    for iteration, params in enumerate(parameter_grid(), 1):
+    for iteration, params in enumerate(parameter_grid(previous_params), 1):
         details = []
         for code, df in data.items():
             result = backtest_one(df, params)
@@ -201,7 +232,20 @@ def main():
             best_params = params
             best_details = details
 
-    reached = best_summary["pass_rate_pct"] >= TARGET_PASS_RATE
+    run_best = best_summary
+    improved_history = history_best is None or score(run_best) > score(history_best["best"])
+    if history_best is not None and not improved_history:
+        historical_best = history_best
+    else:
+        historical_best = {
+            "updated_at": datetime.now(ZoneInfo(TIMEZONE)).isoformat(),
+            "github_run_number": RUN_ID,
+            "best": run_best,
+            "best_params": best_params,
+            "stock_results": sorted(best_details, key=lambda x: x["return_pct"], reverse=True),
+        }
+
+    reached = historical_best["best"]["pass_rate_pct"] >= TARGET_PASS_RATE
     output = {
         "generated_at": datetime.now(ZoneInfo(TIMEZONE)).isoformat(),
         "universe": "TWSE listed common stocks only",
@@ -214,24 +258,31 @@ def main():
             "below_ma5": "reduce 50% next open",
             "below_ma10": "exit remaining position next open",
         },
+        "github_run_number": RUN_ID,
+        "improved_history": improved_history,
         "target_reached": reached,
-        "best": best_summary,
-        "best_params": best_params,
-        "stock_results": sorted(best_details, key=lambda x: x["return_pct"], reverse=True),
+        "run_best": run_best,
+        "best": historical_best["best"],
+        "best_params": historical_best["best_params"],
+        "stock_results": historical_best["stock_results"],
         "top_candidates": sorted(candidates, key=score, reverse=True)[:20],
         "note": "Optimization target is not a promise of future returns. Validate on unseen periods before deployment.",
     }
+
+    with open(HISTORY_FILE, "w", encoding="utf-8") as f:
+        json.dump(historical_best, f, ensure_ascii=False, indent=2)
 
     with open("backtest_results/latest.json", "w", encoding="utf-8") as f:
         json.dump(output, f, ensure_ascii=False, indent=2)
 
     pd.DataFrame(output["stock_results"]).to_csv("backtest_results/latest_stocks.csv", index=False, encoding="utf-8-sig")
     with open("backtest_results/best_params.json", "w", encoding="utf-8") as f:
-        json.dump(best_params, f, ensure_ascii=False, indent=2)
+        json.dump(historical_best["best_params"], f, ensure_ascii=False, indent=2)
 
     print("=" * 60)
     print("BEST RESULT")
-    print(json.dumps(best_summary, ensure_ascii=False, indent=2))
+    print(json.dumps(historical_best["best"], ensure_ascii=False, indent=2))
+    print(f"IMPROVED HISTORY: {improved_history}")
     print(f"TARGET REACHED: {reached}")
 
 if __name__ == "__main__":
