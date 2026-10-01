@@ -78,6 +78,8 @@ def backtest_one(df, p):
     below10_days = 0
     trades = 0
     wins = 0
+    closed_trades = 0
+    realized_proceeds = 0.0
     equity_curve = []
 
     rows = list(df.itertuples())
@@ -96,6 +98,7 @@ def backtest_one(df, p):
                 below5_days = 0
                 below10_days = 0
                 entry_value = shares * next_open
+                realized_proceeds = 0.0
                 trades += 1
         else:
             below5_days = below5_days + 1 if close < float(r.MA5) else 0
@@ -103,8 +106,10 @@ def backtest_one(df, p):
 
             if below10_days >= p["ma10_confirm"]:
                 exit_value = shares * next_open
-                if exit_value > entry_value:
+                total_proceeds = realized_proceeds + exit_value
+                if total_proceeds > entry_value:
                     wins += 1
+                closed_trades += 1
                 cash += exit_value
                 shares = 0.0
                 reduced = False
@@ -112,7 +117,9 @@ def backtest_one(df, p):
                 below10_days = 0
             elif below5_days >= p["ma5_confirm"] and not reduced:
                 sell = shares * 0.5
-                cash += sell * next_open
+                proceeds = sell * next_open
+                cash += proceeds
+                realized_proceeds += proceeds
                 shares -= sell
                 reduced = True
             elif p["reentry"] and reduced and close > float(r.MA5) and close > float(r.MA10):
@@ -122,6 +129,8 @@ def backtest_one(df, p):
                 if add_value > 0:
                     shares += add_value / next_open
                     cash -= add_value
+                    entry_value = shares * next_open
+                    realized_proceeds = 0.0
                     reduced = False
                     below5_days = 0
                     below10_days = 0
@@ -130,6 +139,13 @@ def backtest_one(df, p):
 
     last_close = float(df["Close"].iloc[-1])
     final_equity = cash + shares * last_close
+    if shares > 0:
+        total_proceeds = realized_proceeds + shares * last_close
+        if total_proceeds > entry_value:
+            wins += 1
+        closed_trades += 1
+    first_open = float(df["Open"].iloc[0])
+    buy_hold_pct = (last_close / first_open - 1.0) * 100 if first_open > 0 else 0.0
     arr = np.asarray(equity_curve or [1.0], dtype=float)
     peaks = np.maximum.accumulate(arr)
     mdd = float(np.min((arr / peaks - 1.0) * 100))
@@ -137,7 +153,8 @@ def backtest_one(df, p):
         "return_pct": (final_equity - 1.0) * 100,
         "mdd_pct": mdd,
         "trades": trades,
-        "win_rate_pct": (wins / trades * 100) if trades else 0.0,
+        "win_rate_pct": (wins / closed_trades * 100) if closed_trades else 0.0,
+        "buy_hold_pct": buy_hold_pct,
     }
 
 def load_history_best():
@@ -250,6 +267,7 @@ def main():
             "risk_pass_rate_pct": 100 * risk_passed / len(details) if details else 0,
             "avg_trades": float(np.mean([x["trades"] for x in details])) if details else 0,
             "avg_win_rate_pct": float(np.mean([x["win_rate_pct"] for x in details])) if details else 0,
+            "avg_buy_hold_pct": float(np.mean([x["buy_hold_pct"] for x in details])) if details else 0,
             "avg_return_pct": float(np.mean(returns)) if returns else 0,
             "median_return_pct": float(np.median(returns)) if returns else 0,
             "avg_mdd_pct": float(np.mean(mdds)) if mdds else 0,
