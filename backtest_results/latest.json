@@ -1,0 +1,1220 @@
+{
+  "generated_at": "2026-10-01T10:19:03.397464+08:00",
+  "universe": "TWSE listed common stocks only",
+  "start_date": "2026-01-01",
+  "target": {
+    "individual_return_pct": 20.0,
+    "required_pass_rate_pct": 80.0
+  },
+  "exit_rules": {
+    "below_ma5": "reduce 50% next open",
+    "below_ma10": "exit remaining position next open"
+  },
+  "github_run_number": 1,
+  "improved_history": true,
+  "target_reached": false,
+  "run_best": {
+    "iteration": 22,
+    "symbols": 120,
+    "passed_symbols": 6,
+    "pass_rate_pct": 5.0,
+    "avg_return_pct": -4.028666882674032,
+    "median_return_pct": -3.2331676802744513,
+    "avg_mdd_pct": -13.453961233572587,
+    "params": {
+      "ma_order": false,
+      "rsi_min": 40,
+      "rsi_max": 70,
+      "vol_ratio": 0.7,
+      "breakout_pct": -3.0
+    }
+  },
+  "best": {
+    "iteration": 22,
+    "symbols": 120,
+    "passed_symbols": 6,
+    "pass_rate_pct": 5.0,
+    "avg_return_pct": -4.028666882674032,
+    "median_return_pct": -3.2331676802744513,
+    "avg_mdd_pct": -13.453961233572587,
+    "params": {
+      "ma_order": false,
+      "rsi_min": 40,
+      "rsi_max": 70,
+      "vol_ratio": 0.7,
+      "breakout_pct": -3.0
+    }
+  },
+  "best_params": {
+    "ma_order": false,
+    "rsi_min": 40,
+    "rsi_max": 70,
+    "vol_ratio": 0.7,
+    "breakout_pct": -3.0
+  },
+  "stock_results": [
+    {
+      "code": "1309",
+      "return_pct": 35.510428789184445,
+      "mdd_pct": -9.837488920651438,
+      "trades": 3,
+      "win_rate_pct": 0.0
+    },
+    {
+      "code": "1342",
+      "return_pct": 25.802641775915404,
+      "mdd_pct": -4.535868052040215,
+      "trades": 6,
+      "win_rate_pct": 16.666666666666664
+    },
+    {
+      "code": "1515",
+      "return_pct": 24.319409061753227,
+      "mdd_pct": -13.218308123228105,
+      "trades": 4,
+      "win_rate_pct": 0.0
+    },
+    {
+      "code": "1319",
+      "return_pct": 24.009652621327948,
+      "mdd_pct": -11.444943923454154,
+      "trades": 4,
+      "win_rate_pct": 0.0
+    },
+    {
+      "code": "1503",
+      "return_pct": 23.911403215549186,
+      "mdd_pct": -17.307567976946924,
+      "trades": 5,
+      "win_rate_pct": 0.0
+    },
+    {
+      "code": "1526",
+      "return_pct": 20.499411993693116,
+      "mdd_pct": -13.015283640897879,
+      "trades": 3,
+      "win_rate_pct": 0.0
+    },
+    {
+      "code": "1466",
+      "return_pct": 13.554676785626318,
+      "mdd_pct": -17.530913297303808,
+      "trades": 4,
+      "win_rate_pct": 0.0
+    },
+    {
+      "code": "1303",
+      "return_pct": 9.484095965366235,
+      "mdd_pct": -25.85681814952272,
+      "trades": 9,
+      "win_rate_pct": 0.0
+    },
+    {
+      "code": "1517",
+      "return_pct": 7.115494531042277,
+      "mdd_pct": -9.064218694965708,
+      "trades": 4,
+      "win_rate_pct": 0.0
+    },
+    {
+      "code": "1307",
+      "return_pct": 6.943376181825034,
+      "mdd_pct": -7.461247793530445,
+      "trades": 6,
+      "win_rate_pct": 0.0
+    },
+    {
+      "code": "2330",
+      "return_pct": 5.877922805756652,
+      "mdd_pct": -12.478616632754836,
+      "trades": 12,
+      "win_rate_pct": 0.0
+    },
+    {
+      "code": "1455",
+      "return_pct": 5.0584576280448434,
+      "mdd_pct": -10.426654392477142,
+      "trades": 5,
+      "win_rate_pct": 0.0
+    },
+    {
+      "code": "1527",
+      "return_pct": 4.4391585461994065,
+      "mdd_pct": -5.757726580447075,
+      "trades": 13,
+      "win_rate_pct": 30.76923076923077
+    },
+    {
+      "code": "1454",
+      "return_pct": 4.163648070477288,
+      "mdd_pct": -18.314673939819837,
+      "trades": 7,
+      "win_rate_pct": 14.285714285714285
+    },
+    {
+      "code": "1459",
+      "return_pct": 4.132204264258621,
+      "mdd_pct": -7.856626388811128,
+      "trades": 8,
+      "win_rate_pct": 0.0
+    },
+    {
+      "code": "1323",
+      "return_pct": 3.2133147394746597,
+      "mdd_pct": -10.882803525280039,
+      "trades": 5,
+      "win_rate_pct": 20.0
+    },
+    {
+      "code": "1417",
+      "return_pct": 3.0035930933326904,
+      "mdd_pct": -4.70270208410316,
+      "trades": 8,
+      "win_rate_pct": 0.0
+    },
+    {
+      "code": "1213",
+      "return_pct": 2.1032111339156057,
+      "mdd_pct": -5.534106406856498,
+      "trades": 2,
+      "win_rate_pct": 0.0
+    },
+    {
+      "code": "1416",
+      "return_pct": 2.032424608396388,
+      "mdd_pct": -6.781592601109665,
+      "trades": 8,
+      "win_rate_pct": 12.5
+    },
+    {
+      "code": "1315",
+      "return_pct": 1.9490479759160628,
+      "mdd_pct": -5.3199955192904325,
+      "trades": 12,
+      "win_rate_pct": 16.666666666666664
+    },
+    {
+      "code": "1514",
+      "return_pct": 1.8818225975978375,
+      "mdd_pct": -20.99690316022501,
+      "trades": 4,
+      "win_rate_pct": 0.0
+    },
+    {
+      "code": "1233",
+      "return_pct": 1.7288311383635069,
+      "mdd_pct": -4.60069335601061,
+      "trades": 9,
+      "win_rate_pct": 0.0
+    },
+    {
+      "code": "1418",
+      "return_pct": 1.6758170074898882,
+      "mdd_pct": -5.577016846134963,
+      "trades": 6,
+      "win_rate_pct": 50.0
+    },
+    {
+      "code": "1104",
+      "return_pct": 1.3720681278465374,
+      "mdd_pct": -3.5537930350486135,
+      "trades": 10,
+      "win_rate_pct": 0.0
+    },
+    {
+      "code": "1316",
+      "return_pct": 1.2862367338278613,
+      "mdd_pct": -6.808512261573307,
+      "trades": 2,
+      "win_rate_pct": 0.0
+    },
+    {
+      "code": "1471",
+      "return_pct": 1.2024499983821269,
+      "mdd_pct": -17.420689655474895,
+      "trades": 4,
+      "win_rate_pct": 0.0
+    },
+    {
+      "code": "1443",
+      "return_pct": 1.1867302500264465,
+      "mdd_pct": -7.684608101588342,
+      "trades": 9,
+      "win_rate_pct": 22.22222222222222
+    },
+    {
+      "code": "1513",
+      "return_pct": 1.1009299304742592,
+      "mdd_pct": -17.242969503445604,
+      "trades": 5,
+      "win_rate_pct": 0.0
+    },
+    {
+      "code": "1326",
+      "return_pct": 0.8777750309786114,
+      "mdd_pct": -23.64413513051442,
+      "trades": 6,
+      "win_rate_pct": 0.0
+    },
+    {
+      "code": "1463",
+      "return_pct": 0.5561027273327079,
+      "mdd_pct": -5.684444143958711,
+      "trades": 8,
+      "win_rate_pct": 12.5
+    },
+    {
+      "code": "1465",
+      "return_pct": 0.522537225905606,
+      "mdd_pct": -6.594575787377388,
+      "trades": 7,
+      "win_rate_pct": 0.0
+    },
+    {
+      "code": "1464",
+      "return_pct": 0.49877846681984916,
+      "mdd_pct": -8.97087119144091,
+      "trades": 6,
+      "win_rate_pct": 0.0
+    },
+    {
+      "code": "1449",
+      "return_pct": 0.24066004364335924,
+      "mdd_pct": -13.218491266581678,
+      "trades": 4,
+      "win_rate_pct": 0.0
+    },
+    {
+      "code": "1225",
+      "return_pct": 0.2405998624768424,
+      "mdd_pct": -8.722534105939573,
+      "trades": 5,
+      "win_rate_pct": 0.0
+    },
+    {
+      "code": "1101",
+      "return_pct": 0.17850242376855618,
+      "mdd_pct": -12.39128067182369,
+      "trades": 9,
+      "win_rate_pct": 11.11111111111111
+    },
+    {
+      "code": "1216",
+      "return_pct": 0.1108186259058952,
+      "mdd_pct": -6.339666726363435,
+      "trades": 10,
+      "win_rate_pct": 20.0
+    },
+    {
+      "code": "1423",
+      "return_pct": 0.07816023087332535,
+      "mdd_pct": -12.166200371596025,
+      "trades": 10,
+      "win_rate_pct": 10.0
+    },
+    {
+      "code": "1439",
+      "return_pct": -0.06470768480041356,
+      "mdd_pct": -8.457874475111794,
+      "trades": 6,
+      "win_rate_pct": 16.666666666666664
+    },
+    {
+      "code": "1452",
+      "return_pct": -0.34402598435244736,
+      "mdd_pct": -4.405981206949761,
+      "trades": 5,
+      "win_rate_pct": 0.0
+    },
+    {
+      "code": "1437",
+      "return_pct": -0.46787513745457643,
+      "mdd_pct": -6.231832108285196,
+      "trades": 7,
+      "win_rate_pct": 0.0
+    },
+    {
+      "code": "1338",
+      "return_pct": -0.5887158085013944,
+      "mdd_pct": -11.281747029858359,
+      "trades": 5,
+      "win_rate_pct": 0.0
+    },
+    {
+      "code": "1467",
+      "return_pct": -0.8129152524824712,
+      "mdd_pct": -13.869465437096029,
+      "trades": 3,
+      "win_rate_pct": 0.0
+    },
+    {
+      "code": "1473",
+      "return_pct": -0.9540669684381609,
+      "mdd_pct": -11.004853389202896,
+      "trades": 5,
+      "win_rate_pct": 0.0
+    },
+    {
+      "code": "1219",
+      "return_pct": -1.0770242958592635,
+      "mdd_pct": -5.344434684480348,
+      "trades": 6,
+      "win_rate_pct": 0.0
+    },
+    {
+      "code": "1475",
+      "return_pct": -1.1033121381233468,
+      "mdd_pct": -6.403943231793907,
+      "trades": 4,
+      "win_rate_pct": 50.0
+    },
+    {
+      "code": "1474",
+      "return_pct": -1.1971804903894712,
+      "mdd_pct": -4.498896417713672,
+      "trades": 4,
+      "win_rate_pct": 0.0
+    },
+    {
+      "code": "1460",
+      "return_pct": -1.1987500191920963,
+      "mdd_pct": -6.66277304377364,
+      "trades": 6,
+      "win_rate_pct": 16.666666666666664
+    },
+    {
+      "code": "1102",
+      "return_pct": -1.3556018482500765,
+      "mdd_pct": -5.3875117412477636,
+      "trades": 12,
+      "win_rate_pct": 0.0
+    },
+    {
+      "code": "1444",
+      "return_pct": -1.4804529583306691,
+      "mdd_pct": -11.965240356207563,
+      "trades": 4,
+      "win_rate_pct": 0.0
+    },
+    {
+      "code": "1210",
+      "return_pct": -1.5608037095776184,
+      "mdd_pct": -6.935438745720191,
+      "trades": 11,
+      "win_rate_pct": 9.090909090909092
+    },
+    {
+      "code": "1445",
+      "return_pct": -1.8685496586604788,
+      "mdd_pct": -13.491736533075683,
+      "trades": 3,
+      "win_rate_pct": 0.0
+    },
+    {
+      "code": "1310",
+      "return_pct": -1.9612462625053784,
+      "mdd_pct": -13.713699866967666,
+      "trades": 7,
+      "win_rate_pct": 0.0
+    },
+    {
+      "code": "1447",
+      "return_pct": -2.156945793632059,
+      "mdd_pct": -15.385199517541693,
+      "trades": 3,
+      "win_rate_pct": 0.0
+    },
+    {
+      "code": "1218",
+      "return_pct": -2.5538433138948546,
+      "mdd_pct": -6.931359859814112,
+      "trades": 9,
+      "win_rate_pct": 0.0
+    },
+    {
+      "code": "1529",
+      "return_pct": -2.643892498406053,
+      "mdd_pct": -9.657542110908878,
+      "trades": 2,
+      "win_rate_pct": 0.0
+    },
+    {
+      "code": "1341",
+      "return_pct": -2.6577308005401368,
+      "mdd_pct": -9.757481572652527,
+      "trades": 14,
+      "win_rate_pct": 14.285714285714285
+    },
+    {
+      "code": "1217",
+      "return_pct": -2.956797851284354,
+      "mdd_pct": -4.3125563363073045,
+      "trades": 8,
+      "win_rate_pct": 12.5
+    },
+    {
+      "code": "1215",
+      "return_pct": -3.1606671389510566,
+      "mdd_pct": -10.564285859214738,
+      "trades": 4,
+      "win_rate_pct": 0.0
+    },
+    {
+      "code": "1108",
+      "return_pct": -3.1644596724018204,
+      "mdd_pct": -4.430279488047894,
+      "trades": 5,
+      "win_rate_pct": 20.0
+    },
+    {
+      "code": "1109",
+      "return_pct": -3.1899825348360666,
+      "mdd_pct": -5.327745451391697,
+      "trades": 9,
+      "win_rate_pct": 11.11111111111111
+    },
+    {
+      "code": "1434",
+      "return_pct": -3.276352825712836,
+      "mdd_pct": -8.133868829119972,
+      "trades": 10,
+      "win_rate_pct": 0.0
+    },
+    {
+      "code": "1521",
+      "return_pct": -3.2930119241266986,
+      "mdd_pct": -21.92925816899709,
+      "trades": 6,
+      "win_rate_pct": 0.0
+    },
+    {
+      "code": "1440",
+      "return_pct": -3.6505271710537412,
+      "mdd_pct": -19.390400922994843,
+      "trades": 6,
+      "win_rate_pct": 0.0
+    },
+    {
+      "code": "1313",
+      "return_pct": -3.816009057722647,
+      "mdd_pct": -12.932479251601602,
+      "trades": 7,
+      "win_rate_pct": 0.0
+    },
+    {
+      "code": "1220",
+      "return_pct": -4.473498954572152,
+      "mdd_pct": -8.133518098221248,
+      "trades": 9,
+      "win_rate_pct": 0.0
+    },
+    {
+      "code": "1231",
+      "return_pct": -4.751376344952973,
+      "mdd_pct": -7.043789154096114,
+      "trades": 8,
+      "win_rate_pct": 0.0
+    },
+    {
+      "code": "1256",
+      "return_pct": -4.784157954653145,
+      "mdd_pct": -19.06460647684771,
+      "trades": 5,
+      "win_rate_pct": 0.0
+    },
+    {
+      "code": "1472",
+      "return_pct": -5.12399599596054,
+      "mdd_pct": -10.840000776382052,
+      "trades": 15,
+      "win_rate_pct": 20.0
+    },
+    {
+      "code": "1506",
+      "return_pct": -5.151616462506259,
+      "mdd_pct": -13.896503244753333,
+      "trades": 5,
+      "win_rate_pct": 0.0
+    },
+    {
+      "code": "1477",
+      "return_pct": -5.22762072266536,
+      "mdd_pct": -9.091868688867134,
+      "trades": 5,
+      "win_rate_pct": 0.0
+    },
+    {
+      "code": "1451",
+      "return_pct": -5.7635111788967075,
+      "mdd_pct": -11.401881918476164,
+      "trades": 9,
+      "win_rate_pct": 11.11111111111111
+    },
+    {
+      "code": "1402",
+      "return_pct": -5.925660033557545,
+      "mdd_pct": -9.333928347184939,
+      "trades": 9,
+      "win_rate_pct": 0.0
+    },
+    {
+      "code": "1476",
+      "return_pct": -6.9154252203729065,
+      "mdd_pct": -13.177210169275122,
+      "trades": 8,
+      "win_rate_pct": 12.5
+    },
+    {
+      "code": "1435",
+      "return_pct": -6.979438904072577,
+      "mdd_pct": -8.341821424639729,
+      "trades": 2,
+      "win_rate_pct": 0.0
+    },
+    {
+      "code": "1103",
+      "return_pct": -7.1281581470639015,
+      "mdd_pct": -7.914437230197291,
+      "trades": 13,
+      "win_rate_pct": 0.0
+    },
+    {
+      "code": "1446",
+      "return_pct": -7.256789748253056,
+      "mdd_pct": -10.187919629896447,
+      "trades": 7,
+      "win_rate_pct": 0.0
+    },
+    {
+      "code": "1227",
+      "return_pct": -7.336558982171592,
+      "mdd_pct": -9.922207757869705,
+      "trades": 7,
+      "win_rate_pct": 0.0
+    },
+    {
+      "code": "1522",
+      "return_pct": -7.377480476009124,
+      "mdd_pct": -13.517230911960375,
+      "trades": 3,
+      "win_rate_pct": 0.0
+    },
+    {
+      "code": "1232",
+      "return_pct": -7.499543813831511,
+      "mdd_pct": -9.456135807681987,
+      "trades": 13,
+      "win_rate_pct": 7.6923076923076925
+    },
+    {
+      "code": "1314",
+      "return_pct": -7.887300106046702,
+      "mdd_pct": -18.113244886670564,
+      "trades": 7,
+      "win_rate_pct": 0.0
+    },
+    {
+      "code": "1516",
+      "return_pct": -8.059349500052582,
+      "mdd_pct": -13.467623058873013,
+      "trades": 4,
+      "win_rate_pct": 0.0
+    },
+    {
+      "code": "1203",
+      "return_pct": -8.32922959815603,
+      "mdd_pct": -16.35200797562355,
+      "trades": 13,
+      "win_rate_pct": 23.076923076923077
+    },
+    {
+      "code": "1234",
+      "return_pct": -8.492234769998886,
+      "mdd_pct": -9.715600565407767,
+      "trades": 9,
+      "win_rate_pct": 0.0
+    },
+    {
+      "code": "1321",
+      "return_pct": -8.522758839670386,
+      "mdd_pct": -10.269014308443136,
+      "trades": 10,
+      "win_rate_pct": 20.0
+    },
+    {
+      "code": "1409",
+      "return_pct": -8.543212392923527,
+      "mdd_pct": -42.39245415999093,
+      "trades": 11,
+      "win_rate_pct": 9.090909090909092
+    },
+    {
+      "code": "1468",
+      "return_pct": -8.720346465659778,
+      "mdd_pct": -12.136193807282059,
+      "trades": 11,
+      "win_rate_pct": 0.0
+    },
+    {
+      "code": "1201",
+      "return_pct": -8.800128217129544,
+      "mdd_pct": -9.112457728430524,
+      "trades": 11,
+      "win_rate_pct": 18.181818181818183
+    },
+    {
+      "code": "1470",
+      "return_pct": -8.960257700995623,
+      "mdd_pct": -10.348143234576469,
+      "trades": 7,
+      "win_rate_pct": 0.0
+    },
+    {
+      "code": "1453",
+      "return_pct": -9.24402130325641,
+      "mdd_pct": -10.259185003633197,
+      "trades": 4,
+      "win_rate_pct": 0.0
+    },
+    {
+      "code": "1432",
+      "return_pct": -9.27612456463831,
+      "mdd_pct": -10.352676978378806,
+      "trades": 5,
+      "win_rate_pct": 0.0
+    },
+    {
+      "code": "1441",
+      "return_pct": -9.300574727940514,
+      "mdd_pct": -9.300574727940514,
+      "trades": 7,
+      "win_rate_pct": 28.57142857142857
+    },
+    {
+      "code": "1512",
+      "return_pct": -9.43611649326871,
+      "mdd_pct": -21.978769641496754,
+      "trades": 4,
+      "win_rate_pct": 0.0
+    },
+    {
+      "code": "1410",
+      "return_pct": -9.591254519829784,
+      "mdd_pct": -10.910326691438465,
+      "trades": 5,
+      "win_rate_pct": 0.0
+    },
+    {
+      "code": "1524",
+      "return_pct": -10.079868383283607,
+      "mdd_pct": -17.314821501869982,
+      "trades": 7,
+      "win_rate_pct": 0.0
+    },
+    {
+      "code": "1337",
+      "return_pct": -10.11502641406471,
+      "mdd_pct": -19.66683254132623,
+      "trades": 5,
+      "win_rate_pct": 0.0
+    },
+    {
+      "code": "1414",
+      "return_pct": -10.159864582008439,
+      "mdd_pct": -13.465891573675803,
+      "trades": 8,
+      "win_rate_pct": 0.0
+    },
+    {
+      "code": "1236",
+      "return_pct": -10.193290835724122,
+      "mdd_pct": -13.993247321637469,
+      "trades": 5,
+      "win_rate_pct": 0.0
+    },
+    {
+      "code": "1504",
+      "return_pct": -10.298043259237943,
+      "mdd_pct": -18.22326387515315,
+      "trades": 3,
+      "win_rate_pct": 0.0
+    },
+    {
+      "code": "1419",
+      "return_pct": -10.490317586775744,
+      "mdd_pct": -14.954054089062119,
+      "trades": 9,
+      "win_rate_pct": 22.22222222222222
+    },
+    {
+      "code": "1301",
+      "return_pct": -12.198565612546265,
+      "mdd_pct": -31.160515627295716,
+      "trades": 8,
+      "win_rate_pct": 0.0
+    },
+    {
+      "code": "1235",
+      "return_pct": -12.22917283739906,
+      "mdd_pct": -22.812526844060187,
+      "trades": 8,
+      "win_rate_pct": 25.0
+    },
+    {
+      "code": "1324",
+      "return_pct": -12.49390228819074,
+      "mdd_pct": -14.747452696279284,
+      "trades": 9,
+      "win_rate_pct": 11.11111111111111
+    },
+    {
+      "code": "1525",
+      "return_pct": -12.890795025756974,
+      "mdd_pct": -12.890795025756974,
+      "trades": 7,
+      "win_rate_pct": 0.0
+    },
+    {
+      "code": "1436",
+      "return_pct": -12.904505745856598,
+      "mdd_pct": -19.664774255126904,
+      "trades": 5,
+      "win_rate_pct": 0.0
+    },
+    {
+      "code": "1438",
+      "return_pct": -13.152703651442899,
+      "mdd_pct": -18.13615259281263,
+      "trades": 5,
+      "win_rate_pct": 0.0
+    },
+    {
+      "code": "1110",
+      "return_pct": -13.396334811114585,
+      "mdd_pct": -14.442957082173102,
+      "trades": 10,
+      "win_rate_pct": 0.0
+    },
+    {
+      "code": "1325",
+      "return_pct": -15.387370866761463,
+      "mdd_pct": -17.39556186895482,
+      "trades": 5,
+      "win_rate_pct": 0.0
+    },
+    {
+      "code": "1413",
+      "return_pct": -15.58619288263785,
+      "mdd_pct": -16.426134450084806,
+      "trades": 9,
+      "win_rate_pct": 0.0
+    },
+    {
+      "code": "1340",
+      "return_pct": -16.527094515354502,
+      "mdd_pct": -21.25637712316989,
+      "trades": 6,
+      "win_rate_pct": 16.666666666666664
+    },
+    {
+      "code": "1312",
+      "return_pct": -17.354134772976494,
+      "mdd_pct": -36.00486019334734,
+      "trades": 6,
+      "win_rate_pct": 0.0
+    },
+    {
+      "code": "1229",
+      "return_pct": -18.495602171105674,
+      "mdd_pct": -18.495602171105674,
+      "trades": 8,
+      "win_rate_pct": 12.5
+    },
+    {
+      "code": "1528",
+      "return_pct": -18.994353658603757,
+      "mdd_pct": -31.37583516591641,
+      "trades": 4,
+      "win_rate_pct": 0.0
+    },
+    {
+      "code": "1442",
+      "return_pct": -19.572500860026455,
+      "mdd_pct": -19.572500860026455,
+      "trades": 7,
+      "win_rate_pct": 0.0
+    },
+    {
+      "code": "1457",
+      "return_pct": -20.0953021428095,
+      "mdd_pct": -19.844028543480917,
+      "trades": 9,
+      "win_rate_pct": 0.0
+    },
+    {
+      "code": "1339",
+      "return_pct": -23.153554550390464,
+      "mdd_pct": -23.153554550390464,
+      "trades": 8,
+      "win_rate_pct": 0.0
+    },
+    {
+      "code": "1519",
+      "return_pct": -24.572371068461575,
+      "mdd_pct": -34.69922828745119,
+      "trades": 7,
+      "win_rate_pct": 0.0
+    },
+    {
+      "code": "1456",
+      "return_pct": -25.498213132917314,
+      "mdd_pct": -27.331005125306472,
+      "trades": 13,
+      "win_rate_pct": 7.6923076923076925
+    },
+    {
+      "code": "1305",
+      "return_pct": -25.826491721637513,
+      "mdd_pct": -27.327976891200144,
+      "trades": 6,
+      "win_rate_pct": 0.0
+    },
+    {
+      "code": "1304",
+      "return_pct": -31.7053845067514,
+      "mdd_pct": -31.7053845067514,
+      "trades": 8,
+      "win_rate_pct": 0.0
+    },
+    {
+      "code": "1308",
+      "return_pct": -34.518271307230464,
+      "mdd_pct": -35.02925326609461,
+      "trades": 9,
+      "win_rate_pct": 0.0
+    }
+  ],
+  "top_candidates": [
+    {
+      "iteration": 22,
+      "symbols": 120,
+      "passed_symbols": 6,
+      "pass_rate_pct": 5.0,
+      "avg_return_pct": -4.028666882674032,
+      "median_return_pct": -3.2331676802744513,
+      "avg_mdd_pct": -13.453961233572587,
+      "params": {
+        "ma_order": false,
+        "rsi_min": 40,
+        "rsi_max": 70,
+        "vol_ratio": 0.7,
+        "breakout_pct": -3.0
+      }
+    },
+    {
+      "iteration": 102,
+      "symbols": 120,
+      "passed_symbols": 6,
+      "pass_rate_pct": 5.0,
+      "avg_return_pct": -4.046360738490055,
+      "median_return_pct": -3.2846823749197673,
+      "avg_mdd_pct": -13.43140994862585,
+      "params": {
+        "ma_order": false,
+        "rsi_min": 45,
+        "rsi_max": 70,
+        "vol_ratio": 0.7,
+        "breakout_pct": -3.0
+      }
+    },
+    {
+      "iteration": 182,
+      "symbols": 120,
+      "passed_symbols": 6,
+      "pass_rate_pct": 5.0,
+      "avg_return_pct": -3.936713844279481,
+      "median_return_pct": -3.5066503910179736,
+      "avg_mdd_pct": -13.181199311638062,
+      "params": {
+        "ma_order": false,
+        "rsi_min": 50,
+        "rsi_max": 70,
+        "vol_ratio": 0.7,
+        "breakout_pct": -3.0
+      }
+    },
+    {
+      "iteration": 262,
+      "symbols": 120,
+      "passed_symbols": 6,
+      "pass_rate_pct": 5.0,
+      "avg_return_pct": -3.9305619416311335,
+      "median_return_pct": -3.69253038465685,
+      "avg_mdd_pct": -12.623203261113865,
+      "params": {
+        "ma_order": false,
+        "rsi_min": 55,
+        "rsi_max": 70,
+        "vol_ratio": 0.7,
+        "breakout_pct": -3.0
+      }
+    },
+    {
+      "iteration": 12,
+      "symbols": 120,
+      "passed_symbols": 5,
+      "pass_rate_pct": 4.166666666666667,
+      "avg_return_pct": -2.272761632253122,
+      "median_return_pct": -2.7367885298593686,
+      "avg_mdd_pct": -10.309278702759665,
+      "params": {
+        "ma_order": false,
+        "rsi_min": 40,
+        "rsi_max": 65,
+        "vol_ratio": 1.1,
+        "breakout_pct": -3.0
+      }
+    },
+    {
+      "iteration": 92,
+      "symbols": 120,
+      "passed_symbols": 5,
+      "pass_rate_pct": 4.166666666666667,
+      "avg_return_pct": -2.3098542362973804,
+      "median_return_pct": -2.867893935018795,
+      "avg_mdd_pct": -10.278682262694183,
+      "params": {
+        "ma_order": false,
+        "rsi_min": 45,
+        "rsi_max": 65,
+        "vol_ratio": 1.1,
+        "breakout_pct": -3.0
+      }
+    },
+    {
+      "iteration": 7,
+      "symbols": 120,
+      "passed_symbols": 5,
+      "pass_rate_pct": 4.166666666666667,
+      "avg_return_pct": -2.4625161023888364,
+      "median_return_pct": -2.9118640715613875,
+      "avg_mdd_pct": -10.677536371610254,
+      "params": {
+        "ma_order": false,
+        "rsi_min": 40,
+        "rsi_max": 65,
+        "vol_ratio": 0.9,
+        "breakout_pct": -3.0
+      }
+    },
+    {
+      "iteration": 87,
+      "symbols": 120,
+      "passed_symbols": 5,
+      "pass_rate_pct": 4.166666666666667,
+      "avg_return_pct": -2.550978594697895,
+      "median_return_pct": -2.9661338998059286,
+      "avg_mdd_pct": -10.664806428433657,
+      "params": {
+        "ma_order": false,
+        "rsi_min": 45,
+        "rsi_max": 65,
+        "vol_ratio": 0.9,
+        "breakout_pct": -3.0
+      }
+    },
+    {
+      "iteration": 32,
+      "symbols": 120,
+      "passed_symbols": 5,
+      "pass_rate_pct": 4.166666666666667,
+      "avg_return_pct": -3.8488505398033817,
+      "median_return_pct": -3.025013877984295,
+      "avg_mdd_pct": -12.758587337135562,
+      "params": {
+        "ma_order": false,
+        "rsi_min": 40,
+        "rsi_max": 70,
+        "vol_ratio": 1.1,
+        "breakout_pct": -3.0
+      }
+    },
+    {
+      "iteration": 267,
+      "symbols": 120,
+      "passed_symbols": 5,
+      "pass_rate_pct": 4.166666666666667,
+      "avg_return_pct": -3.848124698572256,
+      "median_return_pct": -3.068526444351982,
+      "avg_mdd_pct": -12.14921068406974,
+      "params": {
+        "ma_order": false,
+        "rsi_min": 55,
+        "rsi_max": 70,
+        "vol_ratio": 0.9,
+        "breakout_pct": -3.0
+      }
+    },
+    {
+      "iteration": 2,
+      "symbols": 120,
+      "passed_symbols": 5,
+      "pass_rate_pct": 4.166666666666667,
+      "avg_return_pct": -2.7094649090642955,
+      "median_return_pct": -3.096654977483654,
+      "avg_mdd_pct": -11.114306794294635,
+      "params": {
+        "ma_order": false,
+        "rsi_min": 40,
+        "rsi_max": 65,
+        "vol_ratio": 0.7,
+        "breakout_pct": -3.0
+      }
+    },
+    {
+      "iteration": 82,
+      "symbols": 120,
+      "passed_symbols": 5,
+      "pass_rate_pct": 4.166666666666667,
+      "avg_return_pct": -2.729117580932816,
+      "median_return_pct": -3.1214163688526697,
+      "avg_mdd_pct": -11.085996717065587,
+      "params": {
+        "ma_order": false,
+        "rsi_min": 45,
+        "rsi_max": 65,
+        "vol_ratio": 0.7,
+        "breakout_pct": -3.0
+      }
+    },
+    {
+      "iteration": 272,
+      "symbols": 120,
+      "passed_symbols": 5,
+      "pass_rate_pct": 4.166666666666667,
+      "avg_return_pct": -3.8644643212206535,
+      "median_return_pct": -3.1990500836689586,
+      "avg_mdd_pct": -11.959342533893448,
+      "params": {
+        "ma_order": false,
+        "rsi_min": 55,
+        "rsi_max": 70,
+        "vol_ratio": 1.1,
+        "breakout_pct": -3.0
+      }
+    },
+    {
+      "iteration": 187,
+      "symbols": 120,
+      "passed_symbols": 5,
+      "pass_rate_pct": 4.166666666666667,
+      "avg_return_pct": -3.807396352405931,
+      "median_return_pct": -3.208859424811311,
+      "avg_mdd_pct": -12.67466864829938,
+      "params": {
+        "ma_order": false,
+        "rsi_min": 50,
+        "rsi_max": 70,
+        "vol_ratio": 0.9,
+        "breakout_pct": -3.0
+      }
+    },
+    {
+      "iteration": 27,
+      "symbols": 120,
+      "passed_symbols": 5,
+      "pass_rate_pct": 4.166666666666667,
+      "avg_return_pct": -3.809906865709718,
+      "median_return_pct": -3.208859424811311,
+      "avg_mdd_pct": -12.944064364851867,
+      "params": {
+        "ma_order": false,
+        "rsi_min": 40,
+        "rsi_max": 70,
+        "vol_ratio": 0.9,
+        "breakout_pct": -3.0
+      }
+    },
+    {
+      "iteration": 112,
+      "symbols": 120,
+      "passed_symbols": 5,
+      "pass_rate_pct": 4.166666666666667,
+      "avg_return_pct": -3.887038319506028,
+      "median_return_pct": -3.245775559975461,
+      "avg_mdd_pct": -12.735197400510291,
+      "params": {
+        "ma_order": false,
+        "rsi_min": 45,
+        "rsi_max": 70,
+        "vol_ratio": 1.1,
+        "breakout_pct": -3.0
+      }
+    },
+    {
+      "iteration": 107,
+      "symbols": 120,
+      "passed_symbols": 5,
+      "pass_rate_pct": 4.166666666666667,
+      "avg_return_pct": -3.8998228979608127,
+      "median_return_pct": -3.4537894408626535,
+      "avg_mdd_pct": -12.928290878771964,
+      "params": {
+        "ma_order": false,
+        "rsi_min": 45,
+        "rsi_max": 70,
+        "vol_ratio": 0.9,
+        "breakout_pct": -3.0
+      }
+    },
+    {
+      "iteration": 321,
+      "symbols": 120,
+      "passed_symbols": 5,
+      "pass_rate_pct": 4.166666666666667,
+      "avg_return_pct": -3.3517233795634573,
+      "median_return_pct": -3.6801356531202147,
+      "avg_mdd_pct": -13.375798349700725,
+      "params": {
+        "ma_order": true,
+        "rsi_min": 40,
+        "rsi_max": 65,
+        "vol_ratio": 0.7,
+        "breakout_pct": null
+      }
+    },
+    {
+      "iteration": 401,
+      "symbols": 120,
+      "passed_symbols": 5,
+      "pass_rate_pct": 4.166666666666667,
+      "avg_return_pct": -3.4587025452056666,
+      "median_return_pct": -3.753679582225411,
+      "avg_mdd_pct": -13.266632197369413,
+      "params": {
+        "ma_order": true,
+        "rsi_min": 45,
+        "rsi_max": 65,
+        "vol_ratio": 0.7,
+        "breakout_pct": null
+      }
+    },
+    {
+      "iteration": 266,
+      "symbols": 120,
+      "passed_symbols": 5,
+      "pass_rate_pct": 4.166666666666667,
+      "avg_return_pct": -4.2686086085477255,
+      "median_return_pct": -4.310112278576978,
+      "avg_mdd_pct": -14.020352148863612,
+      "params": {
+        "ma_order": false,
+        "rsi_min": 55,
+        "rsi_max": 70,
+        "vol_ratio": 0.9,
+        "breakout_pct": null
+      }
+    }
+  ],
+  "note": "Optimization target is not a promise of future returns. Validate on unseen periods before deployment."
+}

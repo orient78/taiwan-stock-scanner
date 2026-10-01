@@ -1,0 +1,7 @@
+{
+  "ma_order": false,
+  "rsi_min": 40,
+  "rsi_max": 70,
+  "vol_ratio": 0.7,
+  "breakout_pct": -3.0
+}
