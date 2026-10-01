@@ -74,6 +74,8 @@ def backtest_one(df, p):
     cash = 1.0
     shares = 0.0
     reduced = False
+    below5_days = 0
+    below10_days = 0
     trades = 0
     wins = 0
     equity_curve = []
@@ -91,21 +93,38 @@ def backtest_one(df, p):
                 shares = cash / next_open
                 cash = 0.0
                 reduced = False
+                below5_days = 0
+                below10_days = 0
                 entry_value = shares * next_open
                 trades += 1
         else:
-            if close < float(r.MA10):
+            below5_days = below5_days + 1 if close < float(r.MA5) else 0
+            below10_days = below10_days + 1 if close < float(r.MA10) else 0
+
+            if below10_days >= p["ma10_confirm"]:
                 exit_value = shares * next_open
                 if exit_value > entry_value:
                     wins += 1
                 cash += exit_value
                 shares = 0.0
                 reduced = False
-            elif close < float(r.MA5) and not reduced:
+                below5_days = 0
+                below10_days = 0
+            elif below5_days >= p["ma5_confirm"] and not reduced:
                 sell = shares * 0.5
                 cash += sell * next_open
                 shares -= sell
                 reduced = True
+            elif p["reentry"] and reduced and close > float(r.MA5) and close > float(r.MA10):
+                # Restore the reduced half only after a close confirms recovery;
+                # execution remains at next open, so no future price is used.
+                add_value = min(cash, shares * next_open)
+                if add_value > 0:
+                    shares += add_value / next_open
+                    cash -= add_value
+                    reduced = False
+                    below5_days = 0
+                    below10_days = 0
 
         equity_curve.append(cash + shares * close)
 
@@ -157,19 +176,24 @@ def parameter_grid(previous_params=None):
     ):
         if rsi_min >= rsi_max:
             continue
-        yield {
-            "ma_order": ma_order,
-            "rsi_min": rsi_min,
-            "rsi_max": rsi_max,
-            "vol_ratio": vol_ratio,
-            "breakout_pct": breakout_pct,
-        }
+        for ma5_confirm, ma10_confirm, reentry in product([1, 2, 3], [1, 2, 3], [False, True]):
+            yield {
+                "ma5_confirm": ma5_confirm,
+                "ma10_confirm": ma10_confirm,
+                "reentry": reentry,
+                "ma_order": ma_order,
+                "rsi_min": rsi_min,
+                "rsi_max": rsi_max,
+                "vol_ratio": vol_ratio,
+                "breakout_pct": breakout_pct,
+            }
 
 def score(summary):
     # Primary objective: percentage of stocks individually exceeding +20%.
     # Tie-breakers penalize drawdown and reward median return.
     return (
         summary["pass_rate_pct"],
+        summary.get("risk_pass_rate_pct", 0),
         summary["median_return_pct"],
         summary["avg_return_pct"],
         -abs(summary["avg_mdd_pct"]),
@@ -216,11 +240,16 @@ def main():
         returns = [x["return_pct"] for x in details]
         mdds = [x["mdd_pct"] for x in details]
         passed = sum(x >= TARGET_RETURN for x in returns)
+        risk_passed = sum(x["return_pct"] >= TARGET_RETURN and x["mdd_pct"] >= -20.0 for x in details)
         summary = {
             "iteration": iteration,
             "symbols": len(details),
             "passed_symbols": passed,
             "pass_rate_pct": 100 * passed / len(details) if details else 0,
+            "risk_passed_symbols": risk_passed,
+            "risk_pass_rate_pct": 100 * risk_passed / len(details) if details else 0,
+            "avg_trades": float(np.mean([x["trades"] for x in details])) if details else 0,
+            "avg_win_rate_pct": float(np.mean([x["win_rate_pct"] for x in details])) if details else 0,
             "avg_return_pct": float(np.mean(returns)) if returns else 0,
             "median_return_pct": float(np.median(returns)) if returns else 0,
             "avg_mdd_pct": float(np.mean(mdds)) if mdds else 0,
