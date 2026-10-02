@@ -39,7 +39,7 @@ jobs:
       - name: Verify backtest execution logic
         run: python -m unittest -v test_backtest_optimizer.py
 
-      - name: Run iterative backtest
+      - name: Run MA10 full-position iterative backtest
         env:
           BACKTEST_START: '2026-01-01'
           TARGET_RETURN: '20'
@@ -64,3 +64,4 @@ jobs:
           git commit -m "Update iterative backtest results"
           git pull --rebase origin main
           git push
+

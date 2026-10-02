@@ -42,21 +42,35 @@ class ExecutionTests(unittest.TestCase):
         self.assertEqual(r["closed_trades"], 0)
         self.assertEqual(r["open_trades"], 1)
 
-    def test_restore_retains_cycle_cost_and_partial_proceeds(self):
+    def test_below_ma5_keeps_full_position(self):
         d = self.frame()
-        # Entry 100; half sale 120; restore 110; final sale 105.
-        # Proceeds .6 + 1.05 = 1.65; purchases 1 + .55 = 1.55.
-        d.iloc[1, d.columns.get_loc("MA5")] = 110
-        d.iloc[2, d.columns.get_loc("Open")] = 120
-        d.iloc[3, d.columns.get_loc("Open")] = 110
-        d.iloc[3, d.columns.get_loc("MA10")] = 110
-        d.iloc[4, d.columns.get_loc("Open")] = 105
-        d.iloc[4:, d.columns.get_loc("RSI")] = 0
+        d.iloc[1:, d.columns.get_loc("MA5")] = 150
+        d.iloc[-1, d.columns.get_loc("Close")] = 120
         r = engine.backtest_one(d, self.p, prepared=True)
-        self.assertAlmostEqual(r["return_pct"], 10)
-        self.assertEqual(r["winning_trades"], 1)
-        self.assertEqual(r["closed_trades"], 1)
+        self.assertAlmostEqual(r["return_pct"], 20)
         self.assertEqual(r["trades"], 1)
+        self.assertEqual(r["closed_trades"], 0)
+        self.assertEqual(r["open_trades"], 1)
+
+    def test_equal_ma10_holds_then_exits_full_next_open(self):
+        d = self.frame()
+        d.iloc[1, d.columns.get_loc("MA10")] = 100
+        d.iloc[2, d.columns.get_loc("MA10")] = 101
+        d.iloc[3, d.columns.get_loc("Open")] = 120
+        d.iloc[3:, d.columns.get_loc("RSI")] = 0
+        r = engine.backtest_one(d, self.p, prepared=True)
+        self.assertAlmostEqual(r["return_pct"], 20)
+        self.assertEqual(r["closed_trades"], 1)
+        self.assertEqual(r["open_trades"], 0)
+
+    def test_ma10_exit_ignores_missing_entry_indicators(self):
+        d = self.frame()
+        d.iloc[1, d.columns.get_loc("MA10")] = 110
+        d.iloc[1:, d.columns.get_loc("RSI")] = np.nan
+        d.iloc[2, d.columns.get_loc("Open")] = 80
+        r = engine.backtest_one(d, self.p, prepared=True)
+        self.assertAlmostEqual(r["return_pct"], -20)
+        self.assertEqual(r["closed_trades"], 1)
 
     def test_ma10_exit_has_priority(self):
         d = self.frame()
@@ -75,9 +89,11 @@ class ExecutionTests(unittest.TestCase):
 
     def test_confirmations_cannot_relax_exit_rule(self):
         with self.assertRaises(ValueError):
-            engine.backtest_one(self.frame(), dict(self.p, ma5_confirm=3), prepared=True)
+            engine.backtest_one(self.frame(), dict(self.p, ma10_confirm=3), prepared=True)
         for p in engine.parameter_grid():
-            self.assertEqual((p["ma5_confirm"], p["ma10_confirm"]), (1, 1))
+            self.assertEqual(p["ma10_confirm"], 1)
+            self.assertNotIn("reentry", p)
+            self.assertNotIn("ma5_confirm", p)
 
     def test_rsi_keeps_trading_dates(self):
         d = self.frame()
@@ -97,3 +113,4 @@ class ExecutionTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+

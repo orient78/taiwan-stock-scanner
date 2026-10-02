@@ -19,8 +19,8 @@ RUN_ID = int(os.getenv("GITHUB_RUN_NUMBER", "0"))
 HISTORY_FILE = "backtest_results/history_best.json"
 
 # Exit rules requested by the project:
-# close < MA5 => reduce position by 50%
-# close < MA10 => exit remaining position
+# close >= MA10 => keep the full position, even below MA5
+# close < MA10 => exit the full position
 # Signals are evaluated at close and executed at next day's open.
 
 def listed_twse_codes():
@@ -68,8 +68,8 @@ def entry_signal(row, p):
     return True
 
 def backtest_one(df, p, prepared=False):
-    if p.get("ma5_confirm", 1) != 1 or p.get("ma10_confirm", 1) != 1:
-        raise ValueError("MA5/MA10 exits must execute after one close below the MA")
+    if p.get("ma10_confirm", 1) != 1:
+        raise ValueError("MA10 exit must execute after one close below the MA")
     df = df if prepared else indicators(df)
     source = df
     start = pd.Timestamp(START_DATE, tz=df.index.tz)
@@ -84,7 +84,6 @@ def backtest_one(df, p, prepared=False):
     buy_cost = float(os.getenv("BUY_COST_BPS", "14.25")) / 10000
     sell_cost = float(os.getenv("SELL_COST_BPS", "44.25")) / 10000
     cash, shares = 1.0, 0.0
-    reduced = False
     trades = wins = closed_trades = 0
     cycle_cost = cycle_proceeds = 0.0
     pending = None
@@ -105,41 +104,21 @@ def backtest_one(df, p, prepared=False):
             cash = 0.0
             cycle_cost, cycle_proceeds = spent, 0.0
             trades += 1
-            reduced = False
         elif pending == "exit":
             proceeds = shares * opening * (1 - sell_cost)
             cash += proceeds
             cycle_proceeds += proceeds
             wins += int(cycle_proceeds > cycle_cost)
             closed_trades += 1
-            shares, reduced = 0.0, False
-        elif pending == "reduce":
-            sold = shares * 0.5
-            proceeds = sold * opening * (1 - sell_cost)
-            cash += proceeds
-            cycle_proceeds += proceeds
-            shares -= sold
-            reduced = True
-        elif pending == "restore":
-            spent = min(cash, shares * opening * (1 + buy_cost))
-            if spent > 0:
-                shares += spent / (opening * (1 + buy_cost))
-                cash -= spent
-                cycle_cost += spent
-                reduced = False
+            shares = 0.0
         equity_curve.append(cash + shares * close)
         pending = None
-        if not all(math.isfinite(float(row[c])) for c in cols):
-            continue
-        if shares == 0:
-            if entry_signal(row, p):
-                pending = "buy"
-        elif close < row["MA10"]:
-            pending = "exit"
-        elif close < row["MA5"] and not reduced:
-            pending = "reduce"
-        elif p["reentry"] and reduced and entry_signal(row, p):
-            pending = "restore"
+        # Exit depends only on MA10; missing entry indicators cannot block it.
+        if shares > 0:
+            if math.isfinite(float(row["MA10"])) and close < row["MA10"]:
+                pending = "exit"
+        elif all(math.isfinite(float(row[c])) for c in cols) and entry_signal(row, p):
+            pending = "buy"
 
     final_equity = equity_curve[-1]
     first_open, last_close = float(df["Open"].iloc[0]), float(df["Close"].iloc[-1])
@@ -193,11 +172,9 @@ def parameter_grid(previous_params=None):
     ):
         if rsi_min >= rsi_max:
             continue
-        for ma5_confirm, ma10_confirm, reentry in product([1], [1], [False, True]):
+        for ma10_confirm in [1]:
             yield {
-                "ma5_confirm": ma5_confirm,
                 "ma10_confirm": ma10_confirm,
-                "reentry": reentry,
                 "ma_order": ma_order,
                 "rsi_min": rsi_min,
                 "rsi_max": rsi_max,
@@ -251,7 +228,8 @@ def main():
 
     grid = list(parameter_grid(previous_params))
     if previous_params:
-        incumbent = dict(previous_params, ma5_confirm=1, ma10_confirm=1)
+        incumbent = {k: v for k, v in previous_params.items() if k not in ("ma5_confirm", "reentry")}
+        incumbent["ma10_confirm"] = 1
         if incumbent not in grid:
             grid.insert(0, incumbent)
     for iteration, params in enumerate(grid, 1):
@@ -299,7 +277,7 @@ def main():
 
     reached = historical_best["best"]["pass_rate_pct"] >= TARGET_PASS_RATE
     output = {
-        "engine_version": "3-causal-accounting",
+        "engine_version": "4-ma10-full-position",
         "validation_status": "in_sample_only",
         "data_end_date": max(str(df.index[-1].date()) for df in data.values()),
         "generated_at": datetime.now(ZoneInfo(TIMEZONE)).isoformat(),
@@ -316,8 +294,8 @@ def main():
             "required_pass_rate_pct": TARGET_PASS_RATE,
         },
         "exit_rules": {
-            "below_ma5": "reduce 50% next open",
-            "below_ma10": "exit remaining position next open",
+            "below_ma5": "hold full position while close >= MA10",
+            "below_ma10": "exit full position next open",
         },
         "github_run_number": RUN_ID,
         "improved_history": improved_history,
@@ -348,3 +326,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
