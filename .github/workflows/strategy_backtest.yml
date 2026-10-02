@@ -1,6 +1,12 @@
 name: Strategy Iterative Backtest
 
 on:
+  push:
+    branches: [main]
+    paths:
+      - 'backtest_optimizer.py'
+      - 'test_backtest_optimizer.py'
+      - '.github/workflows/strategy_backtest.yml'
   workflow_dispatch:
   schedule:
     # Run once every hour, every day. GitHub cron uses UTC.
@@ -29,6 +35,9 @@ jobs:
 
       - name: Install dependencies
         run: pip install -r requirements.txt
+
+      - name: Verify backtest execution logic
+        run: python -m unittest -v test_backtest_optimizer.py
 
       - name: Run iterative backtest
         env:
