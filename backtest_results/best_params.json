@@ -1,10 +1,10 @@
 {
-  "ma5_confirm": 3,
-  "ma10_confirm": 3,
-  "reentry": true,
+  "ma5_confirm": 1,
+  "ma10_confirm": 1,
+  "reentry": false,
   "ma_order": true,
-  "rsi_min": 43.0,
-  "rsi_max": 58.0,
+  "rsi_min": 41.0,
+  "rsi_max": 61.0,
   "vol_ratio": 0.5,
-  "breakout_pct": -6
+  "breakout_pct": -4.5
 }
