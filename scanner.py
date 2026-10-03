@@ -187,14 +187,17 @@ def fetch_t86(date_string):
     return result
 
 
-def get_t86_history(days=5):
+def get_t86_history(days=5, trading_dates=None):
     today = datetime.now(ZoneInfo(TIMEZONE)).date()
     history = []
 
-    for offset in range(14):
-        date = today - timedelta(days=offset)
-        if date.weekday() >= 5:
-            continue
+    dates = (
+        [datetime.strptime(value, "%Y-%m-%d").date() for value in trading_dates][-days:][::-1]
+        if trading_dates is not None
+        else [today - timedelta(days=offset) for offset in range(14)
+              if (today - timedelta(days=offset)).weekday() < 5]
+    )
+    for date in dates:
 
         try:
             daily = fetch_t86(date.strftime("%Y%m%d"))
@@ -202,8 +205,12 @@ def get_t86_history(days=5):
                 history.append((date.strftime("%Y-%m-%d"), daily))
                 if len(history) >= days:
                     break
+            elif trading_dates is not None:
+                # A known trading session is missing: never bridge the gap.
+                break
         except Exception as error:
             print("[T86 WARN]", date, error)
+            break
 
     if not history:
         return {}, {"status": "unavailable", "date": "", "days": 0}
@@ -240,7 +247,19 @@ def get_t86_history(days=5):
         "status": "ok",
         "date": latest_date,
         "days": len(history),
+        "dates": [date for date, _ in history],
     }
+
+
+def passes_institutional_two_day_gate(stock):
+    """Both investors must buy on the latest two known trading sessions."""
+    return bool(
+        stock.get("institutional_available")
+        and stock.get("date")
+        and stock.get("institutional_date") == stock.get("date")
+        and stock.get("foreign_buy_streak", 0) >= 2
+        and stock.get("trust_buy_streak", 0) >= 2
+    )
 
 # INDICATORS
 # ============================================================
@@ -449,6 +468,7 @@ def get_market_reference(max_retries=MAX_DOWNLOAD_RETRIES):
                 raise RuntimeError("insufficient valid Close history")
 
             result = {
+                "trading_dates": [idx.strftime("%Y-%m-%d") for idx in df.index[-5:]],
                 "ret5": safe_float(close.pct_change(5).iloc[-1] * 100),
                 "ret20": safe_float(close.pct_change(20).iloc[-1] * 100),
                 "ret60": safe_float(close.pct_change(60).iloc[-1] * 100),
@@ -1146,6 +1166,9 @@ def get_next_day_failed_gates(stock):
     plan = stock["trade_plan"]
     failed = []
 
+    if not passes_institutional_two_day_gate(stock):
+        failed.append("外資與投信未同時連續2個交易日買超（或法人資料缺漏／過期）")
+
     if stock["rsi"] >= 75:
         failed.append("RSI>=75")
     if stock["distance_ma20_pct"] >= 12:
@@ -1239,6 +1262,13 @@ def classify_mid_long(stock):
 
 def build_reasons(stock):
     reasons, risks = [], []
+
+    if passes_institutional_two_day_gate(stock):
+        reasons.append(
+            f"外資連買{stock['foreign_buy_streak']}日、投信連買{stock['trust_buy_streak']}日，雙方皆連續至少2個交易日買超"
+        )
+    else:
+        risks.append("外資與投信連買2日條件未通過，或法人資料缺漏／過期")
 
     if stock["ma5"] > stock["ma10"] > stock["ma20"] > 0:
         reasons.append("短期均線呈多頭排列")
@@ -1660,7 +1690,9 @@ def main():
         market_ref=market_ref,
     )
 
-    institutional_map, institutional_meta = get_t86_history()
+    institutional_map, institutional_meta = get_t86_history(
+        trading_dates=market_ref.get("trading_dates", [])
+    )
     print("[T86]", institutional_meta)
 
     # Sector membership map.
@@ -1705,6 +1737,8 @@ def main():
         ]
         for key in institutional_fields:
             stock[key] = institutional.get(key, 0)
+
+        stock["foreign_trust_buy_2d"] = passes_institutional_two_day_gate(stock)
 
         volume = stock.get("volume", 0)
         stock["institutional_volume_pct"] = (
@@ -1896,6 +1930,7 @@ def main():
             "Trend + Breakout + Volume + Relative Strength "
             "+ Sector Strength + Entry Quality + Risk/Reward "
             "+ Overheat Control"
+            " + Foreign AND Investment Trust Net Buying >=2 Trading Days"
         ),
         "universe_count": len(codes),
         "valid_count": sum(1 for x in raw_stocks if x.get("eligible_for_trade")),
@@ -1905,6 +1940,7 @@ def main():
         "market_reference": {
             k: r2(v)
             for k, v in market_ref.items()
+            if k != "trading_dates"
         },
         "signal_counts": signal_counts,
         "sector_ranking": sector_ranking,
