@@ -67,13 +67,15 @@ def entry_signal(row, p):
             return False
     return True
 
-def backtest_one(df, p, prepared=False):
+def backtest_one(df, p, prepared=False, start_date=None, end_date=None):
     if p.get("ma10_confirm", 1) != 1:
         raise ValueError("MA10 exit must execute after one close below the MA")
     df = df if prepared else indicators(df)
     source = df
-    start = pd.Timestamp(START_DATE, tz=df.index.tz)
+    start = pd.Timestamp(start_date or START_DATE, tz=df.index.tz)
     df = df[df.index >= start]
+    if end_date is not None:
+        df = df[df.index < pd.Timestamp(end_date, tz=df.index.tz)]
     if len(df) < 25:
         return None
     if not df.index.is_monotonic_increasing or not df.index.is_unique:
@@ -203,6 +205,44 @@ def score(summary):
         -abs(summary["avg_mdd_pct"]),
     )
 
+def summarize(details, params, iteration=0):
+    returns = [x["return_pct"] for x in details]
+    closed = sum(x["closed_trades"] for x in details)
+    passed = sum(x > TARGET_RETURN for x in returns)
+    risk_passed = sum(x["return_pct"] > TARGET_RETURN and x["mdd_pct"] >= -20 for x in details)
+    n = len(details)
+    def mean(field):
+        return float(np.mean([x[field] for x in details])) if n else 0.0
+    return {
+        "iteration": iteration, "symbols": n,
+        "passed_symbols": passed, "pass_rate_pct": 100 * passed / n if n else 0,
+        "risk_passed_symbols": risk_passed, "risk_pass_rate_pct": 100 * risk_passed / n if n else 0,
+        "avg_trades": mean("trades"), "avg_win_rate_pct": mean("win_rate_pct"),
+        "pooled_win_rate_pct": 100 * sum(x["winning_trades"] for x in details) / closed if closed else 0,
+        "avg_buy_hold_pct": mean("buy_hold_pct"), "avg_return_pct": mean("return_pct"),
+        "median_return_pct": float(np.median(returns)) if n else 0,
+        "avg_mdd_pct": mean("mdd_pct"), "params": params,
+    }
+
+def evaluate(data, params, start_date=None, end_date=None, iteration=0):
+    details = []
+    for code, df in data.items():
+        result = backtest_one(df, params, prepared=True, start_date=start_date, end_date=end_date)
+        if result is not None:
+            details.append({"code": code, **result})
+    return summarize(details, params, iteration), details
+
+def select_training_params(data, grid, start_date, end_date):
+    candidates = []
+    for iteration, params in enumerate(grid, 1):
+        summary, _ = evaluate(data, params, start_date, end_date, iteration)
+        if summary["symbols"]:
+            candidates.append(summary)
+    if not candidates:
+        raise RuntimeError("No usable training-period results")
+    best = max(candidates, key=score)
+    return best["params"], best, candidates
+
 def main():
     os.makedirs("backtest_results", exist_ok=True)
     codes = listed_twse_codes()
@@ -227,55 +267,27 @@ def main():
     if len(data) < 20:
         raise RuntimeError(f"Too few usable symbols: {len(data)}")
 
-    # Historical metrics from different dates/data must never compete with
-    # fresh metrics. Re-evaluate the incumbent on the current snapshot.
-    history_best = load_history_best()
-    previous_params = history_best.get("best_params") if history_best else None
-    candidates = []
-    best_details = None
-    best_summary = None
-    best_params = None
-
-    grid = list(parameter_grid(previous_params))
-    if previous_params:
-        incumbent = {k: v for k, v in previous_params.items() if k not in ("ma5_confirm", "reentry")}
-        incumbent["ma10_confirm"] = 1
-        if incumbent not in grid:
-            grid.insert(0, incumbent)
-    for iteration, params in enumerate(grid, 1):
-        details = []
-        for code, df in data.items():
-            result = backtest_one(df, params, prepared=True)
-            if result is not None:
-                details.append({"code": code, **result})
-
-        returns = [x["return_pct"] for x in details]
-        mdds = [x["mdd_pct"] for x in details]
-        passed = sum(x > TARGET_RETURN for x in returns)
-        risk_passed = sum(x["return_pct"] > TARGET_RETURN and x["mdd_pct"] >= -20.0 for x in details)
-        summary = {
-            "iteration": iteration,
-            "symbols": len(details),
-            "passed_symbols": passed,
-            "pass_rate_pct": 100 * passed / len(details) if details else 0,
-            "risk_passed_symbols": risk_passed,
-            "risk_pass_rate_pct": 100 * risk_passed / len(details) if details else 0,
-            "avg_trades": float(np.mean([x["trades"] for x in details])) if details else 0,
-            "avg_win_rate_pct": float(np.mean([x["win_rate_pct"] for x in details])) if details else 0,
-            "pooled_win_rate_pct": 100 * sum(x["winning_trades"] for x in details) / sum(x["closed_trades"] for x in details) if sum(x["closed_trades"] for x in details) else 0,
-            "avg_buy_hold_pct": float(np.mean([x["buy_hold_pct"] for x in details])) if details else 0,
-            "avg_return_pct": float(np.mean(returns)) if returns else 0,
-            "median_return_pct": float(np.median(returns)) if returns else 0,
-            "avg_mdd_pct": float(np.mean(mdds)) if mdds else 0,
-            "params": params,
-        }
-        candidates.append(summary)
-        if best_summary is None or score(summary) > score(best_summary):
-            best_summary = summary
-            best_params = params
-            best_details = details
-
-    run_best = best_summary
+    # Fixed calendar windows and a fixed grid. Never use full-period winners
+    # from earlier runs to seed training: they have already seen later prices.
+    year = pd.Timestamp(START_DATE).year
+    validation_start = f"{year}-05-01"
+    later_start = f"{year}-08-01"
+    if pd.Timestamp(START_DATE) >= pd.Timestamp(validation_start):
+        raise ValueError("BACKTEST_START must precede the May validation boundary")
+    best_params, training, candidates = select_training_params(
+        data, list(parameter_grid()), START_DATE, validation_start
+    )
+    validation, validation_details = evaluate(data, best_params, validation_start, later_start)
+    later, later_details = evaluate(data, best_params, later_start)
+    run_best, best_details = evaluate(data, best_params)
+    temporal_validation = {
+        "selection": "fixed grid, training period only; parameters frozen for later windows",
+        "training": {"start": START_DATE, "end_exclusive": validation_start, "summary": training},
+        "validation": {"start": validation_start, "end_exclusive": later_start, "summary": validation, "stock_results": validation_details},
+        "later_period": {"start": later_start, "summary": later, "stock_results": later_details},
+        "later_period_status": "exploratory: dates were inspected by earlier full-period optimization; not a sealed holdout",
+        "window_valuation": "each window starts in cash; indicators retain earlier warmup data; ending holdings marked at close",
+    }
     improved_history = None  # Old snapshots are not comparable.
     historical_best = {
         "updated_at": datetime.now(ZoneInfo(TIMEZONE)).isoformat(),
@@ -285,11 +297,16 @@ def main():
         "stock_results": sorted(best_details, key=lambda x: x["return_pct"], reverse=True),
     }
 
-    reached = historical_best["best"]["pass_rate_pct"] >= TARGET_PASS_RATE
+    descriptive_reached = run_best["pass_rate_pct"] >= TARGET_PASS_RATE
+    # Previously inspected dates cannot establish an unseen-data target claim.
+    reached = False
     output = {
-        "engine_version": "4.1-ma10-adjusted-comparable-valuation",
+        "engine_version": "5-ma10-training-only-selection",
         "price_basis": "Yahoo adjusted OHLC; corporate-action-adjusted research prices",
-        "validation_status": "in_sample_only",
+        "validation_status": "temporal_split_exploratory_not_sealed",
+        "temporal_validation": temporal_validation,
+        "descriptive_full_period_target_reached": descriptive_reached,
+        "target_reached_reason": "No sealed unseen-data validation; full-period metrics are descriptive only",
         "data_end_date": max(str(df.index[-1].date()) for df in data.values()),
         "generated_at": datetime.now(ZoneInfo(TIMEZONE)).isoformat(),
         "universe": "TWSE listed common stocks only",
@@ -337,4 +354,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

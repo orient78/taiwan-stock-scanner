@@ -118,6 +118,33 @@ class ExecutionTests(unittest.TestCase):
         self.assertEqual(r["closed_trades"], 0)
         self.assertEqual(r["open_trades"], 1)
 
+    def test_training_selection_is_independent_of_later_prices(self):
+        d = self.frame().reindex(pd.date_range("2026-01-01", periods=280)).ffill()
+        grid = [self.p, dict(self.p, rsi_min=65)]
+        before = engine.select_training_params({"2330": d}, grid, "2026-01-01", "2026-05-01")
+        revised = d.copy()
+        revised.loc["2026-05-01":, "Close"] = 1000
+        revised.loc["2026-05-01":, "RSI"] = 75
+        after = engine.select_training_params({"2330": revised}, grid, "2026-01-01", "2026-05-01")
+        self.assertEqual(before, after)
+
+    def test_exclusive_end_does_not_fill_order_in_next_window(self):
+        d = self.frame().reindex(pd.date_range("2026-01-01", periods=50)).ffill()
+        d["RSI"] = 0
+        d.loc["2026-01-25", "RSI"] = 60
+        r = engine.backtest_one(d, self.p, prepared=True, end_date="2026-01-26")
+        self.assertEqual(r["trades"], 0)
+
+    def test_summary_counts_all_symbols_and_pooled_closed_trades(self):
+        r = engine.backtest_one(self.frame(), self.p, prepared=True)
+        details = [dict(r, return_pct=21, mdd_pct=-10, winning_trades=1, closed_trades=2),
+                   dict(r, return_pct=21, mdd_pct=-25, winning_trades=2, closed_trades=3),
+                   dict(r, return_pct=20, mdd_pct=-5, winning_trades=0, closed_trades=0)]
+        s = engine.summarize(details, self.p)
+        self.assertAlmostEqual(s["pass_rate_pct"], 200 / 3)
+        self.assertAlmostEqual(s["risk_pass_rate_pct"], 100 / 3)
+        self.assertAlmostEqual(s["pooled_win_rate_pct"], 60)
+
     def test_confirmations_cannot_relax_exit_rule(self):
         with self.assertRaises(ValueError):
             engine.backtest_one(self.frame(), dict(self.p, ma10_confirm=3), prepared=True)
@@ -144,4 +171,3 @@ class ExecutionTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
-
