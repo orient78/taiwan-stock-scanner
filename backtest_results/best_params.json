@@ -1,8 +1,9 @@
 {
+  "institutional_2d": true,
   "ma10_confirm": 1,
   "ma_order": true,
-  "rsi_min": 40,
+  "rsi_min": 50,
   "rsi_max": 80,
-  "vol_ratio": 0.7,
+  "vol_ratio": 1.3,
   "breakout_pct": null
 }
