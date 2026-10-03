@@ -9,7 +9,7 @@ import numpy as np
 import pandas as pd
 import yfinance as yf
 import twstock
-from institutional_history import attach_gate, load_reports
+from institutional_history import attach_gate, load_reports, load_market_calendar, filter_market_sessions
 
 TIMEZONE = "Asia/Taipei"
 START_DATE = os.getenv("BACKTEST_START", "2026-01-01")
@@ -270,6 +270,12 @@ def main():
     snapshot_dir = "backtest_results/price_snapshot"
     os.makedirs(snapshot_dir, exist_ok=True)
 
+    market_calendar = load_market_calendar("2025-09-01", datetime.now(ZoneInfo(TIMEZONE)).date())
+    with open("backtest_results/market_calendar.json", "w", encoding="utf-8") as f:
+        json.dump({"source": "TWSE FMTQIK actual turnover dates",
+                   "sessions": [str(date.date()) for date in market_calendar]}, f, indent=2)
+    excluded_price_dates = {}
+
     print(f"[BACKTEST] TWSE only, symbols={len(selected)}, start={START_DATE}")
     data = {}
     for idx, code in enumerate(selected, 1):
@@ -277,6 +283,10 @@ def main():
             df = yf.download(code + ".TW", start="2025-09-01", auto_adjust=True, progress=False, timeout=20)
             if isinstance(df.columns, pd.MultiIndex):
                 df.columns = df.columns.get_level_values(0)
+            original_dates = df.index.tz_localize(None).normalize()
+            excluded_price_dates[code] = [str(date.date()) for date in original_dates if date not in market_calendar]
+            # Filter before rolling indicators and next-session execution.
+            df = filter_market_sessions(df, market_calendar)
             if len(df) >= 80:
                 # Preserve the exact research inputs in the Actions artifact.
                 df.to_csv(f"{snapshot_dir}/{code}.csv", index_label="Date")
@@ -288,7 +298,8 @@ def main():
     if len(data) < 20:
         raise RuntimeError(f"Too few usable symbols: {len(data)}")
 
-    calendar = sorted(set().union(*(set(df.index) for df in data.values())))
+    last_price_date = max(df.index[-1].tz_localize(None).normalize() for df in data.values())
+    calendar = market_calendar[market_calendar <= last_price_date]
     sessions, reports, failures = load_reports(calendar, START_DATE)
     institutional_dir = "backtest_results/institutional_snapshot"
     os.makedirs(institutional_dir, exist_ok=True)
@@ -296,7 +307,9 @@ def main():
         with open(f"{institutional_dir}/{date}.json", "w", encoding="utf-8") as f:
             json.dump(report, f, ensure_ascii=False)
     coverage = {"source": "TWSE T86", "requested_sessions": len(sessions),
-                "loaded_sessions": len(reports), "failed_sessions": failures}
+                "loaded_sessions": len(reports), "failed_sessions": failures,
+                "calendar_source": "TWSE FMTQIK actual turnover dates",
+                "excluded_nontrading_price_dates": excluded_price_dates}
     with open("backtest_results/institutional_coverage.json", "w", encoding="utf-8") as f:
         json.dump(coverage, f, ensure_ascii=False, indent=2)
     if failures:
@@ -338,7 +351,7 @@ def main():
     # Previously inspected dates cannot establish an unseen-data target claim.
     reached = False
     output = {
-        "engine_version": "7-ma10-institutional-two-day",
+        "engine_version": "8-ma10-institutional-official-calendar",
         "entry_scope": "technical entry AND foreign/trust each net-buy on both current and preceding market trading session; order next session open",
         "institutional_gate_backtested": True,
         "institutional_coverage": coverage,

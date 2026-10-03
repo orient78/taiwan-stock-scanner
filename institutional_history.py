@@ -11,6 +11,68 @@ FOREIGN = "外陸資買賣超股數(不含外資自營商)"
 TRUST = "投信買賣超股數"
 
 
+def parse_market_month(payload, month):
+    month = pd.Timestamp(month).to_period("M")
+    expected = f"{month.year - 1911:03d}年{month.month:02d}月"
+    fields = payload.get("fields", [])
+    if (payload.get("stat") != "OK" or expected not in payload.get("title", "")
+            or "日期" not in fields or not payload.get("data")):
+        raise ValueError(f"Invalid TWSE market calendar: {month}")
+    dates = []
+    for row in payload["data"]:
+        year, m, day = map(int, row[fields.index("日期")].split("/"))
+        date = pd.Timestamp(year=year + 1911, month=m, day=day)
+        if date.to_period("M") != month:
+            raise ValueError(f"Market calendar month mismatch: {date}")
+        dates.append(date)
+    index = pd.DatetimeIndex(dates)
+    if not index.is_unique or not index.is_monotonic_increasing:
+        raise ValueError("Market calendar dates must be sorted and unique")
+    return index
+
+
+def load_market_calendar(start_date, end_date, cache_dir=".cache/t86/v1/market"):
+    """Use actual monthly TWSE turnover dates, including unscheduled closures."""
+    start, end = pd.Timestamp(start_date), pd.Timestamp(end_date)
+    months = pd.period_range(start, end, freq="M")
+    dates = []
+    for month in months:
+        path = Path(cache_dir) / f"{month}.json"
+        payload = None
+        # The current month is incomplete and must always be refreshed.
+        if month < end.to_period("M") and path.exists():
+            try:
+                cached = json.loads(path.read_text(encoding="utf-8"))
+                parse_market_month(cached, month.start_time)
+                payload = cached
+            except (ValueError, KeyError, TypeError):
+                pass
+        if payload is None:
+            query = urllib.parse.urlencode({"response": "json", "date": month.start_time.strftime("%Y%m%d")})
+            request = urllib.request.Request("https://www.twse.com.tw/rwd/zh/afterTrading/FMTQIK?" + query,
+                                             headers={"User-Agent": "Mozilla/5.0"})
+            for attempt in range(3):
+                try:
+                    with urllib.request.urlopen(request, timeout=25) as response:
+                        payload = json.loads(response.read().decode("utf-8-sig"))
+                    parse_market_month(payload, month.start_time)
+                    path.parent.mkdir(parents=True, exist_ok=True)
+                    path.write_text(json.dumps(payload, ensure_ascii=False), encoding="utf-8")
+                    break
+                except Exception:
+                    if attempt == 2:
+                        raise
+                    time.sleep(1.5 * (attempt + 1))
+        dates.extend(parse_market_month(payload, month.start_time))
+    index = pd.DatetimeIndex(dates)
+    return index[(index >= start) & (index <= end)]
+
+
+def filter_market_sessions(df, calendar):
+    normalized = df.index.tz_localize(None).normalize()
+    return df.loc[normalized.isin(calendar)].copy()
+
+
 def parse_t86(payload, date):
     expected = f"{date.year - 1911:03d}年{date.month:02d}月{date.day:02d}日"
     if expected not in payload.get("title", ""):

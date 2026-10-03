@@ -2,12 +2,56 @@ import unittest
 from unittest.mock import patch
 
 import pandas as pd
-from institutional_history import FOREIGN, TRUST, attach_gate, parse_t86, load_reports
+from institutional_history import (FOREIGN, TRUST, attach_gate, parse_t86, load_reports,
+                                   parse_market_month, filter_market_sessions, load_market_calendar)
 import test_backtest_optimizer as fixtures
 import backtest_optimizer as engine
 
 
 class InstitutionalTests(unittest.TestCase):
+    def test_official_calendar_excludes_unscheduled_closure_before_ma(self):
+        payload = {"stat": "OK", "title": "115年07月市場成交資訊",
+                   "fields": ["日期"], "data": [["115/07/09"], ["115/07/13"]]}
+        calendar = parse_market_month(payload, "2026-07-01")
+        df = pd.DataFrame({"Close": [100., 999., 110.]},
+                          index=pd.to_datetime(["2026-07-09", "2026-07-10", "2026-07-13"]).tz_localize("Asia/Taipei"))
+        clean = filter_market_sessions(df, calendar)
+        self.assertEqual(clean.Close.tolist(), [100., 110.])
+        self.assertEqual(clean.Close.rolling(2).mean().iloc[-1], 105.)
+        reports = {"2026-07-09": {"2330": [1, 1]}, "2026-07-13": {"2330": [1, 1]}}
+        self.assertEqual(attach_gate(clean, "2330", calendar, reports).INSTITUTIONAL_2D.tolist(), [False, True])
+
+    def test_market_calendar_rejects_wrong_month_empty_and_duplicate_dates(self):
+        payload = {"stat": "OK", "title": "115年07月市場成交資訊",
+                   "fields": ["日期"], "data": [["115/07/09"]]}
+        with self.assertRaises(ValueError):
+            parse_market_month(payload, "2026-08-01")
+        payload["data"] = []
+        with self.assertRaises(ValueError):
+            parse_market_month(payload, "2026-07-01")
+        payload["data"] = [["115/07/09"], ["115/07/09"]]
+        with self.assertRaises(ValueError):
+            parse_market_month(payload, "2026-07-01")
+        payload["data"] = [["115/08/01"]]
+        with self.assertRaises(ValueError):
+            parse_market_month(payload, "2026-07-01")
+
+    def test_current_month_calendar_refreshes_and_request_bounds_apply(self):
+        import json
+        import tempfile
+        from pathlib import Path
+        from unittest.mock import MagicMock
+        payload = {"stat": "OK", "title": "115年07月市場成交資訊",
+                   "fields": ["日期"], "data": [["115/07/09"], ["115/07/13"], ["115/07/14"]]}
+        response = MagicMock()
+        response.__enter__.return_value.read.return_value = json.dumps(payload).encode()
+        with tempfile.TemporaryDirectory() as tmp:
+            Path(tmp, "2026-07.json").write_text(json.dumps({**payload, "data": [["115/07/09"]]}))
+            with patch("institutional_history.urllib.request.urlopen", return_value=response) as request:
+                dates = load_market_calendar("2026-07-10", "2026-07-13", tmp)
+            request.assert_called_once()
+        self.assertEqual(dates.tolist(), [pd.Timestamp("2026-07-13")])
+
     def setUp(self):
         self.sessions = pd.to_datetime(["2025-12-31", "2026-01-02", "2026-01-05", "2026-01-06"])
         self.df = pd.DataFrame(index=self.sessions)
