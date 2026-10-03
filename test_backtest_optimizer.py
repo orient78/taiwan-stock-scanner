@@ -87,6 +87,37 @@ class ExecutionTests(unittest.TestCase):
             r = engine.backtest_one(d, self.p, prepared=True)
         self.assertLess(r["return_pct"], 0)
 
+    def test_final_valuation_costs_match_buy_hold(self):
+        d = self.frame()
+        with patch.dict(os.environ, {"BUY_COST_BPS": "14.25", "SELL_COST_BPS": "44.25"}):
+            r = engine.backtest_one(d, self.p, prepared=True)
+        self.assertAlmostEqual(r["return_pct"], r["buy_hold_pct"])
+        self.assertAlmostEqual(r["liquidation_return_pct"], r["buy_hold_liquidation_pct"])
+        self.assertLess(r["liquidation_return_pct"], r["return_pct"])
+        self.assertEqual(r["closed_trades"], 0)
+
+    def test_revised_same_length_prices_invalidate_cache(self):
+        d = self.frame()
+        engine.backtest_one(d, self.p, prepared=True)
+        d.iloc[1, d.columns.get_loc("Open")] = 200
+        r = engine.backtest_one(d, self.p, prepared=True)
+        self.assertAlmostEqual(r["return_pct"], -50)
+
+    def test_copied_frame_does_not_reuse_stale_signal_cache(self):
+        d = self.frame()
+        engine.backtest_one(d, self.p, prepared=True)
+        revised = d.copy()
+        revised["Volume"] = 0
+        r = engine.backtest_one(revised, dict(self.p, vol_ratio=1), prepared=True)
+        self.assertEqual(r["trades"], 0)
+
+    def test_final_day_exit_signal_is_not_a_completed_trade(self):
+        d = self.frame()
+        d.iloc[-1, d.columns.get_loc("MA10")] = 110
+        r = engine.backtest_one(d, self.p, prepared=True)
+        self.assertEqual(r["closed_trades"], 0)
+        self.assertEqual(r["open_trades"], 1)
+
     def test_confirmations_cannot_relax_exit_rule(self):
         with self.assertRaises(ValueError):
             engine.backtest_one(self.frame(), dict(self.p, ma10_confirm=3), prepared=True)
