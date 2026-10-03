@@ -1,8 +1,8 @@
 {
   "ma10_confirm": 1,
-  "ma_order": false,
-  "rsi_min": 46.0,
-  "rsi_max": 58.0,
-  "vol_ratio": 0.5,
-  "breakout_pct": -5.5
+  "ma_order": true,
+  "rsi_min": 55,
+  "rsi_max": 75,
+  "vol_ratio": 1.1,
+  "breakout_pct": -3.0
 }
