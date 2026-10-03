@@ -16,6 +16,27 @@ import backtest_optimizer as engine
 
 
 class ExecutionTests(unittest.TestCase):
+    def test_sample_covers_code_range_without_duplicates(self):
+        codes = [str(i) for i in range(1100, 9900)] + ["2330"]
+        selected = engine.select_symbols(codes, 120)
+        self.assertEqual(len(selected), 120)
+        self.assertEqual(len(set(selected)), 120)
+        self.assertIn("2330", selected)
+        self.assertEqual(selected[0], "1100")
+        self.assertEqual(selected[-1], "9899")
+        self.assertTrue(any(code >= "6000" for code in selected))
+
+    def test_full_universe_and_small_sample_limits(self):
+        codes = ["1101", "2330", "9958"]
+        self.assertEqual(engine.select_symbols(codes, 0), codes)
+        self.assertEqual(engine.select_symbols(codes, 100), codes)
+        self.assertEqual(engine.select_symbols(codes, 1), ["2330"])
+        self.assertEqual(len(engine.select_symbols(codes, 2)), 2)
+        with self.assertRaises(ValueError):
+            engine.select_symbols(codes, -1)
+        with self.assertRaises(ValueError):
+            engine.select_symbols(["1101"], 0)
+
     def setUp(self):
         self.env = patch.dict(os.environ, {"BUY_COST_BPS": "0", "SELL_COST_BPS": "0"})
         self.env.start()

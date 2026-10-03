@@ -50,6 +50,22 @@ def indicators(df):
     # never changes the next session used for execution.
     return x
 
+def select_symbols(codes, limit):
+    """Cover the code range deterministically; zero requests the full universe."""
+    codes = sorted(set(codes))
+    if not codes or "2330" not in codes:
+        raise ValueError("TWSE universe must include 2330")
+    if limit < 0:
+        raise ValueError("MAX_SYMBOLS must be nonnegative")
+    if limit == 0 or limit >= len(codes):
+        return codes
+    if limit == 1:
+        return ["2330"]
+    # Reserve one slot for 2330, then sample across all remaining codes.
+    others = [code for code in codes if code != "2330"]
+    indices = np.linspace(0, len(others) - 1, limit - 1, dtype=int)
+    return sorted(["2330", *(others[i] for i in indices)])
+
 def entry_signal(row, p):
     price = float(row["Close"])
     if not (price > row["MA5"] and price > row["MA10"] and price > row["MA20"]):
@@ -246,10 +262,9 @@ def select_training_params(data, grid, start_date, end_date):
 def main():
     os.makedirs("backtest_results", exist_ok=True)
     codes = listed_twse_codes()
-    # Deterministic code-order sample, not a liquidity or market-wide sample.
-    selected = codes[:MAX_SYMBOLS]
-    if "2330" not in selected:
-        selected[-1] = "2330"
+    selected = select_symbols(codes, MAX_SYMBOLS)
+    snapshot_dir = "backtest_results/price_snapshot"
+    os.makedirs(snapshot_dir, exist_ok=True)
 
     print(f"[BACKTEST] TWSE only, symbols={len(selected)}, start={START_DATE}")
     data = {}
@@ -259,6 +274,8 @@ def main():
             if isinstance(df.columns, pd.MultiIndex):
                 df.columns = df.columns.get_level_values(0)
             if len(df) >= 80:
+                # Preserve the exact research inputs in the Actions artifact.
+                df.to_csv(f"{snapshot_dir}/{code}.csv", index_label="Date")
                 data[code] = indicators(df)
             print(f"[{idx}/{len(selected)}] {code}: {len(df)}")
         except Exception as exc:
@@ -301,7 +318,10 @@ def main():
     # Previously inspected dates cannot establish an unseen-data target claim.
     reached = False
     output = {
-        "engine_version": "5-ma10-training-only-selection",
+        "engine_version": "6-ma10-spread-sample-training-only",
+        "entry_scope": "technical-only research; scanner's foreign-and-trust two-day gate is NOT backtested",
+        "institutional_gate_backtested": False,
+        "price_snapshot": "Actions artifact: price_snapshot/*.csv; exact adjusted OHLCV inputs",
         "price_basis": "Yahoo adjusted OHLC; corporate-action-adjusted research prices",
         "validation_status": "temporal_split_exploratory_not_sealed",
         "temporal_validation": temporal_validation,
@@ -310,7 +330,10 @@ def main():
         "data_end_date": max(str(df.index[-1].date()) for df in data.values()),
         "generated_at": datetime.now(ZoneInfo(TIMEZONE)).isoformat(),
         "universe": "TWSE listed common stocks only",
-        "sample_method": "first MAX_SYMBOLS by code, with 2330 forced in; not market-wide",
+        "sample_method": "all current TWSE codes" if len(selected) == len(codes) else "evenly spaced across code range with 2330 reserved; not sector-stratified or market-wide",
+        "universe_symbols": len(codes),
+        "selected_codes": selected,
+        "universe_basis": "current listing membership; historical delistings excluded (survivorship bias possible)",
         "requested_symbols": len(selected),
         "downloaded_symbols": len(data),
         "failed_symbols": [code for code in selected if code not in data],
