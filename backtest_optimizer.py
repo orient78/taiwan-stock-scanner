@@ -9,6 +9,7 @@ import numpy as np
 import pandas as pd
 import yfinance as yf
 import twstock
+from institutional_history import attach_gate, load_reports
 
 TIMEZONE = "Asia/Taipei"
 START_DATE = os.getenv("BACKTEST_START", "2026-01-01")
@@ -67,6 +68,8 @@ def select_symbols(codes, limit):
     return sorted(["2330", *(others[i] for i in indices)])
 
 def entry_signal(row, p):
+    if p.get("institutional_2d", True) and not row.get("INSTITUTIONAL_2D", False):
+        return False
     price = float(row["Close"])
     if not (price > row["MA5"] and price > row["MA10"] and price > row["MA20"]):
         return False
@@ -113,7 +116,7 @@ def backtest_one(df, p, prepared=False, start_date=None, end_date=None):
     # Include every execution/signal input. Same-length revised snapshots and
     # copied DataFrames may carry old attrs; dates alone cannot validate them.
     fingerprint = pd.util.hash_pandas_object(
-        df[list(dict.fromkeys(["Open", "Volume", *cols]))], index=True
+        df[list(dict.fromkeys(["Open", "Volume", *cols, *(["INSTITUTIONAL_2D"] if "INSTITUTIONAL_2D" in df else [])]))], index=True
     ).to_numpy().tobytes()
     cache_key = (START_DATE, fingerprint)
     if source.attrs.get("record_cache_key") != cache_key:
@@ -202,6 +205,7 @@ def parameter_grid(previous_params=None):
             continue
         for ma10_confirm in [1]:
             yield {
+                "institutional_2d": True,
                 "ma10_confirm": ma10_confirm,
                 "ma_order": ma_order,
                 "rsi_min": rsi_min,
@@ -284,6 +288,22 @@ def main():
     if len(data) < 20:
         raise RuntimeError(f"Too few usable symbols: {len(data)}")
 
+    calendar = sorted(set().union(*(set(df.index) for df in data.values())))
+    sessions, reports, failures = load_reports(calendar, START_DATE)
+    institutional_dir = "backtest_results/institutional_snapshot"
+    os.makedirs(institutional_dir, exist_ok=True)
+    for date, report in reports.items():
+        with open(f"{institutional_dir}/{date}.json", "w", encoding="utf-8") as f:
+            json.dump(report, f, ensure_ascii=False)
+    coverage = {"source": "TWSE T86", "requested_sessions": len(sessions),
+                "loaded_sessions": len(reports), "failed_sessions": failures}
+    with open("backtest_results/institutional_coverage.json", "w", encoding="utf-8") as f:
+        json.dump(coverage, f, ensure_ascii=False, indent=2)
+    if failures:
+        raise RuntimeError("Incomplete T86 history: no performance result published; see institutional_coverage.json")
+    data = {code: attach_gate(df, code, sessions, reports) for code, df in data.items()}
+    coverage["missing_stock_sessions"] = {code: int((~df.loc[df.index >= pd.Timestamp(START_DATE, tz=df.index.tz), "INSTITUTIONAL_AVAILABLE"]).sum()) for code, df in data.items()}
+
     # Fixed calendar windows and a fixed grid. Never use full-period winners
     # from earlier runs to seed training: they have already seen later prices.
     year = pd.Timestamp(START_DATE).year
@@ -318,9 +338,11 @@ def main():
     # Previously inspected dates cannot establish an unseen-data target claim.
     reached = False
     output = {
-        "engine_version": "6-ma10-spread-sample-training-only",
-        "entry_scope": "technical-only research; scanner's foreign-and-trust two-day gate is NOT backtested",
-        "institutional_gate_backtested": False,
+        "engine_version": "7-ma10-institutional-two-day",
+        "entry_scope": "technical entry AND foreign/trust each net-buy on both current and preceding market trading session; order next session open",
+        "institutional_gate_backtested": True,
+        "institutional_coverage": coverage,
+        "institutional_timing": "T86 trade-date reports assumed available by next open; historical original release timestamps unavailable; missing stock records block entry; never forward-fill",
         "price_snapshot": "Actions artifact: price_snapshot/*.csv; exact adjusted OHLCV inputs",
         "price_basis": "Yahoo adjusted OHLC; corporate-action-adjusted research prices",
         "validation_status": "temporal_split_exploratory_not_sealed",

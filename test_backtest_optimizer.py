@@ -41,7 +41,7 @@ class ExecutionTests(unittest.TestCase):
         self.env = patch.dict(os.environ, {"BUY_COST_BPS": "0", "SELL_COST_BPS": "0"})
         self.env.start()
         self.addCleanup(self.env.stop)
-        self.p = dict(ma5_confirm=1, ma10_confirm=1, reentry=True,
+        self.p = dict(institutional_2d=False, ma5_confirm=1, ma10_confirm=1, reentry=True,
                       ma_order=False, rsi_min=40, rsi_max=80,
                       vol_ratio=0, breakout_pct=None)
 

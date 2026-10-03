@@ -6,6 +6,8 @@ on:
     paths:
       - 'backtest_optimizer.py'
       - 'test_backtest_optimizer.py'
+      - 'institutional_history.py'
+      - 'test_institutional_history.py'
       - '.github/workflows/strategy_backtest.yml'
   workflow_dispatch:
   schedule:
@@ -37,7 +39,14 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Verify backtest execution logic
-        run: python -m unittest -v test_backtest_optimizer.py
+        run: python -m unittest -v test_backtest_optimizer.py test_institutional_history.py
+
+      - name: Cache validated historical T86 reports
+        uses: actions/cache@v4
+        with:
+          path: .cache/t86/v1
+          key: t86-v1-${{ github.run_id }}
+          restore-keys: t86-v1-
 
       - name: Run MA10 full-position iterative backtest
         env:
@@ -45,9 +54,12 @@ jobs:
           TARGET_RETURN: '20'
           TARGET_PASS_RATE: '80'
           MAX_SYMBOLS: '120'
-        run: python backtest_optimizer.py
+        run: |
+          rm -f backtest_results/latest.json backtest_results/latest_stocks.csv backtest_results/best_params.json backtest_results/history_best.json
+          python backtest_optimizer.py
 
       - name: Upload backtest artifact
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: strategy-backtest-results
