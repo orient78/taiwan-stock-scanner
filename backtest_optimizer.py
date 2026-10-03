@@ -92,7 +92,12 @@ def backtest_one(df, p, prepared=False):
 
     # Execute yesterday's signal at today's open, mark today's close,
     # then decide tomorrow's order. The final close cannot create a fill.
-    cache_key = (START_DATE, len(df), str(df.index[-1]))
+    # Include every execution/signal input. Same-length revised snapshots and
+    # copied DataFrames may carry old attrs; dates alone cannot validate them.
+    fingerprint = pd.util.hash_pandas_object(
+        df[list(dict.fromkeys(["Open", "Volume", *cols]))], index=True
+    ).to_numpy().tobytes()
+    cache_key = (START_DATE, fingerprint)
     if source.attrs.get("record_cache_key") != cache_key:
         source.attrs["record_cache"] = df.to_dict("records")
         source.attrs["record_cache_key"] = cache_key
@@ -122,7 +127,10 @@ def backtest_one(df, p, prepared=False):
 
     final_equity = equity_curve[-1]
     first_open, last_close = float(df["Open"].iloc[0]), float(df["Close"].iloc[-1])
-    buy_hold_pct = (last_close * (1 - sell_cost) / (first_open * (1 + buy_cost)) - 1) * 100
+    # Both portfolios remain marked at the final close, without a fictitious
+    # sale. Also report comparable net-liquidation values separately.
+    buy_hold_equity = last_close / (first_open * (1 + buy_cost))
+    buy_hold_pct = (buy_hold_equity - 1) * 100
     arr = np.asarray(equity_curve, dtype=float)
     peaks = np.maximum.accumulate(arr)
     return {
@@ -134,6 +142,8 @@ def backtest_one(df, p, prepared=False):
         "open_trades": int(shares > 0),
         "win_rate_pct": wins / closed_trades * 100 if closed_trades else 0.0,
         "buy_hold_pct": buy_hold_pct,
+        "liquidation_return_pct": (cash + shares * last_close * (1 - sell_cost) - 1) * 100,
+        "buy_hold_liquidation_pct": (buy_hold_equity * (1 - sell_cost) - 1) * 100,
     }
 
 def load_history_best():
@@ -205,7 +215,7 @@ def main():
     data = {}
     for idx, code in enumerate(selected, 1):
         try:
-            df = yf.download(code + ".TW", start="2025-09-01", auto_adjust=False, progress=False, timeout=20)
+            df = yf.download(code + ".TW", start="2025-09-01", auto_adjust=True, progress=False, timeout=20)
             if isinstance(df.columns, pd.MultiIndex):
                 df.columns = df.columns.get_level_values(0)
             if len(df) >= 80:
@@ -277,7 +287,8 @@ def main():
 
     reached = historical_best["best"]["pass_rate_pct"] >= TARGET_PASS_RATE
     output = {
-        "engine_version": "4-ma10-full-position",
+        "engine_version": "4.1-ma10-adjusted-comparable-valuation",
+        "price_basis": "Yahoo adjusted OHLC; corporate-action-adjusted research prices",
         "validation_status": "in_sample_only",
         "data_end_date": max(str(df.index[-1].date()) for df in data.values()),
         "generated_at": datetime.now(ZoneInfo(TIMEZONE)).isoformat(),
@@ -287,7 +298,7 @@ def main():
         "downloaded_symbols": len(data),
         "failed_symbols": [code for code in selected if code not in data],
         "cost_bps": {"buy": float(os.getenv("BUY_COST_BPS", "14.25")), "sell": float(os.getenv("SELL_COST_BPS", "44.25"))},
-        "valuation": "open holdings marked at final close; win rate uses fully closed cycles only",
+        "valuation": "strategy and buy-and-hold marked at final close without synthetic sale; net-liquidation values separate; win rate uses fully closed cycles only",
         "start_date": START_DATE,
         "target": {
             "individual_return_pct": TARGET_RETURN,
