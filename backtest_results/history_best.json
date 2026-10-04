@@ -1,6 +1,6 @@
 {
-  "updated_at": "2026-10-04T10:55:55.287180+08:00",
-  "github_run_number": 23,
+  "updated_at": "2026-10-04T17:29:22.584093+08:00",
+  "github_run_number": 24,
   "best": {
     "iteration": 0,
     "symbols": 120,
@@ -8,6 +8,10 @@
     "pass_rate_pct": 4.166666666666667,
     "risk_passed_symbols": 3,
     "risk_pass_rate_pct": 2.5,
+    "traded_symbols": 36,
+    "no_trade_symbols": 84,
+    "total_entries": 60,
+    "total_closed_trades": 55,
     "avg_trades": 0.5,
     "avg_win_rate_pct": 5.277777777777777,
     "pooled_win_rate_pct": 23.636363636363637,
