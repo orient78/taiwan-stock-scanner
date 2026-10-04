@@ -6894,7 +6894,7 @@
         "avg_trades": 0.20833333333333334,
         "avg_win_rate_pct": 3.194444444444444,
         "pooled_win_rate_pct": 21.73913043478261,
-        "avg_buy_hold_pct": -1.556813049367024,
+        "avg_buy_hold_pct": -1.5568131034543318,
         "avg_return_pct": -0.1512811202780112,
         "median_return_pct": 0.0,
         "avg_mdd_pct": -1.6258737113426014,
@@ -8296,9 +8296,9 @@
           "winning_trades": 0,
           "open_trades": 0,
           "win_rate_pct": 0.0,
-          "buy_hold_pct": 5.531825147336011,
+          "buy_hold_pct": 5.531818656859078,
           "liquidation_return_pct": 0.0,
-          "buy_hold_liquidation_pct": 5.064846821059055
+          "buy_hold_liquidation_pct": 5.06484035930248
         },
         {
           "code": "7749",
@@ -10070,7 +10070,7 @@
   "descriptive_full_period_target_reached": false,
   "target_reached_reason": "No sealed unseen-data validation; full-period metrics are descriptive only",
   "data_end_date": "2026-10-02",
-  "generated_at": "2026-10-04T23:33:39.213976+08:00",
+  "generated_at": "2026-10-05T03:47:06.533967+08:00",
   "universe": "TWSE listed common stocks only",
   "sample_method": "evenly spaced across code range with 2330 reserved; not sector-stratified or market-wide",
   "universe_symbols": 1073,
@@ -10214,7 +10214,7 @@
     "below_ma5": "hold full position while close >= MA10",
     "below_ma10": "exit full position next open"
   },
-  "github_run_number": 26,
+  "github_run_number": 27,
   "improved_history": null,
   "target_reached": false,
   "run_best": {
