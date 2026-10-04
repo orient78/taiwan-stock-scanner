@@ -189,6 +189,38 @@ class ExecutionTests(unittest.TestCase):
         d.iloc[20:, d.columns.get_loc("Close")] = 1000
         pd.testing.assert_frame_equal(prefix, engine.indicators(d).iloc[:20])
 
+    def test_missing_institutional_flag_blocks_entry(self):
+        row = self.frame().iloc[0].to_dict()
+        row["INSTITUTIONAL_2D"] = np.nan
+        self.assertFalse(engine.entry_signal(row, dict(self.p, institutional_2d=True)))
+
+    def test_funnel_rejections_are_disjoint_and_exclude_unfillable_last_signal(self):
+        d = self.frame().iloc[:6].copy()
+        d["INSTITUTIONAL_2D"] = True
+        d.iloc[0, d.columns.get_loc("RSI")] = np.nan
+        d.iloc[1, d.columns.get_loc("INSTITUTIONAL_2D")] = False
+        d.iloc[2, d.columns.get_loc("Close")] = 80
+        d.iloc[3, d.columns.get_loc("RSI")] = 20
+        p = dict(self.p, institutional_2d=True)
+        counts = engine.entry_diagnostics({"2330": d}, p)["totals"]
+        self.assertEqual(counts["sessions"], 6)
+        self.assertEqual(counts["invalid_inputs"], 1)
+        self.assertEqual(counts["institutional"], 1)
+        self.assertEqual(counts["moving_averages"], 1)
+        self.assertEqual(counts["rsi"], 1)
+        self.assertEqual(counts["passed"], 2)
+        self.assertEqual(counts["passed_with_next_session"], 1)
+        self.assertEqual(counts["passed_without_next_session"], 1)
+        self.assertEqual(counts["sessions"], counts["invalid_inputs"] + counts["passed"] + sum(counts[k] for k in engine.ENTRY_STAGES))
+
+    def test_funnel_window_cannot_count_next_window_execution(self):
+        d = self.frame()
+        counts = engine.entry_diagnostics({"2330": d}, self.p, end_date="2026-01-06")["totals"]
+        self.assertEqual(counts["passed"], 5)
+        self.assertEqual(counts["passed_with_next_session"], 4)
+        self.assertEqual(counts["passed_without_next_session"], 1)
+
 
 if __name__ == "__main__":
     unittest.main()
+

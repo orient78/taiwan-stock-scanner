@@ -67,24 +67,59 @@ def select_symbols(codes, limit):
     indices = np.linspace(0, len(others) - 1, limit - 1, dtype=int)
     return sorted(["2330", *(others[i] for i in indices)])
 
-def entry_signal(row, p):
-    if p.get("institutional_2d", True) and not row.get("INSTITUTIONAL_2D", False):
-        return False
+ENTRY_STAGES = ("institutional", "moving_averages", "ma_order", "rsi", "volume", "breakout")
+
+def entry_rejection(row, p):
+    """First rejected entry gate; used by both orders and funnel diagnostics."""
+    gate = row.get("INSTITUTIONAL_2D", False)
+    if p.get("institutional_2d", True) and (pd.isna(gate) or not bool(gate)):
+        return "institutional"
     price = float(row["Close"])
     if not (price > row["MA5"] and price > row["MA10"] and price > row["MA20"]):
-        return False
+        return "moving_averages"
     if p["ma_order"] and not (row["MA5"] >= row["MA10"]):
-        return False
+        return "ma_order"
     if not (p["rsi_min"] <= row["RSI"] <= p["rsi_max"]):
-        return False
+        return "rsi"
     vol_ratio = row["Volume"] / row["VOL20"] if row["VOL20"] else 0
     if vol_ratio < p["vol_ratio"]:
-        return False
+        return "volume"
     if p["breakout_pct"] is not None:
         threshold = row["HIGH20_PREV"] * (1 + p["breakout_pct"] / 100)
         if price < threshold:
-            return False
-    return True
+            return "breakout"
+    return None
+
+def entry_signal(row, p):
+    return entry_rejection(row, p) is None
+
+def entry_diagnostics(data, params, start_date=None, end_date=None):
+    """Stock-session funnel, independent of holdings; final-session signals cannot fill."""
+    totals = dict.fromkeys(("sessions", "invalid_inputs", *ENTRY_STAGES,
+                          "passed", "passed_with_next_session", "passed_without_next_session"), 0)
+    per_stock = {}
+    required = ["Close", "MA5", "MA10", "MA20", "RSI", "VOL20", "HIGH20_PREV", "Volume"]
+    for code, source in data.items():
+        frame = source.loc[source.index >= pd.Timestamp(start_date or START_DATE, tz=source.index.tz)]
+        if end_date is not None:
+            frame = frame.loc[frame.index < pd.Timestamp(end_date, tz=source.index.tz)]
+        counts = dict.fromkeys(totals, 0)
+        for index, row in enumerate(frame.to_dict("records")):
+            counts["sessions"] += 1
+            if not all(math.isfinite(float(row[key])) for key in required):
+                counts["invalid_inputs"] += 1
+                continue
+            rejection = entry_rejection(row, params)
+            if rejection is not None:
+                counts[rejection] += 1
+            else:
+                counts["passed"] += 1
+                counts["passed_with_next_session" if index + 1 < len(frame) else "passed_without_next_session"] += 1
+        per_stock[code] = counts
+        for key in totals:
+            totals[key] += counts[key]
+    return {"basis": "stock sessions, regardless of holdings; rejection counts are sequential and disjoint; next session is inside this window, not a guaranteed fill",
+            "gate_order": list(ENTRY_STAGES), "totals": totals, "per_stock": per_stock}
 
 def backtest_one(df, p, prepared=False, start_date=None, end_date=None):
     if p.get("ma10_confirm", 1) != 1:
@@ -237,6 +272,10 @@ def summarize(details, params, iteration=0):
         "iteration": iteration, "symbols": n,
         "passed_symbols": passed, "pass_rate_pct": 100 * passed / n if n else 0,
         "risk_passed_symbols": risk_passed, "risk_pass_rate_pct": 100 * risk_passed / n if n else 0,
+        "traded_symbols": sum(x["trades"] > 0 for x in details),
+        "no_trade_symbols": sum(x["trades"] == 0 for x in details),
+        "total_entries": sum(x["trades"] for x in details),
+        "total_closed_trades": closed,
         "avg_trades": mean("trades"), "avg_win_rate_pct": mean("win_rate_pct"),
         "pooled_win_rate_pct": 100 * sum(x["winning_trades"] for x in details) / closed if closed else 0,
         "avg_buy_hold_pct": mean("buy_hold_pct"), "avg_return_pct": mean("return_pct"),
@@ -351,7 +390,13 @@ def main():
     # Previously inspected dates cannot establish an unseen-data target claim.
     reached = False
     output = {
-        "engine_version": "8-ma10-institutional-official-calendar",
+        "engine_version": "9-ma10-entry-funnel",
+        "entry_diagnostics": {
+            "full_period": entry_diagnostics(data, best_params),
+            "training": entry_diagnostics(data, best_params, START_DATE, validation_start),
+            "validation": entry_diagnostics(data, best_params, validation_start, later_start),
+            "later_period": entry_diagnostics(data, best_params, later_start),
+        },
         "entry_scope": "technical entry AND foreign/trust each net-buy on both current and preceding market trading session; order next session open",
         "institutional_gate_backtested": True,
         "institutional_coverage": coverage,
@@ -412,3 +457,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
