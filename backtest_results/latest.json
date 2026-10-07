@@ -12,12 +12,12 @@
         "breakout"
       ],
       "totals": {
-        "sessions": 21960,
+        "sessions": 22079,
         "invalid_inputs": 0,
-        "institutional": 21625,
-        "moving_averages": 102,
-        "ma_order": 44,
-        "rsi": 39,
+        "institutional": 21740,
+        "moving_averages": 103,
+        "ma_order": 46,
+        "rsi": 40,
         "volume": 69,
         "breakout": 0,
         "passed": 81,
@@ -26,9 +26,9 @@
       },
       "per_stock": {
         "1101": {
-          "sessions": 183,
+          "sessions": 184,
           "invalid_inputs": 0,
-          "institutional": 176,
+          "institutional": 177,
           "moving_averages": 3,
           "ma_order": 2,
           "rsi": 0,
@@ -39,9 +39,9 @@
           "passed_without_next_session": 0
         },
         "1210": {
-          "sessions": 183,
+          "sessions": 184,
           "invalid_inputs": 0,
-          "institutional": 175,
+          "institutional": 176,
           "moving_averages": 3,
           "ma_order": 3,
           "rsi": 0,
@@ -52,9 +52,9 @@
           "passed_without_next_session": 0
         },
         "1227": {
-          "sessions": 183,
+          "sessions": 184,
           "invalid_inputs": 0,
-          "institutional": 178,
+          "institutional": 179,
           "moving_averages": 1,
           "ma_order": 1,
           "rsi": 0,
@@ -65,9 +65,9 @@
           "passed_without_next_session": 0
         },
         "1301": {
-          "sessions": 183,
+          "sessions": 184,
           "invalid_inputs": 0,
-          "institutional": 180,
+          "institutional": 181,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -78,9 +78,9 @@
           "passed_without_next_session": 0
         },
         "1313": {
-          "sessions": 183,
+          "sessions": 184,
           "invalid_inputs": 0,
-          "institutional": 183,
+          "institutional": 184,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -91,9 +91,9 @@
           "passed_without_next_session": 0
         },
         "1326": {
-          "sessions": 183,
+          "sessions": 184,
           "invalid_inputs": 0,
-          "institutional": 177,
+          "institutional": 178,
           "moving_averages": 1,
           "ma_order": 0,
           "rsi": 1,
@@ -104,9 +104,9 @@
           "passed_without_next_session": 0
         },
         "1410": {
-          "sessions": 183,
+          "sessions": 184,
           "invalid_inputs": 0,
-          "institutional": 183,
+          "institutional": 184,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -117,9 +117,9 @@
           "passed_without_next_session": 0
         },
         "1434": {
-          "sessions": 183,
+          "sessions": 184,
           "invalid_inputs": 0,
-          "institutional": 175,
+          "institutional": 176,
           "moving_averages": 4,
           "ma_order": 2,
           "rsi": 0,
@@ -130,9 +130,9 @@
           "passed_without_next_session": 0
         },
         "1443": {
-          "sessions": 183,
+          "sessions": 184,
           "invalid_inputs": 0,
-          "institutional": 183,
+          "institutional": 184,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -143,9 +143,9 @@
           "passed_without_next_session": 0
         },
         "1454": {
-          "sessions": 183,
+          "sessions": 184,
           "invalid_inputs": 0,
-          "institutional": 183,
+          "institutional": 184,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -156,9 +156,9 @@
           "passed_without_next_session": 0
         },
         "1466": {
-          "sessions": 183,
+          "sessions": 184,
           "invalid_inputs": 0,
-          "institutional": 183,
+          "institutional": 184,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -169,9 +169,9 @@
           "passed_without_next_session": 0
         },
         "1476": {
-          "sessions": 183,
+          "sessions": 184,
           "invalid_inputs": 0,
-          "institutional": 174,
+          "institutional": 175,
           "moving_averages": 4,
           "ma_order": 0,
           "rsi": 1,
@@ -182,9 +182,9 @@
           "passed_without_next_session": 0
         },
         "1516": {
-          "sessions": 183,
+          "sessions": 184,
           "invalid_inputs": 0,
-          "institutional": 183,
+          "institutional": 184,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -195,9 +195,9 @@
           "passed_without_next_session": 0
         },
         "1528": {
-          "sessions": 183,
+          "sessions": 184,
           "invalid_inputs": 0,
-          "institutional": 181,
+          "institutional": 182,
           "moving_averages": 2,
           "ma_order": 0,
           "rsi": 0,
@@ -208,9 +208,9 @@
           "passed_without_next_session": 0
         },
         "1539": {
-          "sessions": 183,
+          "sessions": 184,
           "invalid_inputs": 0,
-          "institutional": 183,
+          "institutional": 184,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -221,9 +221,9 @@
           "passed_without_next_session": 0
         },
         "1587": {
-          "sessions": 183,
+          "sessions": 184,
           "invalid_inputs": 0,
-          "institutional": 183,
+          "institutional": 184,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -234,9 +234,9 @@
           "passed_without_next_session": 0
         },
         "1609": {
-          "sessions": 183,
+          "sessions": 184,
           "invalid_inputs": 0,
-          "institutional": 183,
+          "institutional": 184,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -247,9 +247,9 @@
           "passed_without_next_session": 0
         },
         "1626": {
-          "sessions": 183,
+          "sessions": 184,
           "invalid_inputs": 0,
-          "institutional": 183,
+          "institutional": 184,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -260,9 +260,9 @@
           "passed_without_next_session": 0
         },
         "1714": {
-          "sessions": 183,
+          "sessions": 184,
           "invalid_inputs": 0,
-          "institutional": 182,
+          "institutional": 183,
           "moving_averages": 1,
           "ma_order": 0,
           "rsi": 0,
@@ -273,9 +273,9 @@
           "passed_without_next_session": 0
         },
         "1727": {
-          "sessions": 183,
+          "sessions": 184,
           "invalid_inputs": 0,
-          "institutional": 183,
+          "institutional": 184,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -286,9 +286,9 @@
           "passed_without_next_session": 0
         },
         "1752": {
-          "sessions": 183,
+          "sessions": 184,
           "invalid_inputs": 0,
-          "institutional": 183,
+          "institutional": 184,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -299,9 +299,9 @@
           "passed_without_next_session": 0
         },
         "1802": {
-          "sessions": 183,
+          "sessions": 184,
           "invalid_inputs": 0,
-          "institutional": 174,
+          "institutional": 175,
           "moving_averages": 2,
           "ma_order": 3,
           "rsi": 0,
@@ -312,9 +312,9 @@
           "passed_without_next_session": 0
         },
         "1905": {
-          "sessions": 183,
+          "sessions": 184,
           "invalid_inputs": 0,
-          "institutional": 183,
+          "institutional": 184,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -325,9 +325,9 @@
           "passed_without_next_session": 0
         },
         "2010": {
-          "sessions": 183,
+          "sessions": 184,
           "invalid_inputs": 0,
-          "institutional": 183,
+          "institutional": 184,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -338,9 +338,9 @@
           "passed_without_next_session": 0
         },
         "2024": {
-          "sessions": 183,
+          "sessions": 184,
           "invalid_inputs": 0,
-          "institutional": 183,
+          "institutional": 184,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -351,9 +351,9 @@
           "passed_without_next_session": 0
         },
         "2034": {
-          "sessions": 183,
+          "sessions": 184,
           "invalid_inputs": 0,
-          "institutional": 183,
+          "institutional": 184,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -364,9 +364,9 @@
           "passed_without_next_session": 0
         },
         "2103": {
-          "sessions": 183,
+          "sessions": 184,
           "invalid_inputs": 0,
-          "institutional": 183,
+          "institutional": 184,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -377,9 +377,9 @@
           "passed_without_next_session": 0
         },
         "2204": {
-          "sessions": 183,
+          "sessions": 184,
           "invalid_inputs": 0,
-          "institutional": 179,
+          "institutional": 180,
           "moving_averages": 2,
           "ma_order": 1,
           "rsi": 0,
@@ -390,9 +390,9 @@
           "passed_without_next_session": 0
         },
         "2236": {
-          "sessions": 183,
+          "sessions": 184,
           "invalid_inputs": 0,
-          "institutional": 183,
+          "institutional": 184,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -403,9 +403,9 @@
           "passed_without_next_session": 0
         },
         "2301": {
-          "sessions": 183,
+          "sessions": 184,
           "invalid_inputs": 0,
-          "institutional": 175,
+          "institutional": 176,
           "moving_averages": 0,
           "ma_order": 3,
           "rsi": 0,
@@ -416,9 +416,9 @@
           "passed_without_next_session": 0
         },
         "2317": {
-          "sessions": 183,
+          "sessions": 184,
           "invalid_inputs": 0,
-          "institutional": 166,
+          "institutional": 167,
           "moving_averages": 1,
           "ma_order": 1,
           "rsi": 4,
@@ -429,9 +429,9 @@
           "passed_without_next_session": 0
         },
         "2330": {
-          "sessions": 183,
+          "sessions": 184,
           "invalid_inputs": 0,
-          "institutional": 173,
+          "institutional": 174,
           "moving_averages": 0,
           "ma_order": 2,
           "rsi": 3,
@@ -442,9 +442,9 @@
           "passed_without_next_session": 0
         },
         "2337": {
-          "sessions": 183,
+          "sessions": 184,
           "invalid_inputs": 0,
-          "institutional": 171,
+          "institutional": 172,
           "moving_averages": 1,
           "ma_order": 0,
           "rsi": 5,
@@ -455,9 +455,9 @@
           "passed_without_next_session": 0
         },
         "2351": {
-          "sessions": 183,
+          "sessions": 184,
           "invalid_inputs": 0,
-          "institutional": 180,
+          "institutional": 181,
           "moving_averages": 2,
           "ma_order": 0,
           "rsi": 0,
@@ -468,9 +468,9 @@
           "passed_without_next_session": 0
         },
         "2362": {
-          "sessions": 183,
+          "sessions": 184,
           "invalid_inputs": 0,
-          "institutional": 183,
+          "institutional": 184,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -481,9 +481,9 @@
           "passed_without_next_session": 0
         },
         "2374": {
-          "sessions": 183,
+          "sessions": 184,
           "invalid_inputs": 0,
-          "institutional": 180,
+          "institutional": 181,
           "moving_averages": 1,
           "ma_order": 2,
           "rsi": 0,
@@ -494,9 +494,9 @@
           "passed_without_next_session": 0
         },
         "2387": {
-          "sessions": 183,
+          "sessions": 184,
           "invalid_inputs": 0,
-          "institutional": 183,
+          "institutional": 184,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -507,9 +507,9 @@
           "passed_without_next_session": 0
         },
         "2402": {
-          "sessions": 183,
+          "sessions": 184,
           "invalid_inputs": 0,
-          "institutional": 182,
+          "institutional": 183,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 1,
@@ -520,9 +520,9 @@
           "passed_without_next_session": 0
         },
         "2415": {
-          "sessions": 183,
+          "sessions": 184,
           "invalid_inputs": 0,
-          "institutional": 183,
+          "institutional": 184,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -533,9 +533,9 @@
           "passed_without_next_session": 0
         },
         "2427": {
-          "sessions": 183,
+          "sessions": 184,
           "invalid_inputs": 0,
-          "institutional": 183,
+          "institutional": 184,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -546,9 +546,9 @@
           "passed_without_next_session": 0
         },
         "2438": {
-          "sessions": 183,
+          "sessions": 184,
           "invalid_inputs": 0,
-          "institutional": 183,
+          "institutional": 184,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -559,9 +559,9 @@
           "passed_without_next_session": 0
         },
         "2454": {
-          "sessions": 183,
+          "sessions": 184,
           "invalid_inputs": 0,
-          "institutional": 169,
+          "institutional": 170,
           "moving_averages": 1,
           "ma_order": 1,
           "rsi": 4,
@@ -572,9 +572,9 @@
           "passed_without_next_session": 0
         },
         "2465": {
-          "sessions": 183,
+          "sessions": 184,
           "invalid_inputs": 0,
-          "institutional": 183,
+          "institutional": 184,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -585,9 +585,9 @@
           "passed_without_next_session": 0
         },
         "2478": {
-          "sessions": 183,
+          "sessions": 184,
           "invalid_inputs": 0,
-          "institutional": 178,
+          "institutional": 179,
           "moving_averages": 4,
           "ma_order": 0,
           "rsi": 0,
@@ -598,11 +598,11 @@
           "passed_without_next_session": 0
         },
         "2489": {
-          "sessions": 183,
+          "sessions": 184,
           "invalid_inputs": 0,
           "institutional": 177,
           "moving_averages": 4,
-          "ma_order": 1,
+          "ma_order": 2,
           "rsi": 0,
           "volume": 0,
           "breakout": 0,
@@ -611,9 +611,9 @@
           "passed_without_next_session": 0
         },
         "2504": {
-          "sessions": 183,
+          "sessions": 184,
           "invalid_inputs": 0,
-          "institutional": 181,
+          "institutional": 182,
           "moving_averages": 1,
           "ma_order": 0,
           "rsi": 1,
@@ -624,9 +624,9 @@
           "passed_without_next_session": 0
         },
         "2524": {
-          "sessions": 183,
+          "sessions": 184,
           "invalid_inputs": 0,
-          "institutional": 183,
+          "institutional": 184,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -637,9 +637,9 @@
           "passed_without_next_session": 0
         },
         "2539": {
-          "sessions": 183,
+          "sessions": 184,
           "invalid_inputs": 0,
-          "institutional": 183,
+          "institutional": 184,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -650,9 +650,9 @@
           "passed_without_next_session": 0
         },
         "2601": {
-          "sessions": 183,
+          "sessions": 184,
           "invalid_inputs": 0,
-          "institutional": 183,
+          "institutional": 184,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -663,9 +663,9 @@
           "passed_without_next_session": 0
         },
         "2612": {
-          "sessions": 183,
+          "sessions": 184,
           "invalid_inputs": 0,
-          "institutional": 183,
+          "institutional": 184,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -676,9 +676,9 @@
           "passed_without_next_session": 0
         },
         "2634": {
-          "sessions": 183,
+          "sessions": 184,
           "invalid_inputs": 0,
-          "institutional": 179,
+          "institutional": 180,
           "moving_averages": 2,
           "ma_order": 0,
           "rsi": 0,
@@ -689,9 +689,9 @@
           "passed_without_next_session": 0
         },
         "2705": {
-          "sessions": 183,
+          "sessions": 184,
           "invalid_inputs": 0,
-          "institutional": 183,
+          "institutional": 184,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -702,9 +702,9 @@
           "passed_without_next_session": 0
         },
         "2748": {
-          "sessions": 183,
+          "sessions": 184,
           "invalid_inputs": 0,
-          "institutional": 183,
+          "institutional": 184,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -715,9 +715,9 @@
           "passed_without_next_session": 0
         },
         "2836": {
-          "sessions": 183,
+          "sessions": 184,
           "invalid_inputs": 0,
-          "institutional": 183,
+          "institutional": 184,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -728,9 +728,9 @@
           "passed_without_next_session": 0
         },
         "2881": {
-          "sessions": 183,
+          "sessions": 184,
           "invalid_inputs": 0,
-          "institutional": 173,
+          "institutional": 174,
           "moving_averages": 2,
           "ma_order": 4,
           "rsi": 1,
@@ -741,11 +741,11 @@
           "passed_without_next_session": 0
         },
         "2891": {
-          "sessions": 183,
+          "sessions": 184,
           "invalid_inputs": 0,
           "institutional": 171,
           "moving_averages": 2,
-          "ma_order": 0,
+          "ma_order": 1,
           "rsi": 1,
           "volume": 7,
           "breakout": 0,
@@ -754,9 +754,9 @@
           "passed_without_next_session": 0
         },
         "2910": {
-          "sessions": 183,
+          "sessions": 184,
           "invalid_inputs": 0,
-          "institutional": 183,
+          "institutional": 184,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -767,9 +767,9 @@
           "passed_without_next_session": 0
         },
         "3002": {
-          "sessions": 183,
+          "sessions": 184,
           "invalid_inputs": 0,
-          "institutional": 183,
+          "institutional": 184,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -780,9 +780,9 @@
           "passed_without_next_session": 0
         },
         "3014": {
-          "sessions": 183,
+          "sessions": 184,
           "invalid_inputs": 0,
-          "institutional": 165,
+          "institutional": 166,
           "moving_averages": 7,
           "ma_order": 1,
           "rsi": 0,
@@ -793,9 +793,9 @@
           "passed_without_next_session": 0
         },
         "3024": {
-          "sessions": 183,
+          "sessions": 184,
           "invalid_inputs": 0,
-          "institutional": 183,
+          "institutional": 184,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -806,9 +806,9 @@
           "passed_without_next_session": 0
         },
         "3033": {
-          "sessions": 183,
+          "sessions": 184,
           "invalid_inputs": 0,
-          "institutional": 180,
+          "institutional": 181,
           "moving_averages": 1,
           "ma_order": 0,
           "rsi": 0,
@@ -819,9 +819,9 @@
           "passed_without_next_session": 0
         },
         "3043": {
-          "sessions": 183,
+          "sessions": 184,
           "invalid_inputs": 0,
-          "institutional": 183,
+          "institutional": 184,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -832,9 +832,9 @@
           "passed_without_next_session": 0
         },
         "3052": {
-          "sessions": 183,
+          "sessions": 184,
           "invalid_inputs": 0,
-          "institutional": 183,
+          "institutional": 184,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -845,9 +845,9 @@
           "passed_without_next_session": 0
         },
         "3090": {
-          "sessions": 183,
+          "sessions": 184,
           "invalid_inputs": 0,
-          "institutional": 179,
+          "institutional": 180,
           "moving_averages": 1,
           "ma_order": 1,
           "rsi": 1,
@@ -858,9 +858,9 @@
           "passed_without_next_session": 0
         },
         "3167": {
-          "sessions": 183,
+          "sessions": 184,
           "invalid_inputs": 0,
-          "institutional": 177,
+          "institutional": 178,
           "moving_averages": 1,
           "ma_order": 3,
           "rsi": 0,
@@ -871,9 +871,9 @@
           "passed_without_next_session": 0
         },
         "3305": {
-          "sessions": 183,
+          "sessions": 184,
           "invalid_inputs": 0,
-          "institutional": 183,
+          "institutional": 184,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -884,9 +884,9 @@
           "passed_without_next_session": 0
         },
         "3380": {
-          "sessions": 183,
+          "sessions": 184,
           "invalid_inputs": 0,
-          "institutional": 182,
+          "institutional": 183,
           "moving_averages": 1,
           "ma_order": 0,
           "rsi": 0,
@@ -897,9 +897,9 @@
           "passed_without_next_session": 0
         },
         "3481": {
-          "sessions": 183,
+          "sessions": 184,
           "invalid_inputs": 0,
-          "institutional": 175,
+          "institutional": 176,
           "moving_averages": 4,
           "ma_order": 0,
           "rsi": 0,
@@ -910,9 +910,9 @@
           "passed_without_next_session": 0
         },
         "3533": {
-          "sessions": 183,
+          "sessions": 184,
           "invalid_inputs": 0,
-          "institutional": 159,
+          "institutional": 160,
           "moving_averages": 10,
           "ma_order": 1,
           "rsi": 1,
@@ -923,9 +923,9 @@
           "passed_without_next_session": 0
         },
         "3588": {
-          "sessions": 183,
+          "sessions": 184,
           "invalid_inputs": 0,
-          "institutional": 183,
+          "institutional": 184,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -936,9 +936,9 @@
           "passed_without_next_session": 0
         },
         "3645": {
-          "sessions": 183,
+          "sessions": 184,
           "invalid_inputs": 0,
-          "institutional": 182,
+          "institutional": 183,
           "moving_averages": 1,
           "ma_order": 0,
           "rsi": 0,
@@ -949,9 +949,9 @@
           "passed_without_next_session": 0
         },
         "3694": {
-          "sessions": 183,
+          "sessions": 184,
           "invalid_inputs": 0,
-          "institutional": 183,
+          "institutional": 184,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -962,9 +962,9 @@
           "passed_without_next_session": 0
         },
         "3712": {
-          "sessions": 183,
+          "sessions": 184,
           "invalid_inputs": 0,
-          "institutional": 183,
+          "institutional": 184,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -975,9 +975,9 @@
           "passed_without_next_session": 0
         },
         "4133": {
-          "sessions": 183,
+          "sessions": 184,
           "invalid_inputs": 0,
-          "institutional": 183,
+          "institutional": 184,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -988,9 +988,9 @@
           "passed_without_next_session": 0
         },
         "4426": {
-          "sessions": 183,
+          "sessions": 184,
           "invalid_inputs": 0,
-          "institutional": 183,
+          "institutional": 184,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -1001,9 +1001,9 @@
           "passed_without_next_session": 0
         },
         "4545": {
-          "sessions": 183,
+          "sessions": 184,
           "invalid_inputs": 0,
-          "institutional": 183,
+          "institutional": 184,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -1014,9 +1014,9 @@
           "passed_without_next_session": 0
         },
         "4569": {
-          "sessions": 183,
+          "sessions": 184,
           "invalid_inputs": 0,
-          "institutional": 183,
+          "institutional": 184,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -1027,9 +1027,9 @@
           "passed_without_next_session": 0
         },
         "4720": {
-          "sessions": 183,
+          "sessions": 184,
           "invalid_inputs": 0,
-          "institutional": 182,
+          "institutional": 183,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -1040,9 +1040,9 @@
           "passed_without_next_session": 0
         },
         "4766": {
-          "sessions": 183,
+          "sessions": 184,
           "invalid_inputs": 0,
-          "institutional": 180,
+          "institutional": 181,
           "moving_averages": 2,
           "ma_order": 0,
           "rsi": 0,
@@ -1053,9 +1053,9 @@
           "passed_without_next_session": 0
         },
         "4919": {
-          "sessions": 183,
+          "sessions": 184,
           "invalid_inputs": 0,
-          "institutional": 176,
+          "institutional": 177,
           "moving_averages": 4,
           "ma_order": 1,
           "rsi": 0,
@@ -1066,9 +1066,9 @@
           "passed_without_next_session": 0
         },
         "4956": {
-          "sessions": 183,
+          "sessions": 184,
           "invalid_inputs": 0,
-          "institutional": 180,
+          "institutional": 181,
           "moving_averages": 3,
           "ma_order": 0,
           "rsi": 0,
@@ -1079,9 +1079,9 @@
           "passed_without_next_session": 0
         },
         "4994": {
-          "sessions": 183,
+          "sessions": 184,
           "invalid_inputs": 0,
-          "institutional": 183,
+          "institutional": 184,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -1092,9 +1092,9 @@
           "passed_without_next_session": 0
         },
         "5244": {
-          "sessions": 183,
+          "sessions": 184,
           "invalid_inputs": 0,
-          "institutional": 183,
+          "institutional": 184,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -1105,9 +1105,9 @@
           "passed_without_next_session": 0
         },
         "5388": {
-          "sessions": 183,
+          "sessions": 184,
           "invalid_inputs": 0,
-          "institutional": 183,
+          "institutional": 184,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -1118,9 +1118,9 @@
           "passed_without_next_session": 0
         },
         "5525": {
-          "sessions": 183,
+          "sessions": 184,
           "invalid_inputs": 0,
-          "institutional": 183,
+          "institutional": 184,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -1131,9 +1131,9 @@
           "passed_without_next_session": 0
         },
         "5871": {
-          "sessions": 183,
+          "sessions": 184,
           "invalid_inputs": 0,
-          "institutional": 171,
+          "institutional": 172,
           "moving_averages": 2,
           "ma_order": 3,
           "rsi": 0,
@@ -1144,9 +1144,9 @@
           "passed_without_next_session": 0
         },
         "6115": {
-          "sessions": 183,
+          "sessions": 184,
           "invalid_inputs": 0,
-          "institutional": 183,
+          "institutional": 184,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -1157,9 +1157,9 @@
           "passed_without_next_session": 0
         },
         "6142": {
-          "sessions": 183,
+          "sessions": 184,
           "invalid_inputs": 0,
-          "institutional": 183,
+          "institutional": 184,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -1170,9 +1170,9 @@
           "passed_without_next_session": 0
         },
         "6177": {
-          "sessions": 183,
+          "sessions": 184,
           "invalid_inputs": 0,
-          "institutional": 181,
+          "institutional": 182,
           "moving_averages": 0,
           "ma_order": 1,
           "rsi": 0,
@@ -1183,9 +1183,9 @@
           "passed_without_next_session": 0
         },
         "6202": {
-          "sessions": 183,
+          "sessions": 184,
           "invalid_inputs": 0,
-          "institutional": 177,
+          "institutional": 178,
           "moving_averages": 0,
           "ma_order": 3,
           "rsi": 1,
@@ -1196,9 +1196,9 @@
           "passed_without_next_session": 0
         },
         "6225": {
-          "sessions": 183,
+          "sessions": 184,
           "invalid_inputs": 0,
-          "institutional": 183,
+          "institutional": 184,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -1209,9 +1209,9 @@
           "passed_without_next_session": 0
         },
         "6272": {
-          "sessions": 183,
+          "sessions": 184,
           "invalid_inputs": 0,
-          "institutional": 183,
+          "institutional": 184,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -1222,9 +1222,9 @@
           "passed_without_next_session": 0
         },
         "6412": {
-          "sessions": 183,
+          "sessions": 184,
           "invalid_inputs": 0,
-          "institutional": 179,
+          "institutional": 180,
           "moving_averages": 0,
           "ma_order": 1,
           "rsi": 0,
@@ -1235,9 +1235,9 @@
           "passed_without_next_session": 0
         },
         "6449": {
-          "sessions": 183,
+          "sessions": 184,
           "invalid_inputs": 0,
-          "institutional": 182,
+          "institutional": 183,
           "moving_averages": 1,
           "ma_order": 0,
           "rsi": 0,
@@ -1248,9 +1248,9 @@
           "passed_without_next_session": 0
         },
         "6515": {
-          "sessions": 183,
+          "sessions": 184,
           "invalid_inputs": 0,
-          "institutional": 181,
+          "institutional": 182,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 2,
@@ -1261,9 +1261,9 @@
           "passed_without_next_session": 0
         },
         "6558": {
-          "sessions": 183,
+          "sessions": 184,
           "invalid_inputs": 0,
-          "institutional": 183,
+          "institutional": 184,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -1274,9 +1274,9 @@
           "passed_without_next_session": 0
         },
         "6598": {
-          "sessions": 183,
+          "sessions": 184,
           "invalid_inputs": 0,
-          "institutional": 183,
+          "institutional": 184,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -1287,9 +1287,9 @@
           "passed_without_next_session": 0
         },
         "6658": {
-          "sessions": 183,
+          "sessions": 184,
           "invalid_inputs": 0,
-          "institutional": 183,
+          "institutional": 184,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -1300,9 +1300,9 @@
           "passed_without_next_session": 0
         },
         "6691": {
-          "sessions": 183,
+          "sessions": 184,
           "invalid_inputs": 0,
-          "institutional": 179,
+          "institutional": 180,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 1,
@@ -1313,9 +1313,9 @@
           "passed_without_next_session": 0
         },
         "6753": {
-          "sessions": 183,
+          "sessions": 184,
           "invalid_inputs": 0,
-          "institutional": 183,
+          "institutional": 184,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -1326,9 +1326,9 @@
           "passed_without_next_session": 0
         },
         "6782": {
-          "sessions": 183,
+          "sessions": 184,
           "invalid_inputs": 0,
-          "institutional": 180,
+          "institutional": 181,
           "moving_averages": 0,
           "ma_order": 1,
           "rsi": 0,
@@ -1352,9 +1352,9 @@
           "passed_without_next_session": 0
         },
         "6863": {
-          "sessions": 183,
+          "sessions": 184,
           "invalid_inputs": 0,
-          "institutional": 183,
+          "institutional": 184,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -1365,9 +1365,9 @@
           "passed_without_next_session": 0
         },
         "6908": {
-          "sessions": 183,
+          "sessions": 184,
           "invalid_inputs": 0,
-          "institutional": 183,
+          "institutional": 184,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -1378,9 +1378,9 @@
           "passed_without_next_session": 0
         },
         "6928": {
-          "sessions": 183,
+          "sessions": 184,
           "invalid_inputs": 0,
-          "institutional": 183,
+          "institutional": 184,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -1391,9 +1391,9 @@
           "passed_without_next_session": 0
         },
         "6952": {
-          "sessions": 183,
+          "sessions": 184,
           "invalid_inputs": 0,
-          "institutional": 183,
+          "institutional": 184,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -1404,9 +1404,9 @@
           "passed_without_next_session": 0
         },
         "7631": {
-          "sessions": 183,
+          "sessions": 184,
           "invalid_inputs": 0,
-          "institutional": 183,
+          "institutional": 184,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -1417,9 +1417,9 @@
           "passed_without_next_session": 0
         },
         "7749": {
-          "sessions": 183,
+          "sessions": 184,
           "invalid_inputs": 0,
-          "institutional": 182,
+          "institutional": 183,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -1430,9 +1430,9 @@
           "passed_without_next_session": 0
         },
         "7799": {
-          "sessions": 183,
+          "sessions": 184,
           "invalid_inputs": 0,
-          "institutional": 180,
+          "institutional": 181,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 2,
@@ -1443,12 +1443,12 @@
           "passed_without_next_session": 0
         },
         "8046": {
-          "sessions": 183,
+          "sessions": 184,
           "invalid_inputs": 0,
           "institutional": 157,
           "moving_averages": 5,
           "ma_order": 1,
-          "rsi": 9,
+          "rsi": 10,
           "volume": 5,
           "breakout": 0,
           "passed": 6,
@@ -1456,9 +1456,9 @@
           "passed_without_next_session": 0
         },
         "8112": {
-          "sessions": 183,
+          "sessions": 184,
           "invalid_inputs": 0,
-          "institutional": 179,
+          "institutional": 180,
           "moving_averages": 1,
           "ma_order": 0,
           "rsi": 0,
@@ -1469,9 +1469,9 @@
           "passed_without_next_session": 0
         },
         "8215": {
-          "sessions": 183,
+          "sessions": 184,
           "invalid_inputs": 0,
-          "institutional": 179,
+          "institutional": 180,
           "moving_averages": 4,
           "ma_order": 0,
           "rsi": 0,
@@ -1482,9 +1482,9 @@
           "passed_without_next_session": 0
         },
         "8411": {
-          "sessions": 183,
+          "sessions": 184,
           "invalid_inputs": 0,
-          "institutional": 183,
+          "institutional": 184,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -1495,10 +1495,10 @@
           "passed_without_next_session": 0
         },
         "8464": {
-          "sessions": 183,
+          "sessions": 184,
           "invalid_inputs": 0,
           "institutional": 174,
-          "moving_averages": 6,
+          "moving_averages": 7,
           "ma_order": 0,
           "rsi": 0,
           "volume": 3,
@@ -1508,9 +1508,9 @@
           "passed_without_next_session": 0
         },
         "8488": {
-          "sessions": 183,
+          "sessions": 184,
           "invalid_inputs": 0,
-          "institutional": 183,
+          "institutional": 184,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -1521,9 +1521,9 @@
           "passed_without_next_session": 0
         },
         "9802": {
-          "sessions": 183,
+          "sessions": 184,
           "invalid_inputs": 0,
-          "institutional": 182,
+          "institutional": 183,
           "moving_averages": 1,
           "ma_order": 0,
           "rsi": 0,
@@ -1534,9 +1534,9 @@
           "passed_without_next_session": 0
         },
         "9912": {
-          "sessions": 183,
+          "sessions": 184,
           "invalid_inputs": 0,
-          "institutional": 183,
+          "institutional": 184,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -1547,9 +1547,9 @@
           "passed_without_next_session": 0
         },
         "9927": {
-          "sessions": 183,
+          "sessions": 184,
           "invalid_inputs": 0,
-          "institutional": 183,
+          "institutional": 184,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -1560,9 +1560,9 @@
           "passed_without_next_session": 0
         },
         "9938": {
-          "sessions": 183,
+          "sessions": 184,
           "invalid_inputs": 0,
-          "institutional": 183,
+          "institutional": 184,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -1573,9 +1573,9 @@
           "passed_without_next_session": 0
         },
         "9958": {
-          "sessions": 183,
+          "sessions": 184,
           "invalid_inputs": 0,
-          "institutional": 178,
+          "institutional": 179,
           "moving_averages": 3,
           "ma_order": 1,
           "rsi": 0,
@@ -4770,12 +4770,12 @@
         "breakout"
       ],
       "totals": {
-        "sessions": 5400,
+        "sessions": 5519,
         "invalid_inputs": 0,
-        "institutional": 5319,
-        "moving_averages": 22,
-        "ma_order": 9,
-        "rsi": 11,
+        "institutional": 5434,
+        "moving_averages": 23,
+        "ma_order": 11,
+        "rsi": 12,
         "volume": 22,
         "breakout": 0,
         "passed": 17,
@@ -4784,9 +4784,9 @@
       },
       "per_stock": {
         "1101": {
-          "sessions": 45,
+          "sessions": 46,
           "invalid_inputs": 0,
-          "institutional": 44,
+          "institutional": 45,
           "moving_averages": 0,
           "ma_order": 1,
           "rsi": 0,
@@ -4797,9 +4797,9 @@
           "passed_without_next_session": 0
         },
         "1210": {
-          "sessions": 45,
+          "sessions": 46,
           "invalid_inputs": 0,
-          "institutional": 44,
+          "institutional": 45,
           "moving_averages": 1,
           "ma_order": 0,
           "rsi": 0,
@@ -4810,9 +4810,9 @@
           "passed_without_next_session": 0
         },
         "1227": {
-          "sessions": 45,
+          "sessions": 46,
           "invalid_inputs": 0,
-          "institutional": 45,
+          "institutional": 46,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -4823,9 +4823,9 @@
           "passed_without_next_session": 0
         },
         "1301": {
-          "sessions": 45,
+          "sessions": 46,
           "invalid_inputs": 0,
-          "institutional": 45,
+          "institutional": 46,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -4836,9 +4836,9 @@
           "passed_without_next_session": 0
         },
         "1313": {
-          "sessions": 45,
+          "sessions": 46,
           "invalid_inputs": 0,
-          "institutional": 45,
+          "institutional": 46,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -4849,9 +4849,9 @@
           "passed_without_next_session": 0
         },
         "1326": {
-          "sessions": 45,
+          "sessions": 46,
           "invalid_inputs": 0,
-          "institutional": 45,
+          "institutional": 46,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -4862,9 +4862,9 @@
           "passed_without_next_session": 0
         },
         "1410": {
-          "sessions": 45,
+          "sessions": 46,
           "invalid_inputs": 0,
-          "institutional": 45,
+          "institutional": 46,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -4875,9 +4875,9 @@
           "passed_without_next_session": 0
         },
         "1434": {
-          "sessions": 45,
+          "sessions": 46,
           "invalid_inputs": 0,
-          "institutional": 45,
+          "institutional": 46,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -4888,9 +4888,9 @@
           "passed_without_next_session": 0
         },
         "1443": {
-          "sessions": 45,
+          "sessions": 46,
           "invalid_inputs": 0,
-          "institutional": 45,
+          "institutional": 46,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -4901,9 +4901,9 @@
           "passed_without_next_session": 0
         },
         "1454": {
-          "sessions": 45,
+          "sessions": 46,
           "invalid_inputs": 0,
-          "institutional": 45,
+          "institutional": 46,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -4914,9 +4914,9 @@
           "passed_without_next_session": 0
         },
         "1466": {
-          "sessions": 45,
+          "sessions": 46,
           "invalid_inputs": 0,
-          "institutional": 45,
+          "institutional": 46,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -4927,9 +4927,9 @@
           "passed_without_next_session": 0
         },
         "1476": {
-          "sessions": 45,
+          "sessions": 46,
           "invalid_inputs": 0,
-          "institutional": 42,
+          "institutional": 43,
           "moving_averages": 2,
           "ma_order": 0,
           "rsi": 0,
@@ -4940,9 +4940,9 @@
           "passed_without_next_session": 0
         },
         "1516": {
-          "sessions": 45,
+          "sessions": 46,
           "invalid_inputs": 0,
-          "institutional": 45,
+          "institutional": 46,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -4953,9 +4953,9 @@
           "passed_without_next_session": 0
         },
         "1528": {
-          "sessions": 45,
+          "sessions": 46,
           "invalid_inputs": 0,
-          "institutional": 45,
+          "institutional": 46,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -4966,9 +4966,9 @@
           "passed_without_next_session": 0
         },
         "1539": {
-          "sessions": 45,
+          "sessions": 46,
           "invalid_inputs": 0,
-          "institutional": 45,
+          "institutional": 46,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -4979,9 +4979,9 @@
           "passed_without_next_session": 0
         },
         "1587": {
-          "sessions": 45,
+          "sessions": 46,
           "invalid_inputs": 0,
-          "institutional": 45,
+          "institutional": 46,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -4992,9 +4992,9 @@
           "passed_without_next_session": 0
         },
         "1609": {
-          "sessions": 45,
+          "sessions": 46,
           "invalid_inputs": 0,
-          "institutional": 45,
+          "institutional": 46,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -5005,9 +5005,9 @@
           "passed_without_next_session": 0
         },
         "1626": {
-          "sessions": 45,
+          "sessions": 46,
           "invalid_inputs": 0,
-          "institutional": 45,
+          "institutional": 46,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -5018,9 +5018,9 @@
           "passed_without_next_session": 0
         },
         "1714": {
-          "sessions": 45,
+          "sessions": 46,
           "invalid_inputs": 0,
-          "institutional": 45,
+          "institutional": 46,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -5031,9 +5031,9 @@
           "passed_without_next_session": 0
         },
         "1727": {
-          "sessions": 45,
+          "sessions": 46,
           "invalid_inputs": 0,
-          "institutional": 45,
+          "institutional": 46,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -5044,9 +5044,9 @@
           "passed_without_next_session": 0
         },
         "1752": {
-          "sessions": 45,
+          "sessions": 46,
           "invalid_inputs": 0,
-          "institutional": 45,
+          "institutional": 46,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -5057,9 +5057,9 @@
           "passed_without_next_session": 0
         },
         "1802": {
-          "sessions": 45,
+          "sessions": 46,
           "invalid_inputs": 0,
-          "institutional": 44,
+          "institutional": 45,
           "moving_averages": 1,
           "ma_order": 0,
           "rsi": 0,
@@ -5070,9 +5070,9 @@
           "passed_without_next_session": 0
         },
         "1905": {
-          "sessions": 45,
+          "sessions": 46,
           "invalid_inputs": 0,
-          "institutional": 45,
+          "institutional": 46,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -5083,9 +5083,9 @@
           "passed_without_next_session": 0
         },
         "2010": {
-          "sessions": 45,
+          "sessions": 46,
           "invalid_inputs": 0,
-          "institutional": 45,
+          "institutional": 46,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -5096,9 +5096,9 @@
           "passed_without_next_session": 0
         },
         "2024": {
-          "sessions": 45,
+          "sessions": 46,
           "invalid_inputs": 0,
-          "institutional": 45,
+          "institutional": 46,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -5109,9 +5109,9 @@
           "passed_without_next_session": 0
         },
         "2034": {
-          "sessions": 45,
+          "sessions": 46,
           "invalid_inputs": 0,
-          "institutional": 45,
+          "institutional": 46,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -5122,9 +5122,9 @@
           "passed_without_next_session": 0
         },
         "2103": {
-          "sessions": 45,
+          "sessions": 46,
           "invalid_inputs": 0,
-          "institutional": 45,
+          "institutional": 46,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -5135,9 +5135,9 @@
           "passed_without_next_session": 0
         },
         "2204": {
-          "sessions": 45,
+          "sessions": 46,
           "invalid_inputs": 0,
-          "institutional": 45,
+          "institutional": 46,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -5148,9 +5148,9 @@
           "passed_without_next_session": 0
         },
         "2236": {
-          "sessions": 45,
+          "sessions": 46,
           "invalid_inputs": 0,
-          "institutional": 45,
+          "institutional": 46,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -5161,9 +5161,9 @@
           "passed_without_next_session": 0
         },
         "2301": {
-          "sessions": 45,
+          "sessions": 46,
           "invalid_inputs": 0,
-          "institutional": 42,
+          "institutional": 43,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -5174,9 +5174,9 @@
           "passed_without_next_session": 0
         },
         "2317": {
-          "sessions": 45,
+          "sessions": 46,
           "invalid_inputs": 0,
-          "institutional": 44,
+          "institutional": 45,
           "moving_averages": 0,
           "ma_order": 1,
           "rsi": 0,
@@ -5187,9 +5187,9 @@
           "passed_without_next_session": 0
         },
         "2330": {
-          "sessions": 45,
+          "sessions": 46,
           "invalid_inputs": 0,
-          "institutional": 38,
+          "institutional": 39,
           "moving_averages": 0,
           "ma_order": 2,
           "rsi": 2,
@@ -5200,9 +5200,9 @@
           "passed_without_next_session": 0
         },
         "2337": {
-          "sessions": 45,
+          "sessions": 46,
           "invalid_inputs": 0,
-          "institutional": 45,
+          "institutional": 46,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -5213,9 +5213,9 @@
           "passed_without_next_session": 0
         },
         "2351": {
-          "sessions": 45,
+          "sessions": 46,
           "invalid_inputs": 0,
-          "institutional": 45,
+          "institutional": 46,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -5226,9 +5226,9 @@
           "passed_without_next_session": 0
         },
         "2362": {
-          "sessions": 45,
+          "sessions": 46,
           "invalid_inputs": 0,
-          "institutional": 45,
+          "institutional": 46,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -5239,9 +5239,9 @@
           "passed_without_next_session": 0
         },
         "2374": {
-          "sessions": 45,
+          "sessions": 46,
           "invalid_inputs": 0,
-          "institutional": 44,
+          "institutional": 45,
           "moving_averages": 1,
           "ma_order": 0,
           "rsi": 0,
@@ -5252,9 +5252,9 @@
           "passed_without_next_session": 0
         },
         "2387": {
-          "sessions": 45,
+          "sessions": 46,
           "invalid_inputs": 0,
-          "institutional": 45,
+          "institutional": 46,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -5265,9 +5265,9 @@
           "passed_without_next_session": 0
         },
         "2402": {
-          "sessions": 45,
+          "sessions": 46,
           "invalid_inputs": 0,
-          "institutional": 45,
+          "institutional": 46,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -5278,9 +5278,9 @@
           "passed_without_next_session": 0
         },
         "2415": {
-          "sessions": 45,
+          "sessions": 46,
           "invalid_inputs": 0,
-          "institutional": 45,
+          "institutional": 46,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -5291,9 +5291,9 @@
           "passed_without_next_session": 0
         },
         "2427": {
-          "sessions": 45,
+          "sessions": 46,
           "invalid_inputs": 0,
-          "institutional": 45,
+          "institutional": 46,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -5304,9 +5304,9 @@
           "passed_without_next_session": 0
         },
         "2438": {
-          "sessions": 45,
+          "sessions": 46,
           "invalid_inputs": 0,
-          "institutional": 45,
+          "institutional": 46,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -5317,9 +5317,9 @@
           "passed_without_next_session": 0
         },
         "2454": {
-          "sessions": 45,
+          "sessions": 46,
           "invalid_inputs": 0,
-          "institutional": 41,
+          "institutional": 42,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -5330,9 +5330,9 @@
           "passed_without_next_session": 0
         },
         "2465": {
-          "sessions": 45,
+          "sessions": 46,
           "invalid_inputs": 0,
-          "institutional": 45,
+          "institutional": 46,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -5343,9 +5343,9 @@
           "passed_without_next_session": 0
         },
         "2478": {
-          "sessions": 45,
+          "sessions": 46,
           "invalid_inputs": 0,
-          "institutional": 44,
+          "institutional": 45,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -5356,11 +5356,11 @@
           "passed_without_next_session": 0
         },
         "2489": {
-          "sessions": 45,
+          "sessions": 46,
           "invalid_inputs": 0,
           "institutional": 44,
           "moving_averages": 1,
-          "ma_order": 0,
+          "ma_order": 1,
           "rsi": 0,
           "volume": 0,
           "breakout": 0,
@@ -5369,9 +5369,9 @@
           "passed_without_next_session": 0
         },
         "2504": {
-          "sessions": 45,
+          "sessions": 46,
           "invalid_inputs": 0,
-          "institutional": 45,
+          "institutional": 46,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -5382,9 +5382,9 @@
           "passed_without_next_session": 0
         },
         "2524": {
-          "sessions": 45,
+          "sessions": 46,
           "invalid_inputs": 0,
-          "institutional": 45,
+          "institutional": 46,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -5395,9 +5395,9 @@
           "passed_without_next_session": 0
         },
         "2539": {
-          "sessions": 45,
+          "sessions": 46,
           "invalid_inputs": 0,
-          "institutional": 45,
+          "institutional": 46,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -5408,9 +5408,9 @@
           "passed_without_next_session": 0
         },
         "2601": {
-          "sessions": 45,
+          "sessions": 46,
           "invalid_inputs": 0,
-          "institutional": 45,
+          "institutional": 46,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -5421,9 +5421,9 @@
           "passed_without_next_session": 0
         },
         "2612": {
-          "sessions": 45,
+          "sessions": 46,
           "invalid_inputs": 0,
-          "institutional": 45,
+          "institutional": 46,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -5434,9 +5434,9 @@
           "passed_without_next_session": 0
         },
         "2634": {
-          "sessions": 45,
+          "sessions": 46,
           "invalid_inputs": 0,
-          "institutional": 44,
+          "institutional": 45,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -5447,9 +5447,9 @@
           "passed_without_next_session": 0
         },
         "2705": {
-          "sessions": 45,
+          "sessions": 46,
           "invalid_inputs": 0,
-          "institutional": 45,
+          "institutional": 46,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -5460,9 +5460,9 @@
           "passed_without_next_session": 0
         },
         "2748": {
-          "sessions": 45,
+          "sessions": 46,
           "invalid_inputs": 0,
-          "institutional": 45,
+          "institutional": 46,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -5473,9 +5473,9 @@
           "passed_without_next_session": 0
         },
         "2836": {
-          "sessions": 45,
+          "sessions": 46,
           "invalid_inputs": 0,
-          "institutional": 45,
+          "institutional": 46,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -5486,9 +5486,9 @@
           "passed_without_next_session": 0
         },
         "2881": {
-          "sessions": 45,
+          "sessions": 46,
           "invalid_inputs": 0,
-          "institutional": 42,
+          "institutional": 43,
           "moving_averages": 0,
           "ma_order": 2,
           "rsi": 1,
@@ -5499,11 +5499,11 @@
           "passed_without_next_session": 0
         },
         "2891": {
-          "sessions": 45,
+          "sessions": 46,
           "invalid_inputs": 0,
           "institutional": 36,
           "moving_averages": 1,
-          "ma_order": 0,
+          "ma_order": 1,
           "rsi": 1,
           "volume": 5,
           "breakout": 0,
@@ -5512,9 +5512,9 @@
           "passed_without_next_session": 0
         },
         "2910": {
-          "sessions": 45,
+          "sessions": 46,
           "invalid_inputs": 0,
-          "institutional": 45,
+          "institutional": 46,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -5525,9 +5525,9 @@
           "passed_without_next_session": 0
         },
         "3002": {
-          "sessions": 45,
+          "sessions": 46,
           "invalid_inputs": 0,
-          "institutional": 45,
+          "institutional": 46,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -5538,9 +5538,9 @@
           "passed_without_next_session": 0
         },
         "3014": {
-          "sessions": 45,
+          "sessions": 46,
           "invalid_inputs": 0,
-          "institutional": 34,
+          "institutional": 35,
           "moving_averages": 4,
           "ma_order": 0,
           "rsi": 0,
@@ -5551,9 +5551,9 @@
           "passed_without_next_session": 0
         },
         "3024": {
-          "sessions": 45,
+          "sessions": 46,
           "invalid_inputs": 0,
-          "institutional": 45,
+          "institutional": 46,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -5564,9 +5564,9 @@
           "passed_without_next_session": 0
         },
         "3033": {
-          "sessions": 45,
+          "sessions": 46,
           "invalid_inputs": 0,
-          "institutional": 44,
+          "institutional": 45,
           "moving_averages": 1,
           "ma_order": 0,
           "rsi": 0,
@@ -5577,9 +5577,9 @@
           "passed_without_next_session": 0
         },
         "3043": {
-          "sessions": 45,
+          "sessions": 46,
           "invalid_inputs": 0,
-          "institutional": 45,
+          "institutional": 46,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -5590,9 +5590,9 @@
           "passed_without_next_session": 0
         },
         "3052": {
-          "sessions": 45,
+          "sessions": 46,
           "invalid_inputs": 0,
-          "institutional": 45,
+          "institutional": 46,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -5603,9 +5603,9 @@
           "passed_without_next_session": 0
         },
         "3090": {
-          "sessions": 45,
+          "sessions": 46,
           "invalid_inputs": 0,
-          "institutional": 44,
+          "institutional": 45,
           "moving_averages": 1,
           "ma_order": 0,
           "rsi": 0,
@@ -5616,9 +5616,9 @@
           "passed_without_next_session": 0
         },
         "3167": {
-          "sessions": 45,
+          "sessions": 46,
           "invalid_inputs": 0,
-          "institutional": 44,
+          "institutional": 45,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -5629,9 +5629,9 @@
           "passed_without_next_session": 0
         },
         "3305": {
-          "sessions": 45,
+          "sessions": 46,
           "invalid_inputs": 0,
-          "institutional": 45,
+          "institutional": 46,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -5642,9 +5642,9 @@
           "passed_without_next_session": 0
         },
         "3380": {
-          "sessions": 45,
+          "sessions": 46,
           "invalid_inputs": 0,
-          "institutional": 44,
+          "institutional": 45,
           "moving_averages": 1,
           "ma_order": 0,
           "rsi": 0,
@@ -5655,9 +5655,9 @@
           "passed_without_next_session": 0
         },
         "3481": {
-          "sessions": 45,
+          "sessions": 46,
           "invalid_inputs": 0,
-          "institutional": 45,
+          "institutional": 46,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -5668,9 +5668,9 @@
           "passed_without_next_session": 0
         },
         "3533": {
-          "sessions": 45,
+          "sessions": 46,
           "invalid_inputs": 0,
-          "institutional": 45,
+          "institutional": 46,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -5681,9 +5681,9 @@
           "passed_without_next_session": 0
         },
         "3588": {
-          "sessions": 45,
+          "sessions": 46,
           "invalid_inputs": 0,
-          "institutional": 45,
+          "institutional": 46,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -5694,9 +5694,9 @@
           "passed_without_next_session": 0
         },
         "3645": {
-          "sessions": 45,
+          "sessions": 46,
           "invalid_inputs": 0,
-          "institutional": 45,
+          "institutional": 46,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -5707,9 +5707,9 @@
           "passed_without_next_session": 0
         },
         "3694": {
-          "sessions": 45,
+          "sessions": 46,
           "invalid_inputs": 0,
-          "institutional": 45,
+          "institutional": 46,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -5720,9 +5720,9 @@
           "passed_without_next_session": 0
         },
         "3712": {
-          "sessions": 45,
+          "sessions": 46,
           "invalid_inputs": 0,
-          "institutional": 45,
+          "institutional": 46,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -5733,9 +5733,9 @@
           "passed_without_next_session": 0
         },
         "4133": {
-          "sessions": 45,
+          "sessions": 46,
           "invalid_inputs": 0,
-          "institutional": 45,
+          "institutional": 46,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -5746,9 +5746,9 @@
           "passed_without_next_session": 0
         },
         "4426": {
-          "sessions": 45,
+          "sessions": 46,
           "invalid_inputs": 0,
-          "institutional": 45,
+          "institutional": 46,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -5759,9 +5759,9 @@
           "passed_without_next_session": 0
         },
         "4545": {
-          "sessions": 45,
+          "sessions": 46,
           "invalid_inputs": 0,
-          "institutional": 45,
+          "institutional": 46,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -5772,9 +5772,9 @@
           "passed_without_next_session": 0
         },
         "4569": {
-          "sessions": 45,
+          "sessions": 46,
           "invalid_inputs": 0,
-          "institutional": 45,
+          "institutional": 46,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -5785,9 +5785,9 @@
           "passed_without_next_session": 0
         },
         "4720": {
-          "sessions": 45,
+          "sessions": 46,
           "invalid_inputs": 0,
-          "institutional": 45,
+          "institutional": 46,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -5798,9 +5798,9 @@
           "passed_without_next_session": 0
         },
         "4766": {
-          "sessions": 45,
+          "sessions": 46,
           "invalid_inputs": 0,
-          "institutional": 45,
+          "institutional": 46,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -5811,9 +5811,9 @@
           "passed_without_next_session": 0
         },
         "4919": {
-          "sessions": 45,
+          "sessions": 46,
           "invalid_inputs": 0,
-          "institutional": 44,
+          "institutional": 45,
           "moving_averages": 1,
           "ma_order": 0,
           "rsi": 0,
@@ -5824,9 +5824,9 @@
           "passed_without_next_session": 0
         },
         "4956": {
-          "sessions": 45,
+          "sessions": 46,
           "invalid_inputs": 0,
-          "institutional": 45,
+          "institutional": 46,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -5837,9 +5837,9 @@
           "passed_without_next_session": 0
         },
         "4994": {
-          "sessions": 45,
+          "sessions": 46,
           "invalid_inputs": 0,
-          "institutional": 45,
+          "institutional": 46,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -5850,9 +5850,9 @@
           "passed_without_next_session": 0
         },
         "5244": {
-          "sessions": 45,
+          "sessions": 46,
           "invalid_inputs": 0,
-          "institutional": 45,
+          "institutional": 46,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -5863,9 +5863,9 @@
           "passed_without_next_session": 0
         },
         "5388": {
-          "sessions": 45,
+          "sessions": 46,
           "invalid_inputs": 0,
-          "institutional": 45,
+          "institutional": 46,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -5876,9 +5876,9 @@
           "passed_without_next_session": 0
         },
         "5525": {
-          "sessions": 45,
+          "sessions": 46,
           "invalid_inputs": 0,
-          "institutional": 45,
+          "institutional": 46,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -5889,9 +5889,9 @@
           "passed_without_next_session": 0
         },
         "5871": {
-          "sessions": 45,
+          "sessions": 46,
           "invalid_inputs": 0,
-          "institutional": 41,
+          "institutional": 42,
           "moving_averages": 0,
           "ma_order": 2,
           "rsi": 0,
@@ -5902,9 +5902,9 @@
           "passed_without_next_session": 0
         },
         "6115": {
-          "sessions": 45,
+          "sessions": 46,
           "invalid_inputs": 0,
-          "institutional": 45,
+          "institutional": 46,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -5915,9 +5915,9 @@
           "passed_without_next_session": 0
         },
         "6142": {
-          "sessions": 45,
+          "sessions": 46,
           "invalid_inputs": 0,
-          "institutional": 45,
+          "institutional": 46,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -5928,9 +5928,9 @@
           "passed_without_next_session": 0
         },
         "6177": {
-          "sessions": 45,
+          "sessions": 46,
           "invalid_inputs": 0,
-          "institutional": 43,
+          "institutional": 44,
           "moving_averages": 0,
           "ma_order": 1,
           "rsi": 0,
@@ -5941,9 +5941,9 @@
           "passed_without_next_session": 0
         },
         "6202": {
-          "sessions": 45,
+          "sessions": 46,
           "invalid_inputs": 0,
-          "institutional": 44,
+          "institutional": 45,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 1,
@@ -5954,9 +5954,9 @@
           "passed_without_next_session": 0
         },
         "6225": {
-          "sessions": 45,
+          "sessions": 46,
           "invalid_inputs": 0,
-          "institutional": 45,
+          "institutional": 46,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -5967,9 +5967,9 @@
           "passed_without_next_session": 0
         },
         "6272": {
-          "sessions": 45,
+          "sessions": 46,
           "invalid_inputs": 0,
-          "institutional": 45,
+          "institutional": 46,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -5980,9 +5980,9 @@
           "passed_without_next_session": 0
         },
         "6412": {
-          "sessions": 45,
+          "sessions": 46,
           "invalid_inputs": 0,
-          "institutional": 45,
+          "institutional": 46,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -5993,9 +5993,9 @@
           "passed_without_next_session": 0
         },
         "6449": {
-          "sessions": 45,
+          "sessions": 46,
           "invalid_inputs": 0,
-          "institutional": 45,
+          "institutional": 46,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -6006,9 +6006,9 @@
           "passed_without_next_session": 0
         },
         "6515": {
-          "sessions": 45,
+          "sessions": 46,
           "invalid_inputs": 0,
-          "institutional": 45,
+          "institutional": 46,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -6019,9 +6019,9 @@
           "passed_without_next_session": 0
         },
         "6558": {
-          "sessions": 45,
+          "sessions": 46,
           "invalid_inputs": 0,
-          "institutional": 45,
+          "institutional": 46,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -6032,9 +6032,9 @@
           "passed_without_next_session": 0
         },
         "6598": {
-          "sessions": 45,
+          "sessions": 46,
           "invalid_inputs": 0,
-          "institutional": 45,
+          "institutional": 46,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -6045,9 +6045,9 @@
           "passed_without_next_session": 0
         },
         "6658": {
-          "sessions": 45,
+          "sessions": 46,
           "invalid_inputs": 0,
-          "institutional": 45,
+          "institutional": 46,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -6058,9 +6058,9 @@
           "passed_without_next_session": 0
         },
         "6691": {
-          "sessions": 45,
+          "sessions": 46,
           "invalid_inputs": 0,
-          "institutional": 42,
+          "institutional": 43,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 1,
@@ -6071,9 +6071,9 @@
           "passed_without_next_session": 0
         },
         "6753": {
-          "sessions": 45,
+          "sessions": 46,
           "invalid_inputs": 0,
-          "institutional": 45,
+          "institutional": 46,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -6084,9 +6084,9 @@
           "passed_without_next_session": 0
         },
         "6782": {
-          "sessions": 45,
+          "sessions": 46,
           "invalid_inputs": 0,
-          "institutional": 45,
+          "institutional": 46,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -6110,9 +6110,9 @@
           "passed_without_next_session": 0
         },
         "6863": {
-          "sessions": 45,
+          "sessions": 46,
           "invalid_inputs": 0,
-          "institutional": 45,
+          "institutional": 46,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -6123,9 +6123,9 @@
           "passed_without_next_session": 0
         },
         "6908": {
-          "sessions": 45,
+          "sessions": 46,
           "invalid_inputs": 0,
-          "institutional": 45,
+          "institutional": 46,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -6136,9 +6136,9 @@
           "passed_without_next_session": 0
         },
         "6928": {
-          "sessions": 45,
+          "sessions": 46,
           "invalid_inputs": 0,
-          "institutional": 45,
+          "institutional": 46,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -6149,9 +6149,9 @@
           "passed_without_next_session": 0
         },
         "6952": {
-          "sessions": 45,
+          "sessions": 46,
           "invalid_inputs": 0,
-          "institutional": 45,
+          "institutional": 46,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -6162,9 +6162,9 @@
           "passed_without_next_session": 0
         },
         "7631": {
-          "sessions": 45,
+          "sessions": 46,
           "invalid_inputs": 0,
-          "institutional": 45,
+          "institutional": 46,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -6175,9 +6175,9 @@
           "passed_without_next_session": 0
         },
         "7749": {
-          "sessions": 45,
+          "sessions": 46,
           "invalid_inputs": 0,
-          "institutional": 44,
+          "institutional": 45,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -6188,9 +6188,9 @@
           "passed_without_next_session": 0
         },
         "7799": {
-          "sessions": 45,
+          "sessions": 46,
           "invalid_inputs": 0,
-          "institutional": 42,
+          "institutional": 43,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 2,
@@ -6201,12 +6201,12 @@
           "passed_without_next_session": 0
         },
         "8046": {
-          "sessions": 45,
+          "sessions": 46,
           "invalid_inputs": 0,
           "institutional": 39,
           "moving_averages": 1,
           "ma_order": 0,
-          "rsi": 3,
+          "rsi": 4,
           "volume": 1,
           "breakout": 0,
           "passed": 1,
@@ -6214,9 +6214,9 @@
           "passed_without_next_session": 0
         },
         "8112": {
-          "sessions": 45,
+          "sessions": 46,
           "invalid_inputs": 0,
-          "institutional": 44,
+          "institutional": 45,
           "moving_averages": 1,
           "ma_order": 0,
           "rsi": 0,
@@ -6227,9 +6227,9 @@
           "passed_without_next_session": 0
         },
         "8215": {
-          "sessions": 45,
+          "sessions": 46,
           "invalid_inputs": 0,
-          "institutional": 42,
+          "institutional": 43,
           "moving_averages": 3,
           "ma_order": 0,
           "rsi": 0,
@@ -6240,9 +6240,9 @@
           "passed_without_next_session": 0
         },
         "8411": {
-          "sessions": 45,
+          "sessions": 46,
           "invalid_inputs": 0,
-          "institutional": 45,
+          "institutional": 46,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -6253,10 +6253,10 @@
           "passed_without_next_session": 0
         },
         "8464": {
-          "sessions": 45,
+          "sessions": 46,
           "invalid_inputs": 0,
           "institutional": 41,
-          "moving_averages": 2,
+          "moving_averages": 3,
           "ma_order": 0,
           "rsi": 0,
           "volume": 2,
@@ -6266,9 +6266,9 @@
           "passed_without_next_session": 0
         },
         "8488": {
-          "sessions": 45,
+          "sessions": 46,
           "invalid_inputs": 0,
-          "institutional": 45,
+          "institutional": 46,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -6279,9 +6279,9 @@
           "passed_without_next_session": 0
         },
         "9802": {
-          "sessions": 45,
+          "sessions": 46,
           "invalid_inputs": 0,
-          "institutional": 45,
+          "institutional": 46,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -6292,9 +6292,9 @@
           "passed_without_next_session": 0
         },
         "9912": {
-          "sessions": 45,
+          "sessions": 46,
           "invalid_inputs": 0,
-          "institutional": 45,
+          "institutional": 46,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -6305,9 +6305,9 @@
           "passed_without_next_session": 0
         },
         "9927": {
-          "sessions": 45,
+          "sessions": 46,
           "invalid_inputs": 0,
-          "institutional": 45,
+          "institutional": 46,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -6318,9 +6318,9 @@
           "passed_without_next_session": 0
         },
         "9938": {
-          "sessions": 45,
+          "sessions": 46,
           "invalid_inputs": 0,
-          "institutional": 45,
+          "institutional": 46,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -6331,9 +6331,9 @@
           "passed_without_next_session": 0
         },
         "9958": {
-          "sessions": 45,
+          "sessions": 46,
           "invalid_inputs": 0,
-          "institutional": 45,
+          "institutional": 46,
           "moving_averages": 0,
           "ma_order": 0,
           "rsi": 0,
@@ -6350,8 +6350,8 @@
   "institutional_gate_backtested": true,
   "institutional_coverage": {
     "source": "TWSE T86",
-    "requested_sessions": 184,
-    "loaded_sessions": 184,
+    "requested_sessions": 185,
+    "loaded_sessions": 185,
     "failed_sessions": {},
     "calendar_source": "TWSE FMTQIK actual turnover dates",
     "excluded_nontrading_price_dates": {
@@ -6862,7 +6862,7 @@
         "avg_trades": 0.2,
         "avg_win_rate_pct": 2.7777777777777777,
         "pooled_win_rate_pct": 21.05263157894737,
-        "avg_buy_hold_pct": 19.774984448941847,
+        "avg_buy_hold_pct": 19.77498453800775,
         "avg_return_pct": 1.5527286776908324,
         "median_return_pct": 0.0,
         "avg_mdd_pct": -1.6960975702819332,
@@ -6894,7 +6894,7 @@
         "avg_trades": 0.20833333333333334,
         "avg_win_rate_pct": 3.194444444444444,
         "pooled_win_rate_pct": 21.73913043478261,
-        "avg_buy_hold_pct": -1.5568130042024573,
+        "avg_buy_hold_pct": -1.556813049367024,
         "avg_return_pct": -0.1512811202780112,
         "median_return_pct": 0.0,
         "avg_mdd_pct": -1.6258737113426014,
@@ -7321,9 +7321,9 @@
           "winning_trades": 0,
           "open_trades": 0,
           "win_rate_pct": 0.0,
-          "buy_hold_pct": 10.364074969602921,
+          "buy_hold_pct": 10.364063059377958,
           "liquidation_return_pct": 0.0,
-          "buy_hold_liquidation_pct": 9.875713937862418
+          "buy_hold_liquidation_pct": 9.87570208034021
         },
         {
           "code": "2337",
@@ -8296,9 +8296,9 @@
           "winning_trades": 0,
           "open_trades": 0,
           "win_rate_pct": 0.0,
-          "buy_hold_pct": 5.531818656859078,
+          "buy_hold_pct": 5.531825147336011,
           "liquidation_return_pct": 0.0,
-          "buy_hold_liquidation_pct": 5.06484035930248
+          "buy_hold_liquidation_pct": 5.064846821059055
         },
         {
           "code": "7749",
@@ -8487,10 +8487,10 @@
         "avg_trades": 0.09166666666666666,
         "avg_win_rate_pct": 0.8333333333333334,
         "pooled_win_rate_pct": 16.666666666666668,
-        "avg_buy_hold_pct": 11.440863952097704,
-        "avg_return_pct": -0.061552594279579896,
+        "avg_buy_hold_pct": 12.156471944227944,
+        "avg_return_pct": -0.09388422225561974,
         "median_return_pct": 0.0,
-        "avg_mdd_pct": -0.4291502656762693,
+        "avg_mdd_pct": -0.4607479884548854,
         "params": {
           "institutional_2d": true,
           "ma10_confirm": 1,
@@ -8511,9 +8511,9 @@
           "winning_trades": 0,
           "open_trades": 0,
           "win_rate_pct": 0.0,
-          "buy_hold_pct": 3.769657157887951,
+          "buy_hold_pct": 5.005007040225395,
           "liquidation_return_pct": 0.0,
-          "buy_hold_liquidation_pct": 3.3104764249642926
+          "buy_hold_liquidation_pct": 4.540359884072398
         },
         {
           "code": "1210",
@@ -8537,9 +8537,9 @@
           "winning_trades": 0,
           "open_trades": 0,
           "win_rate_pct": 0.0,
-          "buy_hold_pct": -5.955933064293406,
+          "buy_hold_pct": -5.271973604763581,
           "liquidation_return_pct": 0.0,
-          "buy_hold_liquidation_pct": -6.37207806048391
+          "buy_hold_liquidation_pct": -5.691145121562502
         },
         {
           "code": "1301",
@@ -8550,9 +8550,9 @@
           "winning_trades": 0,
           "open_trades": 0,
           "win_rate_pct": 0.0,
-          "buy_hold_pct": 25.462242661809498,
+          "buy_hold_pct": 37.8987390460263,
           "liquidation_return_pct": 0.0,
-          "buy_hold_liquidation_pct": 24.90707223803099
+          "buy_hold_liquidation_pct": 37.288537125747624
         },
         {
           "code": "1313",
@@ -8563,9 +8563,9 @@
           "winning_trades": 0,
           "open_trades": 0,
           "win_rate_pct": 0.0,
-          "buy_hold_pct": 21.290573705787665,
+          "buy_hold_pct": 22.75191151603819,
           "liquidation_return_pct": 0.0,
-          "buy_hold_liquidation_pct": 20.753862917139543
+          "buy_hold_liquidation_pct": 22.208734307579725
         },
         {
           "code": "1326",
@@ -8576,9 +8576,9 @@
           "winning_trades": 0,
           "open_trades": 0,
           "win_rate_pct": 0.0,
-          "buy_hold_pct": 28.7917402648336,
+          "buy_hold_pct": 33.731702809802535,
           "liquidation_return_pct": 0.0,
-          "buy_hold_liquidation_pct": 28.221836814161705
+          "buy_hold_liquidation_pct": 33.139940024869155
         },
         {
           "code": "1410",
@@ -8589,9 +8589,9 @@
           "winning_trades": 0,
           "open_trades": 0,
           "win_rate_pct": 0.0,
-          "buy_hold_pct": -9.186012266596599,
+          "buy_hold_pct": -9.939658181317002,
           "liquidation_return_pct": 0.0,
-          "buy_hold_liquidation_pct": -9.587864162316906
+          "buy_hold_liquidation_pct": -10.338175193864673
         },
         {
           "code": "1434",
@@ -8602,9 +8602,9 @@
           "winning_trades": 0,
           "open_trades": 0,
           "win_rate_pct": 0.0,
-          "buy_hold_pct": 4.199342024571506,
+          "buy_hold_pct": 9.698756159078826,
           "liquidation_return_pct": 0.0,
-          "buy_hold_liquidation_pct": 3.7382599361127866
+          "buy_hold_liquidation_pct": 9.213339163074895
         },
         {
           "code": "1443",
@@ -8615,9 +8615,9 @@
           "winning_trades": 0,
           "open_trades": 0,
           "win_rate_pct": 0.0,
-          "buy_hold_pct": -7.958947383427894,
+          "buy_hold_pct": -9.717689196024304,
           "liquidation_return_pct": 0.0,
-          "buy_hold_liquidation_pct": -8.366229041256224
+          "buy_hold_liquidation_pct": -10.117188421331901
         },
         {
           "code": "1454",
@@ -8628,9 +8628,9 @@
           "winning_trades": 0,
           "open_trades": 0,
           "win_rate_pct": 0.0,
-          "buy_hold_pct": -2.911577502341023,
+          "buy_hold_pct": -3.707379702923985,
           "liquidation_return_pct": 0.0,
-          "buy_hold_liquidation_pct": -3.3411937718931695
+          "buy_hold_liquidation_pct": -4.1334745477385475
         },
         {
           "code": "1466",
@@ -8641,9 +8641,9 @@
           "winning_trades": 0,
           "open_trades": 0,
           "win_rate_pct": 0.0,
-          "buy_hold_pct": -7.082520338621789,
+          "buy_hold_pct": -4.455873975770497,
           "liquidation_return_pct": 0.0,
-          "buy_hold_liquidation_pct": -7.493680186123386
+          "buy_hold_liquidation_pct": -4.878656733427711
         },
         {
           "code": "1476",
@@ -8654,9 +8654,9 @@
           "winning_trades": 0,
           "open_trades": 0,
           "win_rate_pct": 0.0,
-          "buy_hold_pct": -15.817634289741777,
+          "buy_hold_pct": -13.78564615190795,
           "liquidation_return_pct": 0.0,
-          "buy_hold_liquidation_pct": -16.19014125800967
+          "buy_hold_liquidation_pct": -14.167144667685761
         },
         {
           "code": "1516",
@@ -8667,9 +8667,9 @@
           "winning_trades": 0,
           "open_trades": 0,
           "win_rate_pct": 0.0,
-          "buy_hold_pct": -12.786615809926161,
+          "buy_hold_pct": -11.81397211342603,
           "liquidation_return_pct": 0.0,
-          "buy_hold_liquidation_pct": -13.172535034967236
+          "buy_hold_liquidation_pct": -12.204195286824115
         },
         {
           "code": "1528",
@@ -8680,9 +8680,9 @@
           "winning_trades": 0,
           "open_trades": 0,
           "win_rate_pct": 0.0,
-          "buy_hold_pct": 39.80078167469485,
+          "buy_hold_pct": 39.22189423295308,
           "liquidation_return_pct": 0.0,
-          "buy_hold_liquidation_pct": 39.182163215784314
+          "buy_hold_liquidation_pct": 38.60583735097227
         },
         {
           "code": "1539",
@@ -8693,9 +8693,9 @@
           "winning_trades": 0,
           "open_trades": 0,
           "win_rate_pct": 0.0,
-          "buy_hold_pct": -0.7743104068003048,
+          "buy_hold_pct": -1.406317559823922,
           "liquidation_return_pct": 0.0,
-          "buy_hold_liquidation_pct": -1.213384083250213
+          "buy_hold_liquidation_pct": -1.8425946046217057
         },
         {
           "code": "1587",
@@ -8706,9 +8706,9 @@
           "winning_trades": 0,
           "open_trades": 0,
           "win_rate_pct": 0.0,
-          "buy_hold_pct": -1.6169905993776434,
+          "buy_hold_pct": 0.2790368488700512,
           "liquidation_return_pct": 0.0,
-          "buy_hold_liquidation_pct": -2.0523354159754037
+          "buy_hold_liquidation_pct": -0.16469788918620498
         },
         {
           "code": "1609",
@@ -8719,9 +8719,9 @@
           "winning_trades": 0,
           "open_trades": 0,
           "win_rate_pct": 0.0,
-          "buy_hold_pct": 13.97449175315668,
+          "buy_hold_pct": 15.906267411526432,
           "liquidation_return_pct": 0.0,
-          "buy_hold_liquidation_pct": 13.470154627148956
+          "buy_hold_liquidation_pct": 15.39338217823043
         },
         {
           "code": "1626",
@@ -8732,9 +8732,9 @@
           "winning_trades": 0,
           "open_trades": 0,
           "win_rate_pct": 0.0,
-          "buy_hold_pct": -0.1422972264523037,
+          "buy_hold_pct": -0.24419517174968375,
           "liquidation_return_pct": 0.0,
-          "buy_hold_liquidation_pct": -0.5841675612252573
+          "buy_hold_liquidation_pct": -0.685614608114693
         },
         {
           "code": "1714",
@@ -8745,9 +8745,9 @@
           "winning_trades": 0,
           "open_trades": 0,
           "win_rate_pct": 0.0,
-          "buy_hold_pct": 46.966019954412516,
+          "buy_hold_pct": 51.99380189690099,
           "liquidation_return_pct": 0.0,
-          "buy_hold_liquidation_pct": 46.31569531611424
+          "buy_hold_liquidation_pct": 51.3212293235072
         },
         {
           "code": "1727",
@@ -8784,9 +8784,9 @@
           "winning_trades": 0,
           "open_trades": 0,
           "win_rate_pct": 0.0,
-          "buy_hold_pct": 32.55251167152744,
+          "buy_hold_pct": 45.63043015733095,
           "liquidation_return_pct": 0.0,
-          "buy_hold_liquidation_pct": 31.96596680738093
+          "buy_hold_liquidation_pct": 44.986015503884744
         },
         {
           "code": "1905",
@@ -8797,9 +8797,9 @@
           "winning_trades": 0,
           "open_trades": 0,
           "win_rate_pct": 0.0,
-          "buy_hold_pct": 0.6533771151059353,
+          "buy_hold_pct": 2.6425743512794586,
           "liquidation_return_pct": 0.0,
-          "buy_hold_liquidation_pct": 0.20798592137158955
+          "buy_hold_liquidation_pct": 2.188380959775049
         },
         {
           "code": "2010",
@@ -8810,9 +8810,9 @@
           "winning_trades": 0,
           "open_trades": 0,
           "win_rate_pct": 0.0,
-          "buy_hold_pct": 6.467667232733398,
+          "buy_hold_pct": 6.939809480967596,
           "liquidation_return_pct": 0.0,
-          "buy_hold_liquidation_pct": 5.996547805228558
+          "buy_hold_liquidation_pct": 6.4666008240143125
         },
         {
           "code": "2024",
@@ -8823,9 +8823,9 @@
           "winning_trades": 0,
           "open_trades": 0,
           "win_rate_pct": 0.0,
-          "buy_hold_pct": -3.4832598910611745,
+          "buy_hold_pct": -5.339351047002305,
           "liquidation_return_pct": 0.0,
-          "buy_hold_liquidation_pct": -3.910346466043235
+          "buy_hold_liquidation_pct": -5.758224418619317
         },
         {
           "code": "2034",
@@ -8836,9 +8836,9 @@
           "winning_trades": 0,
           "open_trades": 0,
           "win_rate_pct": 0.0,
-          "buy_hold_pct": 30.688096028358068,
+          "buy_hold_pct": 31.779430843071754,
           "liquidation_return_pct": 0.0,
-          "buy_hold_liquidation_pct": 30.109801203432585
+          "buy_hold_liquidation_pct": 31.19630686159116
         },
         {
           "code": "2103",
@@ -8849,9 +8849,9 @@
           "winning_trades": 0,
           "open_trades": 0,
           "win_rate_pct": 0.0,
-          "buy_hold_pct": 32.746394227137586,
+          "buy_hold_pct": 38.22784128751358,
           "liquidation_return_pct": 0.0,
-          "buy_hold_liquidation_pct": 32.158991432682505
+          "buy_hold_liquidation_pct": 37.61618308981633
         },
         {
           "code": "2204",
@@ -8862,9 +8862,9 @@
           "winning_trades": 0,
           "open_trades": 0,
           "win_rate_pct": 0.0,
-          "buy_hold_pct": -3.540107520389235,
+          "buy_hold_pct": -2.596272927825971,
           "liquidation_return_pct": 0.0,
-          "buy_hold_liquidation_pct": -3.966942544611518
+          "buy_hold_liquidation_pct": -3.0272844201203464
         },
         {
           "code": "2236",
@@ -8875,9 +8875,9 @@
           "winning_trades": 0,
           "open_trades": 0,
           "win_rate_pct": 0.0,
-          "buy_hold_pct": -31.191804063395455,
+          "buy_hold_pct": -34.23433868319067,
           "liquidation_return_pct": 0.0,
-          "buy_hold_liquidation_pct": -31.496280330414926
+          "buy_hold_liquidation_pct": -34.52535173451755
         },
         {
           "code": "2301",
@@ -8888,9 +8888,9 @@
           "winning_trades": 1,
           "open_trades": 0,
           "win_rate_pct": 100.0,
-          "buy_hold_pct": 31.29800102940137,
+          "buy_hold_pct": 31.73712477866357,
           "liquidation_return_pct": 4.290860299713017,
-          "buy_hold_liquidation_pct": 30.71700737484626
+          "buy_hold_liquidation_pct": 31.15418800151799
         },
         {
           "code": "2317",
@@ -8901,9 +8901,9 @@
           "winning_trades": 0,
           "open_trades": 0,
           "win_rate_pct": 0.0,
-          "buy_hold_pct": 4.554486339583685,
+          "buy_hold_pct": 2.920822490527697,
           "liquidation_return_pct": 0.0,
-          "buy_hold_liquidation_pct": 4.09183273753102
+          "buy_hold_liquidation_pct": 2.4653978510071006
         },
         {
           "code": "2330",
@@ -8927,9 +8927,9 @@
           "winning_trades": 0,
           "open_trades": 0,
           "win_rate_pct": 0.0,
-          "buy_hold_pct": 16.41946811159951,
+          "buy_hold_pct": 14.958135875889056,
           "liquidation_return_pct": 0.0,
-          "buy_hold_liquidation_pct": 15.904311965205675
+          "buy_hold_liquidation_pct": 14.449446124638254
         },
         {
           "code": "2351",
@@ -8940,9 +8940,9 @@
           "winning_trades": 0,
           "open_trades": 0,
           "win_rate_pct": 0.0,
-          "buy_hold_pct": 54.12839229211017,
+          "buy_hold_pct": 53.77569574224266,
           "liquidation_return_pct": 0.0,
-          "buy_hold_liquidation_pct": 53.44637415621758
+          "buy_hold_liquidation_pct": 53.095238288583225
         },
         {
           "code": "2362",
@@ -8953,9 +8953,9 @@
           "winning_trades": 0,
           "open_trades": 0,
           "win_rate_pct": 0.0,
-          "buy_hold_pct": 11.888751300481148,
+          "buy_hold_pct": 12.369995077350815,
           "liquidation_return_pct": 0.0,
-          "buy_hold_liquidation_pct": 11.393643575976519
+          "buy_hold_liquidation_pct": 11.872757849133531
         },
         {
           "code": "2374",
@@ -8966,9 +8966,9 @@
           "winning_trades": 0,
           "open_trades": 0,
           "win_rate_pct": 0.0,
-          "buy_hold_pct": 6.180784526422323,
+          "buy_hold_pct": 6.822362740735444,
           "liquidation_return_pct": 0.0,
-          "buy_hold_liquidation_pct": 5.71093455489291
+          "buy_hold_liquidation_pct": 6.34967378560769
         },
         {
           "code": "2387",
@@ -8979,9 +8979,9 @@
           "winning_trades": 0,
           "open_trades": 0,
           "win_rate_pct": 0.0,
-          "buy_hold_pct": -3.585664197092897,
+          "buy_hold_pct": -4.380295893839126,
           "liquidation_return_pct": 0.0,
-          "buy_hold_liquidation_pct": -4.012297633020767
+          "buy_hold_liquidation_pct": -4.80341308450889
         },
         {
           "code": "2402",
@@ -8992,9 +8992,9 @@
           "winning_trades": 0,
           "open_trades": 0,
           "win_rate_pct": 0.0,
-          "buy_hold_pct": 14.787885055910754,
+          "buy_hold_pct": 20.023144738900278,
           "liquidation_return_pct": 0.0,
-          "buy_hold_liquidation_pct": 14.279948664538345
+          "buy_hold_liquidation_pct": 19.492042323430645
         },
         {
           "code": "2415",
@@ -9005,9 +9005,9 @@
           "winning_trades": 0,
           "open_trades": 0,
           "win_rate_pct": 0.0,
-          "buy_hold_pct": 13.649717689415963,
+          "buy_hold_pct": 8.273144683253708,
           "liquidation_return_pct": 0.0,
-          "buy_hold_liquidation_pct": 13.1468176886403
+          "buy_hold_liquidation_pct": 7.794036018030304
         },
         {
           "code": "2427",
@@ -9018,9 +9018,9 @@
           "winning_trades": 0,
           "open_trades": 0,
           "win_rate_pct": 0.0,
-          "buy_hold_pct": 4.82016070608553,
+          "buy_hold_pct": 5.278894005049795,
           "liquidation_return_pct": 0.0,
-          "buy_hold_liquidation_pct": 4.356331494961108
+          "buy_hold_liquidation_pct": 4.813034899077451
         },
         {
           "code": "2438",
@@ -9031,9 +9031,9 @@
           "winning_trades": 0,
           "open_trades": 0,
           "win_rate_pct": 0.0,
-          "buy_hold_pct": 9.871283897071304,
+          "buy_hold_pct": 7.367883310801959,
           "liquidation_return_pct": 0.0,
-          "buy_hold_liquidation_pct": 9.385103465826772
+          "buy_hold_liquidation_pct": 6.892780427151668
         },
         {
           "code": "2454",
@@ -9044,9 +9044,9 @@
           "winning_trades": 0,
           "open_trades": 0,
           "win_rate_pct": 0.0,
-          "buy_hold_pct": 25.6521477355127,
+          "buy_hold_pct": 23.48132811000079,
           "liquidation_return_pct": -12.879104012293208,
-          "buy_hold_liquidation_pct": 25.096136981783058
+          "buy_hold_liquidation_pct": 22.934923233114034
         },
         {
           "code": "2465",
@@ -9057,9 +9057,9 @@
           "winning_trades": 0,
           "open_trades": 0,
           "win_rate_pct": 0.0,
-          "buy_hold_pct": 24.58175676771115,
+          "buy_hold_pct": 22.246711415585985,
           "liquidation_return_pct": 0.0,
-          "buy_hold_liquidation_pct": 24.030482494014027
+          "buy_hold_liquidation_pct": 21.70576971757201
         },
         {
           "code": "2478",
@@ -9070,9 +9070,9 @@
           "winning_trades": 0,
           "open_trades": 0,
           "win_rate_pct": 0.0,
-          "buy_hold_pct": 18.812174133341465,
+          "buy_hold_pct": 24.359824287427443,
           "liquidation_return_pct": -9.388521725544784,
-          "buy_hold_liquidation_pct": 18.286430262801435
+          "buy_hold_liquidation_pct": 23.809532064955576
         },
         {
           "code": "2489",
@@ -9083,9 +9083,9 @@
           "winning_trades": 0,
           "open_trades": 0,
           "win_rate_pct": 0.0,
-          "buy_hold_pct": 47.632033694772716,
+          "buy_hold_pct": 55.126045267224264,
           "liquidation_return_pct": 0.0,
-          "buy_hold_liquidation_pct": 46.97876194567334
+          "buy_hold_liquidation_pct": 54.4396125169168
         },
         {
           "code": "2504",
@@ -9096,9 +9096,9 @@
           "winning_trades": 0,
           "open_trades": 0,
           "win_rate_pct": 0.0,
-          "buy_hold_pct": -1.7400204708290623,
+          "buy_hold_pct": 0.8163342822415709,
           "liquidation_return_pct": 0.0,
-          "buy_hold_liquidation_pct": -2.1748208802456426
+          "buy_hold_liquidation_pct": 0.37022200304264175
         },
         {
           "code": "2524",
@@ -9122,9 +9122,9 @@
           "winning_trades": 0,
           "open_trades": 0,
           "win_rate_pct": 0.0,
-          "buy_hold_pct": -2.726520135138133,
+          "buy_hold_pct": -1.7087153892897944,
           "liquidation_return_pct": 0.0,
-          "buy_hold_liquidation_pct": -3.1569552835401526
+          "buy_hold_liquidation_pct": -2.14365432369219
         },
         {
           "code": "2601",
@@ -9135,9 +9135,9 @@
           "winning_trades": 0,
           "open_trades": 0,
           "win_rate_pct": 0.0,
-          "buy_hold_pct": -16.95684468662605,
+          "buy_hold_pct": -17.499609900156198,
           "liquidation_return_pct": 0.0,
-          "buy_hold_liquidation_pct": -17.32431064888773
+          "buy_hold_liquidation_pct": -17.864674126348014
         },
         {
           "code": "2612",
@@ -9148,22 +9148,22 @@
           "winning_trades": 0,
           "open_trades": 0,
           "win_rate_pct": 0.0,
-          "buy_hold_pct": 23.353632837911853,
+          "buy_hold_pct": 20.808241908103398,
           "liquidation_return_pct": 0.0,
-          "buy_hold_liquidation_pct": 22.807793012604094
+          "buy_hold_liquidation_pct": 20.27366543766005
         },
         {
           "code": "2634",
-          "return_pct": -4.464498575915754,
-          "mdd_pct": -4.464498575915754,
+          "return_pct": -5.209705313031787,
+          "mdd_pct": -5.209705313031787,
           "trades": 1,
           "closed_trades": 0,
           "winning_trades": 0,
           "open_trades": 1,
           "win_rate_pct": 0.0,
-          "buy_hold_pct": 4.589518229055156,
-          "liquidation_return_pct": -4.887243169717326,
-          "buy_hold_liquidation_pct": 4.126709610891588
+          "buy_hold_pct": 3.7736873342129273,
+          "liquidation_return_pct": -5.629152367021629,
+          "buy_hold_liquidation_pct": 3.3144887677590384
         },
         {
           "code": "2705",
@@ -9174,9 +9174,9 @@
           "winning_trades": 0,
           "open_trades": 0,
           "win_rate_pct": 0.0,
-          "buy_hold_pct": -6.943747288768964,
+          "buy_hold_pct": -6.634589127595147,
           "liquidation_return_pct": 0.0,
-          "buy_hold_liquidation_pct": -7.355521207016158
+          "buy_hold_liquidation_pct": -7.047731070705543
         },
         {
           "code": "2748",
@@ -9200,9 +9200,9 @@
           "winning_trades": 0,
           "open_trades": 0,
           "win_rate_pct": 0.0,
-          "buy_hold_pct": -0.5566461149163593,
+          "buy_hold_pct": 0.2720516620117408,
           "liquidation_return_pct": 0.0,
-          "buy_hold_liquidation_pct": -0.9966829558578527
+          "buy_hold_liquidation_pct": -0.1716521665926618
         },
         {
           "code": "2881",
@@ -9213,9 +9213,9 @@
           "winning_trades": 0,
           "open_trades": 0,
           "win_rate_pct": 0.0,
-          "buy_hold_pct": 19.597016112504797,
+          "buy_hold_pct": 20.371106831679576,
           "liquidation_return_pct": 0.0,
-          "buy_hold_liquidation_pct": 19.06779931620697
+          "buy_hold_liquidation_pct": 19.838464683949386
         },
         {
           "code": "2891",
@@ -9226,9 +9226,9 @@
           "winning_trades": 0,
           "open_trades": 0,
           "win_rate_pct": 0.0,
-          "buy_hold_pct": 6.722922220022265,
+          "buy_hold_pct": 7.190998059393783,
           "liquidation_return_pct": -3.4205679778522624,
-          "buy_hold_liquidation_pct": 6.2506732891986605
+          "buy_hold_liquidation_pct": 6.71667789298096
         },
         {
           "code": "2910",
@@ -9239,9 +9239,9 @@
           "winning_trades": 0,
           "open_trades": 0,
           "win_rate_pct": 0.0,
-          "buy_hold_pct": -6.565890752147019,
+          "buy_hold_pct": -8.512434694810633,
           "liquidation_return_pct": 0.0,
-          "buy_hold_liquidation_pct": -6.9793366855687715
+          "buy_hold_liquidation_pct": -8.917267171286102
         },
         {
           "code": "3002",
@@ -9258,16 +9258,16 @@
         },
         {
           "code": "3014",
-          "return_pct": 8.867420317025676,
+          "return_pct": 11.870659498184999,
           "mdd_pct": -1.7482517482517501,
           "trades": 1,
           "closed_trades": 0,
           "winning_trades": 0,
           "open_trades": 1,
           "win_rate_pct": 0.0,
-          "buy_hold_pct": 16.769087920680768,
-          "liquidation_return_pct": 8.38568198212284,
-          "buy_hold_liquidation_pct": 16.25238470663175
+          "buy_hold_pct": 19.990304139182324,
+          "liquidation_return_pct": 11.37563182990553,
+          "buy_hold_liquidation_pct": 19.45934704336645
         },
         {
           "code": "3024",
@@ -9278,9 +9278,9 @@
           "winning_trades": 0,
           "open_trades": 0,
           "win_rate_pct": 0.0,
-          "buy_hold_pct": 13.588133730519637,
+          "buy_hold_pct": 14.836359776775288,
           "liquidation_return_pct": 0.0,
-          "buy_hold_liquidation_pct": 13.085506238762079
+          "buy_hold_liquidation_pct": 14.32820888476305
         },
         {
           "code": "3033",
@@ -9291,9 +9291,9 @@
           "winning_trades": 0,
           "open_trades": 0,
           "win_rate_pct": 0.0,
-          "buy_hold_pct": -1.165563127469127,
+          "buy_hold_pct": -1.402005545130891,
           "liquidation_return_pct": 0.0,
-          "buy_hold_liquidation_pct": -1.6029055106300816
+          "buy_hold_liquidation_pct": -1.8383016705936894
         },
         {
           "code": "3043",
@@ -9317,9 +9317,9 @@
           "winning_trades": 0,
           "open_trades": 0,
           "win_rate_pct": 0.0,
-          "buy_hold_pct": 5.0342532284090025,
+          "buy_hold_pct": 5.536811390224283,
           "liquidation_return_pct": 0.0,
-          "buy_hold_liquidation_pct": 4.569476657873284
+          "buy_hold_liquidation_pct": 5.069810999822533
         },
         {
           "code": "3090",
@@ -9330,9 +9330,9 @@
           "winning_trades": 0,
           "open_trades": 0,
           "win_rate_pct": 0.0,
-          "buy_hold_pct": 29.89009458514098,
+          "buy_hold_pct": 30.64090438043081,
           "liquidation_return_pct": 0.0,
-          "buy_hold_liquidation_pct": 29.315330916601724
+          "buy_hold_liquidation_pct": 30.062818378547405
         },
         {
           "code": "3167",
@@ -9343,9 +9343,9 @@
           "winning_trades": 0,
           "open_trades": 0,
           "win_rate_pct": 0.0,
-          "buy_hold_pct": 98.54747919886675,
+          "buy_hold_pct": 99.52075115572394,
           "liquidation_return_pct": 0.0,
-          "buy_hold_liquidation_pct": 97.66890660341177
+          "buy_hold_liquidation_pct": 98.63787183185985
         },
         {
           "code": "3305",
@@ -9356,9 +9356,9 @@
           "winning_trades": 0,
           "open_trades": 0,
           "win_rate_pct": 0.0,
-          "buy_hold_pct": 10.614730015569274,
+          "buy_hold_pct": 11.629544052409347,
           "liquidation_return_pct": 0.0,
-          "buy_hold_liquidation_pct": 10.12525983525039
+          "buy_hold_liquidation_pct": 11.135583319977439
         },
         {
           "code": "3380",
@@ -9369,9 +9369,9 @@
           "winning_trades": 0,
           "open_trades": 0,
           "win_rate_pct": 0.0,
-          "buy_hold_pct": 12.953789025733053,
+          "buy_hold_pct": 12.40811992165185,
           "liquidation_return_pct": 0.0,
-          "buy_hold_liquidation_pct": 12.453968509294189
+          "buy_hold_liquidation_pct": 11.910713990998545
         },
         {
           "code": "3481",
@@ -9382,9 +9382,9 @@
           "winning_trades": 0,
           "open_trades": 0,
           "win_rate_pct": 0.0,
-          "buy_hold_pct": 13.39396576350056,
+          "buy_hold_pct": 16.50065323580565,
           "liquidation_return_pct": 0.0,
-          "buy_hold_liquidation_pct": 12.892197464997057
+          "buy_hold_liquidation_pct": 15.985137845237208
         },
         {
           "code": "3533",
@@ -9395,9 +9395,9 @@
           "winning_trades": 0,
           "open_trades": 0,
           "win_rate_pct": 0.0,
-          "buy_hold_pct": -5.231483045404072,
+          "buy_hold_pct": -7.264051773652779,
           "liquidation_return_pct": 0.0,
-          "buy_hold_liquidation_pct": -5.650833732928162
+          "buy_hold_liquidation_pct": -7.674408344554362
         },
         {
           "code": "3588",
@@ -9408,9 +9408,9 @@
           "winning_trades": 0,
           "open_trades": 0,
           "win_rate_pct": 0.0,
-          "buy_hold_pct": 12.478746913195437,
+          "buy_hold_pct": 12.276805584996664,
           "liquidation_return_pct": 0.0,
-          "buy_hold_liquidation_pct": 11.981028458104536
+          "buy_hold_liquidation_pct": 11.779980720283056
         },
         {
           "code": "3645",
@@ -9421,9 +9421,9 @@
           "winning_trades": 0,
           "open_trades": 0,
           "win_rate_pct": 0.0,
-          "buy_hold_pct": 11.781010567404127,
+          "buy_hold_pct": 10.737725683822653,
           "liquidation_return_pct": 0.0,
-          "buy_hold_liquidation_pct": 11.286379595643359
+          "buy_hold_liquidation_pct": 10.247711247671742
         },
         {
           "code": "3694",
@@ -9434,9 +9434,9 @@
           "winning_trades": 0,
           "open_trades": 0,
           "win_rate_pct": 0.0,
-          "buy_hold_pct": -5.031748870542185,
+          "buy_hold_pct": -2.398962801407689,
           "liquidation_return_pct": 0.0,
-          "buy_hold_liquidation_pct": -5.451983381790038
+          "buy_hold_liquidation_pct": -2.8308473910114595
         },
         {
           "code": "3712",
@@ -9447,9 +9447,9 @@
           "winning_trades": 0,
           "open_trades": 0,
           "win_rate_pct": 0.0,
-          "buy_hold_pct": 15.241942367868955,
+          "buy_hold_pct": 13.843375132021563,
           "liquidation_return_pct": 0.0,
-          "buy_hold_liquidation_pct": 14.731996772891144
+          "buy_hold_liquidation_pct": 13.339618197062375
         },
         {
           "code": "4133",
@@ -9460,9 +9460,9 @@
           "winning_trades": 0,
           "open_trades": 0,
           "win_rate_pct": 0.0,
-          "buy_hold_pct": -1.8266458560153076,
+          "buy_hold_pct": 4.429504885367042,
           "liquidation_return_pct": 0.0,
-          "buy_hold_liquidation_pct": -2.2610629481024436
+          "buy_hold_liquidation_pct": 3.967404326249291
         },
         {
           "code": "4426",
@@ -9473,9 +9473,9 @@
           "winning_trades": 0,
           "open_trades": 0,
           "win_rate_pct": 0.0,
-          "buy_hold_pct": -6.360081215398516,
+          "buy_hold_pct": -5.365235777167121,
           "liquidation_return_pct": 0.0,
-          "buy_hold_liquidation_pct": -6.774437856020377
+          "buy_hold_liquidation_pct": -5.78399460885316
         },
         {
           "code": "4545",
@@ -9486,9 +9486,9 @@
           "winning_trades": 0,
           "open_trades": 0,
           "win_rate_pct": 0.0,
-          "buy_hold_pct": 20.048363473028452,
+          "buy_hold_pct": 20.361404192555543,
           "liquidation_return_pct": 0.0,
-          "buy_hold_liquidation_pct": 19.5171494646603
+          "buy_hold_liquidation_pct": 19.82880497900348
         },
         {
           "code": "4569",
@@ -9499,9 +9499,9 @@
           "winning_trades": 0,
           "open_trades": 0,
           "win_rate_pct": 0.0,
-          "buy_hold_pct": 2.831557754173475,
+          "buy_hold_pct": 5.476742519554145,
           "liquidation_return_pct": 0.0,
-          "buy_hold_liquidation_pct": 2.3765281111112646
+          "buy_hold_liquidation_pct": 5.010007933905114
         },
         {
           "code": "4720",
@@ -9512,9 +9512,9 @@
           "winning_trades": 0,
           "open_trades": 0,
           "win_rate_pct": 0.0,
-          "buy_hold_pct": 37.30434001971874,
+          "buy_hold_pct": 26.178893348826726,
           "liquidation_return_pct": 0.0,
-          "buy_hold_liquidation_pct": 36.69676831513149
+          "buy_hold_liquidation_pct": 25.62055174575817
         },
         {
           "code": "4766",
@@ -9525,9 +9525,9 @@
           "winning_trades": 0,
           "open_trades": 0,
           "win_rate_pct": 0.0,
-          "buy_hold_pct": 14.423656176496301,
+          "buy_hold_pct": 16.365783296889447,
           "liquidation_return_pct": 0.0,
-          "buy_hold_liquidation_pct": 13.917331497915297
+          "buy_hold_liquidation_pct": 15.850864705800705
         },
         {
           "code": "4919",
@@ -9538,9 +9538,9 @@
           "winning_trades": 0,
           "open_trades": 0,
           "win_rate_pct": 0.0,
-          "buy_hold_pct": 30.11761270492579,
+          "buy_hold_pct": 37.89873240156587,
           "liquidation_return_pct": 0.0,
-          "buy_hold_liquidation_pct": 29.541842268706485
+          "buy_hold_liquidation_pct": 37.28853051068894
         },
         {
           "code": "4956",
@@ -9551,9 +9551,9 @@
           "winning_trades": 0,
           "open_trades": 0,
           "win_rate_pct": 0.0,
-          "buy_hold_pct": 63.280834840759766,
+          "buy_hold_pct": 65.01581719965247,
           "liquidation_return_pct": 0.0,
-          "buy_hold_liquidation_pct": 62.55831714658942
+          "buy_hold_liquidation_pct": 64.28562220854401
         },
         {
           "code": "4994",
@@ -9564,9 +9564,9 @@
           "winning_trades": 0,
           "open_trades": 0,
           "win_rate_pct": 0.0,
-          "buy_hold_pct": -12.474454014240433,
+          "buy_hold_pct": -10.510036858678562,
           "liquidation_return_pct": 0.0,
-          "buy_hold_liquidation_pct": -12.861754555227423
+          "buy_hold_liquidation_pct": -10.90602994557891
         },
         {
           "code": "5244",
@@ -9577,9 +9577,9 @@
           "winning_trades": 0,
           "open_trades": 0,
           "win_rate_pct": 0.0,
-          "buy_hold_pct": 22.66370990496982,
+          "buy_hold_pct": 32.76350533988015,
           "liquidation_return_pct": 0.0,
-          "buy_hold_liquidation_pct": 22.120922988640324
+          "buy_hold_liquidation_pct": 32.17602682875118
         },
         {
           "code": "5388",
@@ -9590,9 +9590,9 @@
           "winning_trades": 0,
           "open_trades": 0,
           "win_rate_pct": 0.0,
-          "buy_hold_pct": -12.275674999324071,
+          "buy_hold_pct": -10.21300448074891,
           "liquidation_return_pct": 0.0,
-          "buy_hold_liquidation_pct": -12.663855137452062
+          "buy_hold_liquidation_pct": -10.610311935921601
         },
         {
           "code": "5525",
@@ -9616,9 +9616,9 @@
           "winning_trades": 0,
           "open_trades": 0,
           "win_rate_pct": 0.0,
-          "buy_hold_pct": -5.540010889887315,
+          "buy_hold_pct": -4.640391945981481,
           "liquidation_return_pct": 0.0,
-          "buy_hold_liquidation_pct": -5.957996341699568
+          "buy_hold_liquidation_pct": -5.06235821162051
         },
         {
           "code": "6115",
@@ -9629,9 +9629,9 @@
           "winning_trades": 0,
           "open_trades": 0,
           "win_rate_pct": 0.0,
-          "buy_hold_pct": -4.715929296953858,
+          "buy_hold_pct": -4.389237731298767,
           "liquidation_return_pct": 0.0,
-          "buy_hold_liquidation_pct": -5.137561309814842
+          "buy_hold_liquidation_pct": -4.812315354337771
         },
         {
           "code": "6142",
@@ -9642,9 +9642,9 @@
           "winning_trades": 0,
           "open_trades": 0,
           "win_rate_pct": 0.0,
-          "buy_hold_pct": -1.8695639515000306,
+          "buy_hold_pct": -1.761607207354099,
           "liquidation_return_pct": 0.0,
-          "buy_hold_liquidation_pct": -2.303791131014643
+          "buy_hold_liquidation_pct": -2.196312095461561
         },
         {
           "code": "6177",
@@ -9655,9 +9655,9 @@
           "winning_trades": 0,
           "open_trades": 0,
           "win_rate_pct": 0.0,
-          "buy_hold_pct": 1.6173153769567294,
+          "buy_hold_pct": 3.3053105919521153,
           "liquidation_return_pct": -4.318566308742245,
-          "buy_hold_liquidation_pct": 1.167658756413692
+          "buy_hold_liquidation_pct": 2.8481845925827365
         },
         {
           "code": "6202",
@@ -9668,9 +9668,9 @@
           "winning_trades": 0,
           "open_trades": 0,
           "win_rate_pct": 0.0,
-          "buy_hold_pct": 13.269798542584944,
+          "buy_hold_pct": 13.830545837806074,
           "liquidation_return_pct": 0.0,
-          "buy_hold_liquidation_pct": 12.768579684033998
+          "buy_hold_liquidation_pct": 13.326845672473775
         },
         {
           "code": "6225",
@@ -9681,9 +9681,9 @@
           "winning_trades": 0,
           "open_trades": 0,
           "win_rate_pct": 0.0,
-          "buy_hold_pct": 216.21606164271253,
+          "buy_hold_pct": 209.01908288461044,
           "liquidation_return_pct": 0.0,
-          "buy_hold_liquidation_pct": 214.81680556994354
+          "buy_hold_liquidation_pct": 207.65167344284606
         },
         {
           "code": "6272",
@@ -9694,9 +9694,9 @@
           "winning_trades": 0,
           "open_trades": 0,
           "win_rate_pct": 0.0,
-          "buy_hold_pct": 6.416150257097208,
+          "buy_hold_pct": 7.897092354491164,
           "liquidation_return_pct": 0.0,
-          "buy_hold_liquidation_pct": 5.945258792209551
+          "buy_hold_liquidation_pct": 7.419647720822531
         },
         {
           "code": "6412",
@@ -9720,9 +9720,9 @@
           "winning_trades": 0,
           "open_trades": 0,
           "win_rate_pct": 0.0,
-          "buy_hold_pct": 12.104402170303551,
+          "buy_hold_pct": 23.173534317371324,
           "liquidation_return_pct": 0.0,
-          "buy_hold_liquidation_pct": 11.608340190699963
+          "buy_hold_liquidation_pct": 22.62849142801695
         },
         {
           "code": "6515",
@@ -9733,9 +9733,9 @@
           "winning_trades": 0,
           "open_trades": 0,
           "win_rate_pct": 0.0,
-          "buy_hold_pct": 3.7504606782791994,
+          "buy_hold_pct": -6.573810286443516,
           "liquidation_return_pct": 0.0,
-          "buy_hold_liquidation_pct": 3.2913648897778147
+          "buy_hold_liquidation_pct": -6.987221175926006
         },
         {
           "code": "6558",
@@ -9746,9 +9746,9 @@
           "winning_trades": 0,
           "open_trades": 0,
           "win_rate_pct": 0.0,
-          "buy_hold_pct": 7.08145472675672,
+          "buy_hold_pct": 6.019138739804086,
           "liquidation_return_pct": 0.0,
-          "buy_hold_liquidation_pct": 6.607619289590816
+          "buy_hold_liquidation_pct": 5.550004050880442
         },
         {
           "code": "6598",
@@ -9759,9 +9759,9 @@
           "winning_trades": 0,
           "open_trades": 0,
           "win_rate_pct": 0.0,
-          "buy_hold_pct": -11.753657866918566,
+          "buy_hold_pct": -11.256029390722166,
           "liquidation_return_pct": 0.0,
-          "buy_hold_liquidation_pct": -12.144147930857452
+          "buy_hold_liquidation_pct": -11.64872146066822
         },
         {
           "code": "6658",
@@ -9772,22 +9772,22 @@
           "winning_trades": 0,
           "open_trades": 0,
           "win_rate_pct": 0.0,
-          "buy_hold_pct": 45.312642745736056,
+          "buy_hold_pct": 44.95472983256923,
           "liquidation_return_pct": 0.0,
-          "buy_hold_liquidation_pct": 44.66963430158617
+          "buy_hold_liquidation_pct": 44.313305153060114
         },
         {
           "code": "6691",
-          "return_pct": 6.200016328083846,
-          "mdd_pct": -0.881612090680095,
+          "return_pct": 4.715645070639218,
+          "mdd_pct": -2.267002518891681,
           "trades": 1,
           "closed_trades": 0,
           "winning_trades": 0,
           "open_trades": 1,
           "win_rate_pct": 0.0,
-          "buy_hold_pct": 40.2998378467132,
-          "liquidation_return_pct": 5.730081255832076,
-          "buy_hold_liquidation_pct": 39.6790110642415
+          "buy_hold_pct": 38.33884900768672,
+          "liquidation_return_pct": 4.252278341201632,
+          "buy_hold_liquidation_pct": 37.72669960082771
         },
         {
           "code": "6753",
@@ -9811,9 +9811,9 @@
           "winning_trades": 0,
           "open_trades": 0,
           "win_rate_pct": 0.0,
-          "buy_hold_pct": 24.28525909718435,
+          "buy_hold_pct": 24.82212846693461,
           "liquidation_return_pct": 0.0,
-          "buy_hold_liquidation_pct": 23.73529682567932
+          "buy_hold_liquidation_pct": 24.26979054846843
         },
         {
           "code": "6807",
@@ -9837,9 +9837,9 @@
           "winning_trades": 0,
           "open_trades": 0,
           "win_rate_pct": 0.0,
-          "buy_hold_pct": -27.348809813277285,
+          "buy_hold_pct": -27.047351447389122,
           "liquidation_return_pct": 0.0,
-          "buy_hold_liquidation_pct": -27.670291329853537
+          "buy_hold_liquidation_pct": -27.370166917234428
         },
         {
           "code": "6908",
@@ -9850,9 +9850,9 @@
           "winning_trades": 0,
           "open_trades": 0,
           "win_rate_pct": 0.0,
-          "buy_hold_pct": -21.837570654008175,
+          "buy_hold_pct": -22.580559547671808,
           "liquidation_return_pct": 0.0,
-          "buy_hold_liquidation_pct": -22.18343940386419
+          "buy_hold_liquidation_pct": -22.92314057167336
         },
         {
           "code": "6928",
@@ -9863,9 +9863,9 @@
           "winning_trades": 0,
           "open_trades": 0,
           "win_rate_pct": 0.0,
-          "buy_hold_pct": -8.603042550772876,
+          "buy_hold_pct": -5.9917009093663935,
           "liquidation_return_pct": 0.0,
-          "buy_hold_liquidation_pct": -9.007474087485711
+          "buy_hold_liquidation_pct": -6.4076876328424515
         },
         {
           "code": "6952",
@@ -9889,9 +9889,9 @@
           "winning_trades": 0,
           "open_trades": 0,
           "win_rate_pct": 0.0,
-          "buy_hold_pct": 10.598870126464988,
+          "buy_hold_pct": 9.81725266974085,
           "liquidation_return_pct": 0.0,
-          "buy_hold_liquidation_pct": 10.109470126155372
+          "buy_hold_liquidation_pct": 9.331311326677238
         },
         {
           "code": "7749",
@@ -9902,35 +9902,35 @@
           "winning_trades": 0,
           "open_trades": 0,
           "win_rate_pct": 0.0,
-          "buy_hold_pct": 21.77005134454564,
+          "buy_hold_pct": 22.396118446574143,
           "liquidation_return_pct": 0.0,
-          "buy_hold_liquidation_pct": 21.231218867346023
+          "buy_hold_liquidation_pct": 21.854515622448044
         },
         {
           "code": "7799",
-          "return_pct": 3.3614818182335693,
+          "return_pct": 0.4416659476619955,
           "mdd_pct": -7.6271186440677985,
           "trades": 1,
           "closed_trades": 0,
           "winning_trades": 0,
           "open_trades": 1,
           "win_rate_pct": 0.0,
-          "buy_hold_pct": 50.4239437524931,
-          "liquidation_return_pct": 2.9041072611878826,
-          "buy_hold_liquidation_pct": 49.75831780138833
+          "buy_hold_pct": 46.17467980468257,
+          "liquidation_return_pct": -0.0027884241564080092,
+          "buy_hold_liquidation_pct": 45.527856846546854
         },
         {
           "code": "8046",
-          "return_pct": 4.3651685237425575,
-          "mdd_pct": 0.0,
+          "return_pct": 2.631527850590687,
+          "mdd_pct": -1.661129568106312,
           "trades": 1,
           "closed_trades": 0,
           "winning_trades": 0,
           "open_trades": 1,
           "win_rate_pct": 0.0,
-          "buy_hold_pct": 59.032637750464836,
-          "liquidation_return_pct": 3.903352653024994,
-          "buy_hold_liquidation_pct": 58.32891832841902
+          "buy_hold_pct": 56.39089958185246,
+          "liquidation_return_pct": 2.177383339851824,
+          "buy_hold_liquidation_pct": 55.69886985120276
         },
         {
           "code": "8112",
@@ -9941,9 +9941,9 @@
           "winning_trades": 0,
           "open_trades": 0,
           "win_rate_pct": 0.0,
-          "buy_hold_pct": 6.043580212233479,
+          "buy_hold_pct": 5.6648492874359135,
           "liquidation_return_pct": 0.0,
-          "buy_hold_liquidation_pct": 5.5743373697943355
+          "buy_hold_liquidation_pct": 5.197282329339004
         },
         {
           "code": "8215",
@@ -9954,9 +9954,9 @@
           "winning_trades": 0,
           "open_trades": 0,
           "win_rate_pct": 0.0,
-          "buy_hold_pct": 28.22636833421466,
+          "buy_hold_pct": 26.8646758502745,
           "liquidation_return_pct": 0.0,
-          "buy_hold_liquidation_pct": 27.65896665433576
+          "buy_hold_liquidation_pct": 26.303299659637027
         },
         {
           "code": "8411",
@@ -9980,9 +9980,9 @@
           "winning_trades": 0,
           "open_trades": 0,
           "win_rate_pct": 0.0,
-          "buy_hold_pct": -3.2005224778392627,
+          "buy_hold_pct": -2.801623532006181,
           "liquidation_return_pct": 0.0,
-          "buy_hold_liquidation_pct": -3.6288601658748254
+          "buy_hold_liquidation_pct": -3.231726347877051
         },
         {
           "code": "8488",
@@ -9993,9 +9993,9 @@
           "winning_trades": 0,
           "open_trades": 0,
           "win_rate_pct": 0.0,
-          "buy_hold_pct": -6.016274250517506,
+          "buy_hold_pct": -3.8624873432489104,
           "liquidation_return_pct": 0.0,
-          "buy_hold_liquidation_pct": -6.432152236958966
+          "buy_hold_liquidation_pct": -4.28789583675504
         },
         {
           "code": "9802",
@@ -10006,9 +10006,9 @@
           "winning_trades": 0,
           "open_trades": 0,
           "win_rate_pct": 0.0,
-          "buy_hold_pct": -6.601709006597645,
+          "buy_hold_pct": -4.574457070082206,
           "liquidation_return_pct": 0.0,
-          "buy_hold_liquidation_pct": -7.014996444243449
+          "buy_hold_liquidation_pct": -4.996715097547089
         },
         {
           "code": "9912",
@@ -10019,9 +10019,9 @@
           "winning_trades": 0,
           "open_trades": 0,
           "win_rate_pct": 0.0,
-          "buy_hold_pct": 2.631523231768118,
+          "buy_hold_pct": 3.424047681587261,
           "liquidation_return_pct": 0.0,
-          "buy_hold_liquidation_pct": 2.1773787414675505
+          "buy_hold_liquidation_pct": 2.9663962705962277
         },
         {
           "code": "9927",
@@ -10032,9 +10032,9 @@
           "winning_trades": 0,
           "open_trades": 0,
           "win_rate_pct": 0.0,
-          "buy_hold_pct": -3.8888271302020883,
+          "buy_hold_pct": -3.5802828583503143,
           "liquidation_return_pct": 0.0,
-          "buy_hold_liquidation_pct": -4.314119070150946
+          "buy_hold_liquidation_pct": -4.0069401067021175
         },
         {
           "code": "9938",
@@ -10045,9 +10045,9 @@
           "winning_trades": 0,
           "open_trades": 0,
           "win_rate_pct": 0.0,
-          "buy_hold_pct": -8.388735954120996,
+          "buy_hold_pct": -8.27157884526033,
           "liquidation_return_pct": 0.0,
-          "buy_hold_liquidation_pct": -8.794115797524016
+          "buy_hold_liquidation_pct": -8.677477108870058
         },
         {
           "code": "9958",
@@ -10058,9 +10058,9 @@
           "winning_trades": 0,
           "open_trades": 0,
           "win_rate_pct": 0.0,
-          "buy_hold_pct": -14.667051077326942,
+          "buy_hold_pct": -14.953726824442626,
           "liquidation_return_pct": 0.0,
-          "buy_hold_liquidation_pct": -15.04464937630977
+          "buy_hold_liquidation_pct": -15.330056583244467
         }
       ]
     },
@@ -10069,8 +10069,8 @@
   },
   "descriptive_full_period_target_reached": false,
   "target_reached_reason": "No sealed unseen-data validation; full-period metrics are descriptive only",
-  "data_end_date": "2026-10-06",
-  "generated_at": "2026-10-07T08:58:12.752648+08:00",
+  "data_end_date": "2026-10-07",
+  "generated_at": "2026-10-07T22:50:42.216458+08:00",
   "universe": "TWSE listed common stocks only",
   "sample_method": "evenly spaced across code range with 2330 reserved; not sector-stratified or market-wide",
   "universe_symbols": 1073,
@@ -10214,7 +10214,7 @@
     "below_ma5": "hold full position while close >= MA10",
     "below_ma10": "exit full position next open"
   },
-  "github_run_number": 36,
+  "github_run_number": 38,
   "improved_history": null,
   "target_reached": false,
   "run_best": {
@@ -10231,10 +10231,10 @@
     "avg_trades": 0.5083333333333333,
     "avg_win_rate_pct": 5.138888888888888,
     "pooled_win_rate_pct": 23.214285714285715,
-    "avg_buy_hold_pct": 32.84415263351156,
-    "avg_return_pct": 1.2159991388698292,
+    "avg_buy_hold_pct": 33.66845878875186,
+    "avg_return_pct": 1.1698980305766247,
     "median_return_pct": 0.0,
-    "avg_mdd_pct": -3.4592897910135503,
+    "avg_mdd_pct": -3.4767910960043107,
     "params": {
       "institutional_2d": true,
       "ma10_confirm": 1,
@@ -10259,10 +10259,10 @@
     "avg_trades": 0.5083333333333333,
     "avg_win_rate_pct": 5.138888888888888,
     "pooled_win_rate_pct": 23.214285714285715,
-    "avg_buy_hold_pct": 32.84415263351156,
-    "avg_return_pct": 1.2159991388698292,
+    "avg_buy_hold_pct": 33.66845878875186,
+    "avg_return_pct": 1.1698980305766247,
     "median_return_pct": 0.0,
-    "avg_mdd_pct": -3.4592897910135503,
+    "avg_mdd_pct": -3.4767910960043107,
     "params": {
       "institutional_2d": true,
       "ma10_confirm": 1,
@@ -10285,16 +10285,16 @@
   "stock_results": [
     {
       "code": "8046",
-      "return_pct": 98.4836409205679,
+      "return_pct": 95.18657047338239,
       "mdd_pct": -15.103705732680483,
       "trades": 4,
       "closed_trades": 3,
       "winning_trades": 3,
       "open_trades": 1,
       "win_rate_pct": 100.0,
-      "buy_hold_pct": 518.4855840968082,
-      "liquidation_return_pct": 97.60535080949437,
-      "buy_hold_liquidation_pct": 515.7487853871799
+      "buy_hold_pct": 508.21173718490115,
+      "liquidation_return_pct": 94.32286989903767,
+      "buy_hold_liquidation_pct": 505.520400247858
     },
     {
       "code": "3481",
@@ -10305,9 +10305,9 @@
       "winning_trades": 1,
       "open_trades": 0,
       "win_rate_pct": 50.0,
-      "buy_hold_pct": 207.99845872157795,
+      "buy_hold_pct": 216.43678210816154,
       "liquidation_return_pct": 57.484872628441906,
-      "buy_hold_liquidation_pct": 206.635565541735
+      "buy_hold_liquidation_pct": 215.0365493473329
     },
     {
       "code": "2337",
@@ -10318,9 +10318,9 @@
       "winning_trades": 1,
       "open_trades": 0,
       "win_rate_pct": 33.33333333333333,
-      "buy_hold_pct": 194.27856241567633,
+      "buy_hold_pct": 190.5846892472787,
       "liquidation_return_pct": 52.20658053199665,
-      "buy_hold_liquidation_pct": 192.97637977698696
+      "buy_hold_liquidation_pct": 189.29885199735952
     },
     {
       "code": "2454",
@@ -10331,9 +10331,9 @@
       "winning_trades": 1,
       "open_trades": 0,
       "win_rate_pct": 33.33333333333333,
-      "buy_hold_pct": 247.45941026641285,
+      "buy_hold_pct": 241.4565546012411,
       "liquidation_return_pct": 51.68798116145938,
-      "buy_hold_liquidation_pct": 245.92190237598396
+      "buy_hold_liquidation_pct": 239.9456093471306
     },
     {
       "code": "3033",
@@ -10344,9 +10344,9 @@
       "winning_trades": 1,
       "open_trades": 0,
       "win_rate_pct": 100.0,
-      "buy_hold_pct": 40.73512588678516,
+      "buy_hold_pct": 40.39844411403908,
       "liquidation_return_pct": 33.2539309849271,
-      "buy_hold_liquidation_pct": 40.11237295473613
+      "buy_hold_liquidation_pct": 39.77718099883445
     },
     {
       "code": "2330",
@@ -10357,35 +10357,22 @@
       "winning_trades": 1,
       "open_trades": 0,
       "win_rate_pct": 100.0,
-      "buy_hold_pct": 67.47884112657776,
+      "buy_hold_pct": 67.47885413992422,
       "liquidation_return_pct": 14.23875824635017,
-      "buy_hold_liquidation_pct": 66.73774725459265
-    },
-    {
-      "code": "6691",
-      "return_pct": 6.200016328083846,
-      "mdd_pct": -0.881612090680095,
-      "trades": 1,
-      "closed_trades": 0,
-      "winning_trades": 0,
-      "open_trades": 1,
-      "win_rate_pct": 0.0,
-      "buy_hold_pct": 58.17875180263368,
-      "liquidation_return_pct": 5.730081255832076,
-      "buy_hold_liquidation_pct": 57.478810825907026
+      "buy_hold_liquidation_pct": 66.73776021035506
     },
     {
       "code": "3014",
-      "return_pct": 5.584187623326309,
+      "return_pct": 8.49685486810774,
       "mdd_pct": -8.714342179612466,
       "trades": 3,
       "closed_trades": 2,
       "winning_trades": 1,
       "open_trades": 1,
       "win_rate_pct": 50.0,
-      "buy_hold_pct": 32.140828356871445,
-      "liquidation_return_pct": 5.116977593093086,
-      "buy_hold_liquidation_pct": 31.55610519139229
+      "buy_hold_pct": 35.78609258740584,
+      "liquidation_return_pct": 8.016756285316351,
+      "buy_hold_liquidation_pct": 35.185239127706566
     },
     {
       "code": "6202",
@@ -10396,22 +10383,35 @@
       "winning_trades": 1,
       "open_trades": 0,
       "win_rate_pct": 50.0,
-      "buy_hold_pct": 64.86710297857951,
+      "buy_hold_pct": 65.68328507880128,
       "liquidation_return_pct": 5.282458580690386,
-      "buy_hold_liquidation_pct": 64.13756604789931
+      "buy_hold_liquidation_pct": 64.95013654232757
+    },
+    {
+      "code": "6691",
+      "return_pct": 4.715645070639218,
+      "mdd_pct": -2.267002518891681,
+      "trades": 1,
+      "closed_trades": 0,
+      "winning_trades": 0,
+      "open_trades": 1,
+      "win_rate_pct": 0.0,
+      "buy_hold_pct": 55.96786708874679,
+      "liquidation_return_pct": 4.252278341201632,
+      "buy_hold_liquidation_pct": 55.277709276879094
     },
     {
       "code": "7799",
-      "return_pct": 3.3614818182335693,
+      "return_pct": 0.4416659476619955,
       "mdd_pct": -7.6271186440677985,
       "trades": 1,
       "closed_trades": 0,
       "winning_trades": 0,
       "open_trades": 1,
       "win_rate_pct": 0.0,
-      "buy_hold_pct": 17.051744310714835,
-      "liquidation_return_pct": 2.9041072611878826,
-      "buy_hold_liquidation_pct": 16.53379034213991
+      "buy_hold_pct": 13.745197861259628,
+      "liquidation_return_pct": -0.0027884241564080092,
+      "buy_hold_liquidation_pct": 13.241875360723544
     },
     {
       "code": "1313",
@@ -10422,9 +10422,9 @@
       "winning_trades": 0,
       "open_trades": 0,
       "win_rate_pct": 0.0,
-      "buy_hold_pct": 24.780006543305166,
+      "buy_hold_pct": 26.283385874063004,
       "liquidation_return_pct": 0.0,
-      "buy_hold_liquidation_pct": 24.22785501435103
+      "buy_hold_liquidation_pct": 25.724581891570274
     },
     {
       "code": "1410",
@@ -10435,9 +10435,9 @@
       "winning_trades": 0,
       "open_trades": 0,
       "win_rate_pct": 0.0,
-      "buy_hold_pct": -28.86818237104579,
+      "buy_hold_pct": -29.458490154028215,
       "liquidation_return_pct": 0.0,
-      "buy_hold_liquidation_pct": -29.182940664053913
+      "buy_hold_liquidation_pct": -29.770636335096647
     },
     {
       "code": "1443",
@@ -10448,9 +10448,9 @@
       "winning_trades": 0,
       "open_trades": 0,
       "win_rate_pct": 0.0,
-      "buy_hold_pct": -14.795333636642527,
+      "buy_hold_pct": -16.423444192763892,
       "liquidation_return_pct": 0.0,
-      "buy_hold_liquidation_pct": -15.172364285300388
+      "buy_hold_liquidation_pct": -16.79327045221092
     },
     {
       "code": "1454",
@@ -10461,9 +10461,9 @@
       "winning_trades": 0,
       "open_trades": 0,
       "win_rate_pct": 0.0,
-      "buy_hold_pct": -6.246682842902684,
+      "buy_hold_pct": -7.015148270460436,
       "liquidation_return_pct": 0.0,
-      "buy_hold_liquidation_pct": -6.661541271322847
+      "buy_hold_liquidation_pct": -7.426606239363654
     },
     {
       "code": "1466",
@@ -10474,9 +10474,9 @@
       "winning_trades": 0,
       "open_trades": 0,
       "win_rate_pct": 0.0,
-      "buy_hold_pct": 0.7696600794329544,
+      "buy_hold_pct": 3.6182765302666064,
       "liquidation_return_pct": 0.0,
-      "buy_hold_liquidation_pct": 0.3237543335814719
+      "buy_hold_liquidation_pct": 3.1597656566201726
     },
     {
       "code": "1516",
@@ -10487,9 +10487,9 @@
       "winning_trades": 0,
       "open_trades": 0,
       "win_rate_pct": 0.0,
-      "buy_hold_pct": -41.34995171916641,
+      "buy_hold_pct": -40.695859456957486,
       "liquidation_return_pct": 0.0,
-      "buy_hold_liquidation_pct": -41.6094781828091
+      "buy_hold_liquidation_pct": -40.95828027886045
     },
     {
       "code": "1528",
@@ -10500,9 +10500,9 @@
       "winning_trades": 0,
       "open_trades": 0,
       "win_rate_pct": 0.0,
-      "buy_hold_pct": 4.850586256021128,
+      "buy_hold_pct": 4.416420674714816,
       "liquidation_return_pct": 0.0,
-      "buy_hold_liquidation_pct": 4.386622411838226
+      "buy_hold_liquidation_pct": 3.9543780132291984
     },
     {
       "code": "1539",
@@ -10513,9 +10513,9 @@
       "winning_trades": 0,
       "open_trades": 0,
       "win_rate_pct": 0.0,
-      "buy_hold_pct": -10.413376314379796,
+      "buy_hold_pct": -10.983988493712305,
       "liquidation_return_pct": 0.0,
-      "buy_hold_liquidation_pct": -10.80979712418867
+      "buy_hold_liquidation_pct": -11.377884344627631
     },
     {
       "code": "1587",
@@ -10526,9 +10526,9 @@
       "winning_trades": 0,
       "open_trades": 0,
       "win_rate_pct": 0.0,
-      "buy_hold_pct": -53.319772527710874,
+      "buy_hold_pct": -52.420155885395125,
       "liquidation_return_pct": 0.0,
-      "buy_hold_liquidation_pct": -53.526332534275745
+      "buy_hold_liquidation_pct": -52.63069669560225
     },
     {
       "code": "1609",
@@ -10539,9 +10539,9 @@
       "winning_trades": 0,
       "open_trades": 0,
       "win_rate_pct": 0.0,
-      "buy_hold_pct": 2.098941695159895,
+      "buy_hold_pct": 3.82943636355626,
       "liquidation_return_pct": 0.0,
-      "buy_hold_liquidation_pct": 1.6471538781588135
+      "buy_hold_liquidation_pct": 3.3699911076475297
     },
     {
       "code": "1626",
@@ -10552,9 +10552,9 @@
       "winning_trades": 0,
       "open_trades": 0,
       "win_rate_pct": 0.0,
-      "buy_hold_pct": -11.438417254721156,
+      "buy_hold_pct": -11.528788283328662,
       "liquidation_return_pct": 0.0,
-      "buy_hold_liquidation_pct": -11.830302258369018
+      "buy_hold_liquidation_pct": -11.92027339517493
     },
     {
       "code": "1714",
@@ -10565,9 +10565,9 @@
       "winning_trades": 0,
       "open_trades": 0,
       "win_rate_pct": 0.0,
-      "buy_hold_pct": 137.36468770183527,
+      "buy_hold_pct": 145.48505383124314,
       "liquidation_return_pct": 0.0,
-      "buy_hold_liquidation_pct": 136.31434895875464
+      "buy_hold_liquidation_pct": 144.3987824680399
     },
     {
       "code": "1727",
@@ -10604,9 +10604,9 @@
       "winning_trades": 0,
       "open_trades": 0,
       "win_rate_pct": 0.0,
-      "buy_hold_pct": 8.896539694133999,
+      "buy_hold_pct": 11.048645286584335,
       "liquidation_return_pct": 0.0,
-      "buy_hold_liquidation_pct": 8.414672505987465
+      "buy_hold_liquidation_pct": 10.557255031191204
     },
     {
       "code": "2010",
@@ -10617,9 +10617,9 @@
       "winning_trades": 0,
       "open_trades": 0,
       "win_rate_pct": 0.0,
-      "buy_hold_pct": 18.521908256907473,
+      "buy_hold_pct": 19.04750632516512,
       "liquidation_return_pct": 0.0,
-      "buy_hold_liquidation_pct": 17.997448812870665
+      "buy_hold_liquidation_pct": 18.520721109676263
     },
     {
       "code": "2024",
@@ -10630,9 +10630,9 @@
       "winning_trades": 0,
       "open_trades": 0,
       "win_rate_pct": 0.0,
-      "buy_hold_pct": -25.819992225364572,
+      "buy_hold_pct": -27.24653083641525,
       "liquidation_return_pct": 0.0,
-      "buy_hold_liquidation_pct": -26.148238759767338
+      "buy_hold_liquidation_pct": -27.56846493746411
     },
     {
       "code": "2034",
@@ -10643,9 +10643,9 @@
       "winning_trades": 0,
       "open_trades": 0,
       "win_rate_pct": 0.0,
-      "buy_hold_pct": 16.32802204494299,
+      "buy_hold_pct": 17.29944043913918,
       "liquidation_return_pct": 0.0,
-      "buy_hold_liquidation_pct": 15.81327054739412
+      "buy_hold_liquidation_pct": 16.78039041519599
     },
     {
       "code": "2103",
@@ -10656,9 +10656,9 @@
       "winning_trades": 0,
       "open_trades": 0,
       "win_rate_pct": 0.0,
-      "buy_hold_pct": 81.15747169701561,
+      "buy_hold_pct": 88.63793921916658,
       "liquidation_return_pct": 0.0,
-      "buy_hold_liquidation_pct": 80.35584988475632
+      "buy_hold_liquidation_pct": 87.80321633812176
     },
     {
       "code": "2204",
@@ -10669,9 +10669,9 @@
       "winning_trades": 0,
       "open_trades": 0,
       "win_rate_pct": 0.0,
-      "buy_hold_pct": -7.670471125005729,
+      "buy_hold_pct": -6.7670510503284875,
       "liquidation_return_pct": 0.0,
-      "buy_hold_liquidation_pct": -8.079029290277584
+      "buy_hold_liquidation_pct": -7.179606849430787
     },
     {
       "code": "2236",
@@ -10682,9 +10682,9 @@
       "winning_trades": 0,
       "open_trades": 0,
       "win_rate_pct": 0.0,
-      "buy_hold_pct": -24.72265743687707,
+      "buy_hold_pct": -28.051242320071836,
       "liquidation_return_pct": 0.0,
-      "buy_hold_liquidation_pct": -25.055759677718893
+      "buy_hold_liquidation_pct": -28.369615572805518
     },
     {
       "code": "2362",
@@ -10695,9 +10695,9 @@
       "winning_trades": 0,
       "open_trades": 0,
       "win_rate_pct": 0.0,
-      "buy_hold_pct": 25.102261300036034,
+      "buy_hold_pct": 25.640337594777087,
       "liquidation_return_pct": 0.0,
-      "buy_hold_liquidation_pct": 24.548683793783365
+      "buy_hold_liquidation_pct": 25.084379100920184
     },
     {
       "code": "2374",
@@ -10708,9 +10708,9 @@
       "winning_trades": 0,
       "open_trades": 0,
       "win_rate_pct": 0.0,
-      "buy_hold_pct": -12.404268479761903,
+      "buy_hold_pct": -11.874987091788903,
       "liquidation_return_pct": 0.0,
-      "buy_hold_liquidation_pct": -12.791879591738963
+      "buy_hold_liquidation_pct": -12.264940273907744
     },
     {
       "code": "2387",
@@ -10721,9 +10721,9 @@
       "winning_trades": 0,
       "open_trades": 0,
       "win_rate_pct": 0.0,
-      "buy_hold_pct": 3.577978068718668,
+      "buy_hold_pct": 2.724304766165986,
       "liquidation_return_pct": 0.0,
-      "buy_hold_liquidation_pct": 3.1196455157645797
+      "buy_hold_liquidation_pct": 2.2697497175756975
     },
     {
       "code": "2402",
@@ -10734,9 +10734,9 @@
       "winning_trades": 0,
       "open_trades": 0,
       "win_rate_pct": 0.0,
-      "buy_hold_pct": -4.2955565312569055,
+      "buy_hold_pct": 0.06934325002936337,
       "liquidation_return_pct": 0.0,
-      "buy_hold_liquidation_pct": -4.719048693606098
+      "buy_hold_liquidation_pct": -0.3734635938520192
     },
     {
       "code": "2415",
@@ -10747,9 +10747,9 @@
       "winning_trades": 0,
       "open_trades": 0,
       "win_rate_pct": 0.0,
-      "buy_hold_pct": 31.08462106246208,
+      "buy_hold_pct": 24.88323271362789,
       "liquidation_return_pct": 0.0,
-      "buy_hold_liquidation_pct": 30.504571614260676
+      "buy_hold_liquidation_pct": 24.330624408870083
     },
     {
       "code": "2427",
@@ -10760,9 +10760,9 @@
       "winning_trades": 0,
       "open_trades": 0,
       "win_rate_pct": 0.0,
-      "buy_hold_pct": -11.86469736717286,
+      "buy_hold_pct": -11.47898341806589,
       "liquidation_return_pct": 0.0,
-      "buy_hold_liquidation_pct": -12.254696081323125
+      "buy_hold_liquidation_pct": -11.870688916440953
     },
     {
       "code": "2438",
@@ -10773,9 +10773,9 @@
       "winning_trades": 0,
       "open_trades": 0,
       "win_rate_pct": 0.0,
-      "buy_hold_pct": -8.270249777787587,
+      "buy_hold_pct": -10.360298263065616,
       "liquidation_return_pct": 0.0,
-      "buy_hold_liquidation_pct": -8.676153922520879
+      "buy_hold_liquidation_pct": -10.756953943251546
     },
     {
       "code": "2465",
@@ -10786,9 +10786,9 @@
       "winning_trades": 0,
       "open_trades": 0,
       "win_rate_pct": 0.0,
-      "buy_hold_pct": 56.15678166929743,
+      "buy_hold_pct": 53.229923221478344,
       "liquidation_return_pct": 0.0,
-      "buy_hold_liquidation_pct": 55.46578791041079
+      "buy_hold_liquidation_pct": 52.551880811223306
     },
     {
       "code": "2504",
@@ -10799,9 +10799,9 @@
       "winning_trades": 0,
       "open_trades": 0,
       "win_rate_pct": 0.0,
-      "buy_hold_pct": -12.489973468762871,
+      "buy_hold_pct": -10.21329202290473,
       "liquidation_return_pct": 0.0,
-      "buy_hold_liquidation_pct": -12.8772053361636
+      "buy_hold_liquidation_pct": -10.610598205703381
     },
     {
       "code": "2524",
@@ -10825,9 +10825,9 @@
       "winning_trades": 0,
       "open_trades": 0,
       "win_rate_pct": 0.0,
-      "buy_hold_pct": -14.459505699020403,
+      "buy_hold_pct": -13.564467080244725,
       "liquidation_return_pct": 0.0,
-      "buy_hold_liquidation_pct": -14.83802238630224
+      "buy_hold_liquidation_pct": -13.946944313414644
     },
     {
       "code": "2601",
@@ -10838,9 +10838,9 @@
       "winning_trades": 0,
       "open_trades": 0,
       "win_rate_pct": 0.0,
-      "buy_hold_pct": -5.7926589652911975,
+      "buy_hold_pct": -6.408392644723982,
       "liquidation_return_pct": 0.0,
-      "buy_hold_liquidation_pct": -6.209526449369784
+      "buy_hold_liquidation_pct": -6.822535507271077
     },
     {
       "code": "2612",
@@ -10851,9 +10851,9 @@
       "winning_trades": 0,
       "open_trades": 0,
       "win_rate_pct": 0.0,
-      "buy_hold_pct": 9.188810056293374,
+      "buy_hold_pct": 6.935708948853203,
       "liquidation_return_pct": 0.0,
-      "buy_hold_liquidation_pct": 8.705649571794272
+      "buy_hold_liquidation_pct": 6.462518436754516
     },
     {
       "code": "2705",
@@ -10864,9 +10864,9 @@
       "winning_trades": 0,
       "open_trades": 0,
       "win_rate_pct": 0.0,
-      "buy_hold_pct": -10.008480411367815,
+      "buy_hold_pct": -9.709504126522194,
       "liquidation_return_pct": 0.0,
-      "buy_hold_liquidation_pct": -10.406692885547509
+      "buy_hold_liquidation_pct": -10.109039570762334
     },
     {
       "code": "2748",
@@ -10890,9 +10890,9 @@
       "winning_trades": 0,
       "open_trades": 0,
       "win_rate_pct": 0.0,
-      "buy_hold_pct": 1.4459166046459915,
+      "buy_hold_pct": 2.291302467896883,
       "liquidation_return_pct": 0.0,
-      "buy_hold_liquidation_pct": 0.9970184236704371
+      "buy_hold_liquidation_pct": 1.8386634544764302
     },
     {
       "code": "2910",
@@ -10903,9 +10903,9 @@
       "winning_trades": 0,
       "open_trades": 0,
       "win_rate_pct": 0.0,
-      "buy_hold_pct": 20.08739102324664,
+      "buy_hold_pct": 17.585570376929006,
       "liquidation_return_pct": 0.0,
-      "buy_hold_liquidation_pct": 19.556004317968778
+      "buy_hold_liquidation_pct": 17.065254228011085
     },
     {
       "code": "3002",
@@ -10929,9 +10929,9 @@
       "winning_trades": 0,
       "open_trades": 0,
       "win_rate_pct": 0.0,
-      "buy_hold_pct": 22.25347729933409,
+      "buy_hold_pct": 23.596927267201217,
       "liquidation_return_pct": 0.0,
-      "buy_hold_liquidation_pct": 21.71250566228453
+      "buy_hold_liquidation_pct": 23.050010864043855
     },
     {
       "code": "3043",
@@ -10955,9 +10955,9 @@
       "winning_trades": 0,
       "open_trades": 0,
       "win_rate_pct": 0.0,
-      "buy_hold_pct": -8.4763736115678,
+      "buy_hold_pct": -8.038459845089962,
       "liquidation_return_pct": 0.0,
-      "buy_hold_liquidation_pct": -8.881365658336616
+      "buy_hold_liquidation_pct": -8.445389660275438
     },
     {
       "code": "3305",
@@ -10968,9 +10968,9 @@
       "winning_trades": 0,
       "open_trades": 0,
       "win_rate_pct": 0.0,
-      "buy_hold_pct": 6.697235898144549,
+      "buy_hold_pct": 7.676109621980753,
       "liquidation_return_pct": 0.0,
-      "buy_hold_liquidation_pct": 6.225100629295266
+      "buy_hold_liquidation_pct": 7.199642836903486
     },
     {
       "code": "3380",
@@ -10981,9 +10981,9 @@
       "winning_trades": 0,
       "open_trades": 0,
       "win_rate_pct": 0.0,
-      "buy_hold_pct": 1.0731971767031334,
+      "buy_hold_pct": 0.5849220915931319,
       "liquidation_return_pct": 0.0,
-      "buy_hold_liquidation_pct": 0.6259482791962201
+      "buy_hold_liquidation_pct": 0.13983381133784167
     },
     {
       "code": "3588",
@@ -10994,9 +10994,9 @@
       "winning_trades": 0,
       "open_trades": 0,
       "win_rate_pct": 0.0,
-      "buy_hold_pct": 15.172783436707359,
+      "buy_hold_pct": 14.966005307524366,
       "liquidation_return_pct": 0.0,
-      "buy_hold_liquidation_pct": 14.663143869999939
+      "buy_hold_liquidation_pct": 14.45728073403858
     },
     {
       "code": "3645",
@@ -11007,9 +11007,9 @@
       "winning_trades": 0,
       "open_trades": 0,
       "win_rate_pct": 0.0,
-      "buy_hold_pct": 46.23281856888417,
+      "buy_hold_pct": 44.86798487913652,
       "liquidation_return_pct": 0.0,
-      "buy_hold_liquidation_pct": 45.585738346716866
+      "buy_hold_liquidation_pct": 44.22694404604635
     },
     {
       "code": "3694",
@@ -11020,9 +11020,9 @@
       "winning_trades": 0,
       "open_trades": 0,
       "win_rate_pct": 0.0,
-      "buy_hold_pct": -14.253446738315557,
+      "buy_hold_pct": -11.876311977816245,
       "liquidation_return_pct": 0.0,
-      "buy_hold_liquidation_pct": -14.63287523649851
+      "buy_hold_liquidation_pct": -12.266259297314408
     },
     {
       "code": "3712",
@@ -11033,9 +11033,9 @@
       "winning_trades": 0,
       "open_trades": 0,
       "win_rate_pct": 0.0,
-      "buy_hold_pct": -16.03801162335621,
+      "buy_hold_pct": -17.056967774106692,
       "liquidation_return_pct": 0.0,
-      "buy_hold_liquidation_pct": -16.409543421922855
+      "buy_hold_liquidation_pct": -17.42399069170627
     },
     {
       "code": "4133",
@@ -11046,9 +11046,9 @@
       "winning_trades": 0,
       "open_trades": 0,
       "win_rate_pct": 0.0,
-      "buy_hold_pct": -9.774210166083474,
+      "buy_hold_pct": -4.024522311542034,
       "liquidation_return_pct": 0.0,
-      "buy_hold_liquidation_pct": -10.173459286098552
+      "buy_hold_liquidation_pct": -4.449213800313457
     },
     {
       "code": "4426",
@@ -11059,9 +11059,9 @@
       "winning_trades": 0,
       "open_trades": 0,
       "win_rate_pct": 0.0,
-      "buy_hold_pct": -21.674115316995824,
+      "buy_hold_pct": -20.84196862054718,
       "liquidation_return_pct": 0.0,
-      "buy_hold_liquidation_pct": -22.020707356718116
+      "buy_hold_liquidation_pct": -21.19224290940126
     },
     {
       "code": "4545",
@@ -11072,9 +11072,9 @@
       "winning_trades": 0,
       "open_trades": 0,
       "win_rate_pct": 0.0,
-      "buy_hold_pct": -1.435194095363923,
+      "buy_hold_pct": -1.1781743670827738,
       "liquidation_return_pct": 0.0,
-      "buy_hold_liquidation_pct": -1.8713433614919395
+      "buy_hold_liquidation_pct": -1.615460945508429
     },
     {
       "code": "4569",
@@ -11085,9 +11085,9 @@
       "winning_trades": 0,
       "open_trades": 0,
       "win_rate_pct": 0.0,
-      "buy_hold_pct": 5.5737350226158,
+      "buy_hold_pct": 8.28945811001427,
       "liquidation_return_pct": 0.0,
-      "buy_hold_liquidation_pct": 5.106571245140734
+      "buy_hold_liquidation_pct": 7.810277257877463
     },
     {
       "code": "4956",
@@ -11098,9 +11098,9 @@
       "winning_trades": 0,
       "open_trades": 0,
       "win_rate_pct": 0.0,
-      "buy_hold_pct": 95.78580950938071,
+      "buy_hold_pct": 97.86618180752325,
       "liquidation_return_pct": 0.0,
-      "buy_hold_liquidation_pct": 94.91945730230171
+      "buy_hold_liquidation_pct": 96.99062395302495
     },
     {
       "code": "4994",
@@ -11111,9 +11111,9 @@
       "winning_trades": 0,
       "open_trades": 0,
       "win_rate_pct": 0.0,
-      "buy_hold_pct": -14.413783634068999,
+      "buy_hold_pct": -12.492892655151621,
       "liquidation_return_pct": 0.0,
-      "buy_hold_liquidation_pct": -14.792502641488248
+      "buy_hold_liquidation_pct": -12.880111605152578
     },
     {
       "code": "5244",
@@ -11124,9 +11124,9 @@
       "winning_trades": 0,
       "open_trades": 0,
       "win_rate_pct": 0.0,
-      "buy_hold_pct": -15.541787483883162,
+      "buy_hold_pct": -8.58772853790959,
       "liquidation_return_pct": 0.0,
-      "buy_hold_liquidation_pct": -15.915515074266985
+      "buy_hold_liquidation_pct": -8.992227839129342
     },
     {
       "code": "5388",
@@ -11137,9 +11137,9 @@
       "winning_trades": 0,
       "open_trades": 0,
       "win_rate_pct": 0.0,
-      "buy_hold_pct": -7.5943461370334475,
+      "buy_hold_pct": -5.421603081201054,
       "liquidation_return_pct": 0.0,
-      "buy_hold_liquidation_pct": -8.003241155377072
+      "buy_hold_liquidation_pct": -5.84011248756674
     },
     {
       "code": "5525",
@@ -11163,9 +11163,9 @@
       "winning_trades": 0,
       "open_trades": 0,
       "win_rate_pct": 0.0,
-      "buy_hold_pct": -2.044041271226049,
+      "buy_hold_pct": -1.7081888534375422,
       "liquidation_return_pct": 0.0,
-      "buy_hold_liquidation_pct": -2.477496388600875
+      "buy_hold_liquidation_pct": -2.143130117761083
     },
     {
       "code": "6142",
@@ -11176,9 +11176,9 @@
       "winning_trades": 0,
       "open_trades": 0,
       "win_rate_pct": 0.0,
-      "buy_hold_pct": 0.6326482685869328,
+      "buy_hold_pct": 0.7433577844041084,
       "liquidation_return_pct": 0.0,
-      "buy_hold_liquidation_pct": 0.18734879999844356
+      "buy_hold_liquidation_pct": 0.29756842620811685
     },
     {
       "code": "6225",
@@ -11189,9 +11189,9 @@
       "winning_trades": 0,
       "open_trades": 0,
       "win_rate_pct": 0.0,
-      "buy_hold_pct": 286.77669186035956,
+      "buy_hold_pct": 277.97377520588185,
       "liquidation_return_pct": 0.0,
-      "buy_hold_liquidation_pct": 285.0652049988775
+      "buy_hold_liquidation_pct": 276.3012412505958
     },
     {
       "code": "6272",
@@ -11202,9 +11202,9 @@
       "winning_trades": 0,
       "open_trades": 0,
       "win_rate_pct": 0.0,
-      "buy_hold_pct": -41.00261098216347,
+      "buy_hold_pct": -40.18157285193834,
       "liquidation_return_pct": 0.0,
-      "buy_hold_liquidation_pct": -41.2636744285674
+      "buy_hold_liquidation_pct": -40.446269392068515
     },
     {
       "code": "6412",
@@ -11228,9 +11228,9 @@
       "winning_trades": 0,
       "open_trades": 0,
       "win_rate_pct": 0.0,
-      "buy_hold_pct": 47.248088448307904,
+      "buy_hold_pct": 61.787290458960165,
       "liquidation_return_pct": 0.0,
-      "buy_hold_liquidation_pct": 46.59651565692413
+      "buy_hold_liquidation_pct": 61.071381698679275
     },
     {
       "code": "6515",
@@ -11241,9 +11241,9 @@
       "winning_trades": 0,
       "open_trades": 0,
       "win_rate_pct": 0.0,
-      "buy_hold_pct": 114.11604619351867,
+      "buy_hold_pct": 92.80922919873136,
       "liquidation_return_pct": 0.0,
-      "buy_hold_liquidation_pct": 113.16858268911236
+      "buy_hold_liquidation_pct": 91.95604835952697
     },
     {
       "code": "6558",
@@ -11254,9 +11254,9 @@
       "winning_trades": 0,
       "open_trades": 0,
       "win_rate_pct": 0.0,
-      "buy_hold_pct": -32.89562170456579,
+      "buy_hold_pct": -33.56133972305611,
       "liquidation_return_pct": 0.0,
-      "buy_hold_liquidation_pct": -33.19255857852309
+      "buy_hold_liquidation_pct": -33.85533079478158
     },
     {
       "code": "6598",
@@ -11267,9 +11267,9 @@
       "winning_trades": 0,
       "open_trades": 0,
       "win_rate_pct": 0.0,
-      "buy_hold_pct": 20.737042357684523,
+      "buy_hold_pct": 21.41788859965459,
       "liquidation_return_pct": 0.0,
-      "buy_hold_liquidation_pct": 20.202780945251764
+      "buy_hold_liquidation_pct": 20.88061444260112
     },
     {
       "code": "6658",
@@ -11280,9 +11280,9 @@
       "winning_trades": 0,
       "open_trades": 0,
       "win_rate_pct": 0.0,
-      "buy_hold_pct": 237.21215833593124,
+      "buy_hold_pct": 236.3815865173698,
       "liquidation_return_pct": 0.0,
-      "buy_hold_liquidation_pct": 235.71999453529475
+      "buy_hold_liquidation_pct": 234.89309799703045
     },
     {
       "code": "6753",
@@ -11319,9 +11319,9 @@
       "winning_trades": 0,
       "open_trades": 0,
       "win_rate_pct": 0.0,
-      "buy_hold_pct": -16.581355867340008,
+      "buy_hold_pct": -16.2352190995843,
       "liquidation_return_pct": 0.0,
-      "buy_hold_liquidation_pct": -16.950483367627033
+      "buy_hold_liquidation_pct": -16.60587825506864
     },
     {
       "code": "6908",
@@ -11332,9 +11332,9 @@
       "winning_trades": 0,
       "open_trades": 0,
       "win_rate_pct": 0.0,
-      "buy_hold_pct": -56.16060869267201,
+      "buy_hold_pct": -56.577332956731595,
       "liquidation_return_pct": 0.0,
-      "buy_hold_liquidation_pct": -56.35459799920694
+      "buy_hold_liquidation_pct": -56.76947825839807
     },
     {
       "code": "6928",
@@ -11345,9 +11345,9 @@
       "winning_trades": 0,
       "open_trades": 0,
       "win_rate_pct": 0.0,
-      "buy_hold_pct": -17.414473150714592,
+      "buy_hold_pct": -15.054886669306434,
       "liquidation_return_pct": 0.0,
-      "buy_hold_liquidation_pct": -17.779914107022687
+      "buy_hold_liquidation_pct": -15.430768795794759
     },
     {
       "code": "6952",
@@ -11371,9 +11371,9 @@
       "winning_trades": 0,
       "open_trades": 0,
       "win_rate_pct": 0.0,
-      "buy_hold_pct": 14.642604569801222,
+      "buy_hold_pct": 13.83240948450226,
       "liquidation_return_pct": 0.0,
-      "buy_hold_liquidation_pct": 14.135311044579858
+      "buy_hold_liquidation_pct": 13.328701072533345
     },
     {
       "code": "7749",
@@ -11384,9 +11384,9 @@
       "winning_trades": 0,
       "open_trades": 0,
       "win_rate_pct": 0.0,
-      "buy_hold_pct": -7.157740314927297,
+      "buy_hold_pct": -6.680402218860082,
       "liquidation_return_pct": 0.0,
-      "buy_hold_liquidation_pct": -7.568567314033747
+      "buy_hold_liquidation_pct": -7.093341439041623
     },
     {
       "code": "8215",
@@ -11397,9 +11397,9 @@
       "winning_trades": 0,
       "open_trades": 0,
       "win_rate_pct": 0.0,
-      "buy_hold_pct": 50.317012232013795,
+      "buy_hold_pct": 48.720729436019994,
       "liquidation_return_pct": 0.0,
-      "buy_hold_liquidation_pct": 49.65185945288712
+      "buy_hold_liquidation_pct": 48.062640208265606
     },
     {
       "code": "8411",
@@ -11423,9 +11423,9 @@
       "winning_trades": 0,
       "open_trades": 0,
       "win_rate_pct": 0.0,
-      "buy_hold_pct": 4.0682196216973,
+      "buy_hold_pct": 4.497072175083416,
       "liquidation_return_pct": 0.0,
-      "buy_hold_liquidation_pct": 3.6077177498712976
+      "buy_hold_liquidation_pct": 4.034672630708669
     },
     {
       "code": "8488",
@@ -11436,9 +11436,9 @@
       "winning_trades": 0,
       "open_trades": 0,
       "win_rate_pct": 0.0,
-      "buy_hold_pct": -4.040639971761473,
+      "buy_hold_pct": -1.8415782553788174,
       "liquidation_return_pct": 0.0,
-      "buy_hold_liquidation_pct": -4.4652601398864284
+      "buy_hold_liquidation_pct": -2.2759292715987645
     },
     {
       "code": "9802",
@@ -11449,9 +11449,9 @@
       "winning_trades": 0,
       "open_trades": 0,
       "win_rate_pct": 0.0,
-      "buy_hold_pct": -32.734316655944674,
+      "buy_hold_pct": -31.274284728487856,
       "liquidation_return_pct": 0.0,
-      "buy_hold_liquidation_pct": -33.03196730474212
+      "buy_hold_liquidation_pct": -31.578396018564302
     },
     {
       "code": "9912",
@@ -11462,9 +11462,9 @@
       "winning_trades": 0,
       "open_trades": 0,
       "win_rate_pct": 0.0,
-      "buy_hold_pct": 4.709084366619565,
+      "buy_hold_pct": 5.517651821000236,
       "liquidation_return_pct": 0.0,
-      "buy_hold_liquidation_pct": 4.245746668297268
+      "buy_hold_liquidation_pct": 5.050736211692319
     },
     {
       "code": "9927",
@@ -11475,9 +11475,9 @@
       "winning_trades": 0,
       "open_trades": 0,
       "win_rate_pct": 0.0,
-      "buy_hold_pct": -1.4860523767186162,
+      "buy_hold_pct": -1.1697945127359666,
       "liquidation_return_pct": 0.0,
-      "buy_hold_liquidation_pct": -1.9219765949516354
+      "buy_hold_liquidation_pct": -1.607118172017108
     },
     {
       "code": "9938",
@@ -11488,9 +11488,9 @@
       "winning_trades": 0,
       "open_trades": 0,
       "win_rate_pct": 0.0,
-      "buy_hold_pct": -17.604071808141576,
+      "buy_hold_pct": -17.49869973594732,
       "liquidation_return_pct": 0.0,
-      "buy_hold_liquidation_pct": -17.968673790390554
+      "buy_hold_liquidation_pct": -17.863767989615752
     },
     {
       "code": "9958",
@@ -11501,9 +11501,9 @@
       "winning_trades": 0,
       "open_trades": 0,
       "win_rate_pct": 0.0,
-      "buy_hold_pct": -34.68455212777675,
+      "buy_hold_pct": -34.90397914926563,
       "liquidation_return_pct": 0.0,
-      "buy_hold_liquidation_pct": -34.97357298461134
+      "buy_hold_liquidation_pct": -35.19202904153013
     },
     {
       "code": "1434",
@@ -11514,9 +11514,9 @@
       "winning_trades": 0,
       "open_trades": 0,
       "win_rate_pct": 0.0,
-      "buy_hold_pct": 15.288468027826262,
+      "buy_hold_pct": 21.373142060301586,
       "liquidation_return_pct": -0.27733200728260465,
-      "buy_hold_liquidation_pct": 14.778316556803128
+      "buy_hold_liquidation_pct": 20.83606590668474
     },
     {
       "code": "1476",
@@ -11527,9 +11527,9 @@
       "winning_trades": 0,
       "open_trades": 0,
       "win_rate_pct": 0.0,
-      "buy_hold_pct": -21.65316793315697,
+      "buy_hold_pct": -19.76203750395731,
       "liquidation_return_pct": -0.4411231980039898,
-      "buy_hold_liquidation_pct": -21.999852665052757
+      "buy_hold_liquidation_pct": -20.117090488002297
     },
     {
       "code": "1210",
@@ -11553,9 +11553,9 @@
       "winning_trades": 0,
       "open_trades": 0,
       "win_rate_pct": 0.0,
-      "buy_hold_pct": 316.0549471540749,
+      "buy_hold_pct": 318.0944321891439,
       "liquidation_return_pct": -1.467076203968587,
-      "buy_hold_liquidation_pct": 314.21390401291814
+      "buy_hold_liquidation_pct": 316.24436432670694
     },
     {
       "code": "5871",
@@ -11566,9 +11566,9 @@
       "winning_trades": 0,
       "open_trades": 0,
       "win_rate_pct": 0.0,
-      "buy_hold_pct": 5.627724890055652,
+      "buy_hold_pct": 6.6337032223419135,
       "liquidation_return_pct": -1.8115241198019438,
-      "buy_hold_liquidation_pct": 5.160322207417156
+      "buy_hold_liquidation_pct": 6.16184908558306
     },
     {
       "code": "2881",
@@ -11579,9 +11579,9 @@
       "winning_trades": 0,
       "open_trades": 0,
       "win_rate_pct": 0.0,
-      "buy_hold_pct": 65.81622658291953,
+      "buy_hold_pct": 66.88947076792225,
       "liquidation_return_pct": -2.125498296710149,
-      "buy_hold_liquidation_pct": 65.0824897802901
+      "buy_hold_liquidation_pct": 66.15098485977417
     },
     {
       "code": "2489",
@@ -11592,9 +11592,9 @@
       "winning_trades": 0,
       "open_trades": 0,
       "win_rate_pct": 0.0,
-      "buy_hold_pct": 163.87278484294026,
+      "buy_hold_pct": 177.26734193043794,
       "liquidation_return_pct": -2.5450305783792926,
-      "buy_hold_liquidation_pct": 162.70514777001023
+      "buy_hold_liquidation_pct": 176.04043394239577
     },
     {
       "code": "2891",
@@ -11605,9 +11605,9 @@
       "winning_trades": 0,
       "open_trades": 0,
       "win_rate_pct": 0.0,
-      "buy_hold_pct": 41.10837033248502,
+      "buy_hold_pct": 41.72725723617716,
       "liquidation_return_pct": -3.4205679778522624,
-      "buy_hold_liquidation_pct": 40.483965793763765
+      "buy_hold_liquidation_pct": 41.10011412290709
     },
     {
       "code": "3090",
@@ -11618,9 +11618,9 @@
       "winning_trades": 0,
       "open_trades": 0,
       "win_rate_pct": 0.0,
-      "buy_hold_pct": 77.19031940004788,
+      "buy_hold_pct": 78.21454089947014,
       "liquidation_return_pct": -3.747392810490169,
-      "buy_hold_liquidation_pct": 76.40625223670267
+      "buy_hold_liquidation_pct": 77.42594155598997
     },
     {
       "code": "6177",
@@ -11631,9 +11631,9 @@
       "winning_trades": 0,
       "open_trades": 0,
       "win_rate_pct": 0.0,
-      "buy_hold_pct": -10.49350421968157,
+      "buy_hold_pct": -9.006685403147053,
       "liquidation_return_pct": -4.318566308742245,
-      "buy_hold_liquidation_pct": -10.889570463509479
+      "buy_hold_liquidation_pct": -9.409330820238127
     },
     {
       "code": "4720",
@@ -11644,9 +11644,9 @@
       "winning_trades": 0,
       "open_trades": 0,
       "win_rate_pct": 0.0,
-      "buy_hold_pct": 61.60339719121384,
+      "buy_hold_pct": 48.50905525688296,
       "liquidation_return_pct": -4.3216050051462895,
-      "buy_hold_liquidation_pct": 60.888302158642716
+      "buy_hold_liquidation_pct": 47.85190268737125
     },
     {
       "code": "6782",
@@ -11657,22 +11657,22 @@
       "winning_trades": 0,
       "open_trades": 0,
       "win_rate_pct": 0.0,
-      "buy_hold_pct": 38.45555397457012,
+      "buy_hold_pct": 39.053634121328514,
       "liquidation_return_pct": -4.335706632394776,
-      "buy_hold_liquidation_pct": 37.842888148232646
+      "buy_hold_liquidation_pct": 38.43832179034163
     },
     {
       "code": "2634",
-      "return_pct": -4.677832646327984,
-      "mdd_pct": -8.366979100164517,
+      "return_pct": -5.421375311092291,
+      "mdd_pct": -9.081745270844156,
       "trades": 2,
       "closed_trades": 1,
       "winning_trades": 0,
       "open_trades": 1,
       "win_rate_pct": 0.0,
-      "buy_hold_pct": 28.207555889563697,
-      "liquidation_return_pct": -5.099633236867984,
-      "buy_hold_liquidation_pct": 27.64023745475237
+      "buy_hold_pct": 27.207496927461495,
+      "liquidation_return_pct": -5.83988572534071,
+      "buy_hold_liquidation_pct": 26.644603753557483
     },
     {
       "code": "1101",
@@ -11683,9 +11683,9 @@
       "winning_trades": 0,
       "open_trades": 0,
       "win_rate_pct": 0.0,
-      "buy_hold_pct": 11.477539893115729,
+      "buy_hold_pct": 12.804650048068765,
       "liquidation_return_pct": -5.5222109832841255,
-      "buy_hold_liquidation_pct": 10.984251779088684
+      "buy_hold_liquidation_pct": 12.305489471606057
     },
     {
       "code": "1227",
@@ -11696,9 +11696,9 @@
       "winning_trades": 0,
       "open_trades": 0,
       "win_rate_pct": 0.0,
-      "buy_hold_pct": -4.653246091251062,
+      "buy_hold_pct": -3.9598125085037794,
       "liquidation_return_pct": -5.621227160777442,
-      "buy_hold_liquidation_pct": -5.075155477297278
+      "buy_hold_liquidation_pct": -4.384790338153655
     },
     {
       "code": "2351",
@@ -11709,9 +11709,9 @@
       "winning_trades": 0,
       "open_trades": 0,
       "win_rate_pct": 0.0,
-      "buy_hold_pct": 181.5807053397841,
+      "buy_hold_pct": 180.93635589964725,
       "liquidation_return_pct": -6.094513382661615,
-      "buy_hold_liquidation_pct": 180.33471071865551
+      "buy_hold_liquidation_pct": 179.69321252479128
     },
     {
       "code": "2301",
@@ -11722,9 +11722,9 @@
       "winning_trades": 1,
       "open_trades": 0,
       "win_rate_pct": 50.0,
-      "buy_hold_pct": 86.46931578576861,
+      "buy_hold_pct": 87.09295898237653,
       "liquidation_return_pct": -7.159075615196164,
-      "buy_hold_liquidation_pct": 85.6441890634166
+      "buy_hold_liquidation_pct": 86.2650726388795
     },
     {
       "code": "4766",
@@ -11735,9 +11735,9 @@
       "winning_trades": 0,
       "open_trades": 0,
       "win_rate_pct": 0.0,
-      "buy_hold_pct": 17.017665987421758,
+      "buy_hold_pct": 19.00382156288012,
       "liquidation_return_pct": -7.426552789804896,
-      "buy_hold_liquidation_pct": 16.499862815427413
+      "buy_hold_liquidation_pct": 18.477229652464366
     },
     {
       "code": "3533",
@@ -11748,9 +11748,9 @@
       "winning_trades": 1,
       "open_trades": 0,
       "win_rate_pct": 25.0,
-      "buy_hold_pct": 46.360647551865085,
+      "buy_hold_pct": 43.22154519150337,
       "liquidation_return_pct": -8.004705264606592,
-      "buy_hold_liquidation_pct": 45.713001686448074
+      "buy_hold_liquidation_pct": 42.58778985403096
     },
     {
       "code": "2478",
@@ -11761,9 +11761,9 @@
       "winning_trades": 0,
       "open_trades": 0,
       "win_rate_pct": 0.0,
-      "buy_hold_pct": 123.70837741785911,
+      "buy_hold_pct": 134.15390476810933,
       "liquidation_return_pct": -9.388521725544784,
-      "buy_hold_liquidation_pct": 122.7184678477851
+      "buy_hold_liquidation_pct": 133.11777373951043
     },
     {
       "code": "1326",
@@ -11774,9 +11774,9 @@
       "winning_trades": 0,
       "open_trades": 0,
       "win_rate_pct": 0.0,
-      "buy_hold_pct": 129.32883188290302,
+      "buy_hold_pct": 138.1250158435631,
       "liquidation_return_pct": -13.057575828936574,
-      "buy_hold_liquidation_pct": 128.3140518018212
+      "buy_hold_liquidation_pct": 137.07131264845535
     },
     {
       "code": "1301",
@@ -11787,9 +11787,9 @@
       "winning_trades": 0,
       "open_trades": 0,
       "win_rate_pct": 0.0,
-      "buy_hold_pct": 75.96008845109792,
+      "buy_hold_pct": 93.40220455998418,
       "liquidation_return_pct": -13.467840995096324,
-      "buy_hold_liquidation_pct": 75.18146505970181
+      "buy_hold_liquidation_pct": 92.54639980480626
     },
     {
       "code": "8112",
@@ -11800,9 +11800,9 @@
       "winning_trades": 0,
       "open_trades": 0,
       "win_rate_pct": 0.0,
-      "buy_hold_pct": 15.838947185950513,
+      "buy_hold_pct": 15.425232451805314,
       "liquidation_return_pct": -13.919677864143987,
-      "buy_hold_liquidation_pct": 15.326359844652671
+      "buy_hold_liquidation_pct": 14.914475798206084
     },
     {
       "code": "2317",
@@ -11813,9 +11813,9 @@
       "winning_trades": 1,
       "open_trades": 0,
       "win_rate_pct": 25.0,
-      "buy_hold_pct": 13.469167684848182,
+      "buy_hold_pct": 11.696211939772416,
       "liquidation_return_pct": -18.455087466267283,
-      "buy_hold_liquidation_pct": 12.967066617842725
+      "buy_hold_liquidation_pct": 11.201956201938913
     },
     {
       "code": "4919",
@@ -11826,9 +11826,9 @@
       "winning_trades": 0,
       "open_trades": 0,
       "win_rate_pct": 0.0,
-      "buy_hold_pct": 194.67812289056718,
+      "buy_hold_pct": 212.3000704388403,
       "liquidation_return_pct": -19.059676244537382,
-      "buy_hold_liquidation_pct": 193.3741721967764
+      "buy_hold_liquidation_pct": 210.91814262714843
     },
     {
       "code": "1802",
@@ -11839,9 +11839,9 @@
       "winning_trades": 0,
       "open_trades": 0,
       "win_rate_pct": 0.0,
-      "buy_hold_pct": 72.58643968262366,
+      "buy_hold_pct": 89.61419239331951,
       "liquidation_return_pct": -19.9223324547405,
-      "buy_hold_liquidation_pct": 71.82274468702805
+      "buy_hold_liquidation_pct": 88.77514959197907
     }
   ],
   "top_candidates": [
@@ -11859,7 +11859,7 @@
       "avg_trades": 0.2,
       "avg_win_rate_pct": 2.7777777777777777,
       "pooled_win_rate_pct": 21.05263157894737,
-      "avg_buy_hold_pct": 19.774984448941847,
+      "avg_buy_hold_pct": 19.77498453800775,
       "avg_return_pct": 1.5527286776908324,
       "median_return_pct": 0.0,
       "avg_mdd_pct": -1.6960975702819332,
@@ -11887,7 +11887,7 @@
       "avg_trades": 0.20833333333333334,
       "avg_win_rate_pct": 2.7777777777777777,
       "pooled_win_rate_pct": 20.0,
-      "avg_buy_hold_pct": 19.774984448941847,
+      "avg_buy_hold_pct": 19.77498453800775,
       "avg_return_pct": 1.5441721153836354,
       "median_return_pct": 0.0,
       "avg_mdd_pct": -1.740093537796867,
@@ -11915,7 +11915,7 @@
       "avg_trades": 0.20833333333333334,
       "avg_win_rate_pct": 2.7777777777777777,
       "pooled_win_rate_pct": 20.0,
-      "avg_buy_hold_pct": 19.774984448941847,
+      "avg_buy_hold_pct": 19.77498453800775,
       "avg_return_pct": 1.5441721153836354,
       "median_return_pct": 0.0,
       "avg_mdd_pct": -1.740093537796867,
@@ -11943,8 +11943,8 @@
       "avg_trades": 0.23333333333333334,
       "avg_win_rate_pct": 3.611111111111111,
       "pooled_win_rate_pct": 21.73913043478261,
-      "avg_buy_hold_pct": 19.774984448941847,
-      "avg_return_pct": 1.5250980479923237,
+      "avg_buy_hold_pct": 19.77498453800775,
+      "avg_return_pct": 1.5250979872512065,
       "median_return_pct": 0.0,
       "avg_mdd_pct": -1.8233153396520416,
       "params": {
@@ -11971,8 +11971,8 @@
       "avg_trades": 0.24166666666666667,
       "avg_win_rate_pct": 3.611111111111111,
       "pooled_win_rate_pct": 20.833333333333332,
-      "avg_buy_hold_pct": 19.774984448941847,
-      "avg_return_pct": 1.516541485685127,
+      "avg_buy_hold_pct": 19.77498453800775,
+      "avg_return_pct": 1.5165414249440095,
       "median_return_pct": 0.0,
       "avg_mdd_pct": -1.8673113071669754,
       "params": {
@@ -11999,8 +11999,8 @@
       "avg_trades": 0.24166666666666667,
       "avg_win_rate_pct": 3.611111111111111,
       "pooled_win_rate_pct": 20.833333333333332,
-      "avg_buy_hold_pct": 19.774984448941847,
-      "avg_return_pct": 1.516541485685127,
+      "avg_buy_hold_pct": 19.77498453800775,
+      "avg_return_pct": 1.5165414249440095,
       "median_return_pct": 0.0,
       "avg_mdd_pct": -1.8673113071669754,
       "params": {
@@ -12027,8 +12027,8 @@
       "avg_trades": 0.21666666666666667,
       "avg_win_rate_pct": 3.611111111111111,
       "pooled_win_rate_pct": 23.80952380952381,
-      "avg_buy_hold_pct": 19.774984448941847,
-      "avg_return_pct": 1.4627808709983903,
+      "avg_buy_hold_pct": 19.77498453800775,
+      "avg_return_pct": 1.4627808102572728,
       "median_return_pct": 0.0,
       "avg_mdd_pct": -1.762983565529629,
       "params": {
@@ -12055,7 +12055,7 @@
       "avg_trades": 0.19166666666666668,
       "avg_win_rate_pct": 2.7777777777777777,
       "pooled_win_rate_pct": 22.22222222222222,
-      "avg_buy_hold_pct": 19.774984448941847,
+      "avg_buy_hold_pct": 19.77498453800775,
       "avg_return_pct": 1.4612927041059756,
       "median_return_pct": 0.0,
       "avg_mdd_pct": -1.685483844376165,
@@ -12083,8 +12083,8 @@
       "avg_trades": 0.25833333333333336,
       "avg_win_rate_pct": 4.444444444444444,
       "pooled_win_rate_pct": 23.076923076923077,
-      "avg_buy_hold_pct": 19.774984448941847,
-      "avg_return_pct": 1.4579235786766822,
+      "avg_buy_hold_pct": 19.77498453800775,
+      "avg_return_pct": 1.457923517935565,
       "median_return_pct": 0.0,
       "avg_mdd_pct": -1.9052394942860895,
       "params": {
@@ -12111,8 +12111,8 @@
       "avg_trades": 0.15833333333333333,
       "avg_win_rate_pct": 3.75,
       "pooled_win_rate_pct": 33.333333333333336,
-      "avg_buy_hold_pct": 19.774984448941847,
-      "avg_return_pct": 1.4529946817738377,
+      "avg_buy_hold_pct": 19.77498453800775,
+      "avg_return_pct": 1.45299462103272,
       "median_return_pct": 0.0,
       "avg_mdd_pct": -1.2857402320317,
       "params": {
@@ -12139,8 +12139,8 @@
       "avg_trades": 0.15833333333333333,
       "avg_win_rate_pct": 3.75,
       "pooled_win_rate_pct": 33.333333333333336,
-      "avg_buy_hold_pct": 19.774984448941847,
-      "avg_return_pct": 1.4529946817738377,
+      "avg_buy_hold_pct": 19.77498453800775,
+      "avg_return_pct": 1.45299462103272,
       "median_return_pct": 0.0,
       "avg_mdd_pct": -1.2857402320317,
       "params": {
@@ -12167,8 +12167,8 @@
       "avg_trades": 0.15833333333333333,
       "avg_win_rate_pct": 3.75,
       "pooled_win_rate_pct": 33.333333333333336,
-      "avg_buy_hold_pct": 19.774984448941847,
-      "avg_return_pct": 1.4529946817738377,
+      "avg_buy_hold_pct": 19.77498453800775,
+      "avg_return_pct": 1.45299462103272,
       "median_return_pct": 0.0,
       "avg_mdd_pct": -1.2857402320317,
       "params": {
@@ -12195,8 +12195,8 @@
       "avg_trades": 0.15833333333333333,
       "avg_win_rate_pct": 3.75,
       "pooled_win_rate_pct": 33.333333333333336,
-      "avg_buy_hold_pct": 19.774984448941847,
-      "avg_return_pct": 1.4529946817738377,
+      "avg_buy_hold_pct": 19.77498453800775,
+      "avg_return_pct": 1.45299462103272,
       "median_return_pct": 0.0,
       "avg_mdd_pct": -1.2857402320317,
       "params": {
@@ -12223,8 +12223,8 @@
       "avg_trades": 0.225,
       "avg_win_rate_pct": 4.444444444444444,
       "pooled_win_rate_pct": 26.08695652173913,
-      "avg_buy_hold_pct": 19.774984448941847,
-      "avg_return_pct": 1.4520933270716176,
+      "avg_buy_hold_pct": 19.77498453800775,
+      "avg_return_pct": 1.4520932663305,
       "median_return_pct": 0.0,
       "avg_mdd_pct": -1.7297315145710381,
       "params": {
@@ -12251,8 +12251,8 @@
       "avg_trades": 0.225,
       "avg_win_rate_pct": 4.444444444444444,
       "pooled_win_rate_pct": 26.08695652173913,
-      "avg_buy_hold_pct": 19.774984448941847,
-      "avg_return_pct": 1.4520933270716176,
+      "avg_buy_hold_pct": 19.77498453800775,
+      "avg_return_pct": 1.4520932663305,
       "median_return_pct": 0.0,
       "avg_mdd_pct": -1.7297315145710381,
       "params": {
@@ -12279,8 +12279,8 @@
       "avg_trades": 0.26666666666666666,
       "avg_win_rate_pct": 4.444444444444444,
       "pooled_win_rate_pct": 22.22222222222222,
-      "avg_buy_hold_pct": 19.774984448941847,
-      "avg_return_pct": 1.4493670163694854,
+      "avg_buy_hold_pct": 19.77498453800775,
+      "avg_return_pct": 1.4493669556283677,
       "median_return_pct": 0.0,
       "avg_mdd_pct": -1.9492354618010235,
       "params": {
@@ -12307,8 +12307,8 @@
       "avg_trades": 0.26666666666666666,
       "avg_win_rate_pct": 4.444444444444444,
       "pooled_win_rate_pct": 22.22222222222222,
-      "avg_buy_hold_pct": 19.774984448941847,
-      "avg_return_pct": 1.4493670163694854,
+      "avg_buy_hold_pct": 19.77498453800775,
+      "avg_return_pct": 1.4493669556283677,
       "median_return_pct": 0.0,
       "avg_mdd_pct": -1.9492354618010235,
       "params": {
@@ -12335,8 +12335,8 @@
       "avg_trades": 0.26666666666666666,
       "avg_win_rate_pct": 4.444444444444444,
       "pooled_win_rate_pct": 22.22222222222222,
-      "avg_buy_hold_pct": 19.774984448941847,
-      "avg_return_pct": 1.44563729092265,
+      "avg_buy_hold_pct": 19.77498453800775,
+      "avg_return_pct": 1.4456372301815326,
       "median_return_pct": 0.0,
       "avg_mdd_pct": -1.9052394942860895,
       "params": {
@@ -12363,8 +12363,8 @@
       "avg_trades": 0.175,
       "avg_win_rate_pct": 4.583333333333333,
       "pooled_win_rate_pct": 35.294117647058826,
-      "avg_buy_hold_pct": 19.774984448941847,
-      "avg_return_pct": 1.4397439186275078,
+      "avg_buy_hold_pct": 19.77498453800775,
+      "avg_return_pct": 1.4397438578863904,
       "median_return_pct": 0.0,
       "avg_mdd_pct": -1.3218026529278686,
       "params": {
@@ -12391,8 +12391,8 @@
       "avg_trades": 0.175,
       "avg_win_rate_pct": 4.583333333333333,
       "pooled_win_rate_pct": 35.294117647058826,
-      "avg_buy_hold_pct": 19.774984448941847,
-      "avg_return_pct": 1.4397439186275078,
+      "avg_buy_hold_pct": 19.77498453800775,
+      "avg_return_pct": 1.4397438578863904,
       "median_return_pct": 0.0,
       "avg_mdd_pct": -1.3218026529278686,
       "params": {
