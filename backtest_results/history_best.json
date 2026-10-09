@@ -1,6 +1,6 @@
 {
-  "updated_at": "2026-10-09T17:20:15.094084+08:00",
-  "github_run_number": 45,
+  "updated_at": "2026-10-10T00:29:09.205182+08:00",
+  "github_run_number": 46,
   "best": {
     "iteration": 0,
     "symbols": 120,
@@ -15,10 +15,10 @@
     "avg_trades": 0.5083333333333333,
     "avg_win_rate_pct": 5.138888888888888,
     "pooled_win_rate_pct": 22.413793103448278,
-    "avg_buy_hold_pct": 33.873015931623335,
-    "avg_return_pct": 1.1475580580676625,
+    "avg_buy_hold_pct": 33.87301596978003,
+    "avg_return_pct": 1.14755812074605,
     "median_return_pct": 0.0,
-    "avg_mdd_pct": -3.480143763087629,
+    "avg_mdd_pct": -3.480143706647448,
     "params": {
       "institutional_2d": true,
       "ma10_confirm": 1,
@@ -113,9 +113,9 @@
       "winning_trades": 1,
       "open_trades": 0,
       "win_rate_pct": 100.0,
-      "buy_hold_pct": 65.21124876472216,
+      "buy_hold_pct": 65.21123592757185,
       "liquidation_return_pct": 14.23875824635017,
-      "buy_hold_liquidation_pct": 64.48018898893825
+      "buy_hold_liquidation_pct": 64.48017620859234
     },
     {
       "code": "6691",
@@ -1471,16 +1471,16 @@
     },
     {
       "code": "2301",
-      "return_pct": -7.159083136602629,
-      "mdd_pct": -16.399282220333,
+      "return_pct": -7.159075615196164,
+      "mdd_pct": -16.399275447511286,
       "trades": 2,
       "closed_trades": 2,
       "winning_trades": 1,
       "open_trades": 0,
       "win_rate_pct": 50.0,
-      "buy_hold_pct": 85.53383357490402,
-      "liquidation_return_pct": -7.159083136602629,
-      "buy_hold_liquidation_pct": 84.71284636133507
+      "buy_hold_pct": 85.53385099085673,
+      "liquidation_return_pct": -7.159075615196164,
+      "buy_hold_liquidation_pct": 84.7128637002222
     },
     {
       "code": "4766",
