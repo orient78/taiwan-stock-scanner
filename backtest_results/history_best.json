@@ -1,6 +1,6 @@
 {
-  "updated_at": "2026-10-10T00:29:09.205182+08:00",
-  "github_run_number": 46,
+  "updated_at": "2026-10-10T05:10:42.654462+08:00",
+  "github_run_number": 47,
   "best": {
     "iteration": 0,
     "symbols": 120,
@@ -15,7 +15,7 @@
     "avg_trades": 0.5083333333333333,
     "avg_win_rate_pct": 5.138888888888888,
     "pooled_win_rate_pct": 22.413793103448278,
-    "avg_buy_hold_pct": 33.87301596978003,
+    "avg_buy_hold_pct": 33.87301607675628,
     "avg_return_pct": 1.14755812074605,
     "median_return_pct": 0.0,
     "avg_mdd_pct": -3.480143706647448,
@@ -113,9 +113,9 @@
       "winning_trades": 1,
       "open_trades": 0,
       "win_rate_pct": 100.0,
-      "buy_hold_pct": 65.21123592757185,
+      "buy_hold_pct": 65.21124876472216,
       "liquidation_return_pct": 14.23875824635017,
-      "buy_hold_liquidation_pct": 64.48017620859234
+      "buy_hold_liquidation_pct": 64.48018898893825
     },
     {
       "code": "6691",
