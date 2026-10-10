@@ -40,6 +40,9 @@ def indicators(df):
     x = df.copy()
     for n in (5, 10, 20, 60):
         x[f"MA{n}"] = x["Close"].rolling(n).mean()
+        # Exact observed SMA change: (today - close n sessions ago) / n.
+        # This describes today's slope, never predicts tomorrow's close.
+        x[f"MA{n}_CHANGE"] = (x["Close"] - x["Close"].shift(n)) / n
     delta = x["Close"].diff()
     gain = delta.clip(lower=0).rolling(14).mean()
     loss = (-delta.clip(upper=0)).rolling(14).mean()
@@ -67,7 +70,7 @@ def select_symbols(codes, limit):
     indices = np.linspace(0, len(others) - 1, limit - 1, dtype=int)
     return sorted(["2330", *(others[i] for i in indices)])
 
-ENTRY_STAGES = ("institutional", "moving_averages", "ma_order", "rsi", "volume", "breakout")
+ENTRY_STAGES = ("institutional", "moving_averages", "ma_order", "ma_slope", "ma10_distance", "rsi", "volume", "breakout")
 
 def entry_rejection(row, p):
     """First rejected entry gate; used by both orders and funnel diagnostics."""
@@ -79,6 +82,15 @@ def entry_rejection(row, p):
         return "moving_averages"
     if p["ma_order"] and not (row["MA5"] >= row["MA10"]):
         return "ma_order"
+    if p.get("rising_ma10_ma20", False):
+        changes = [row.get("MA10_CHANGE", np.nan), row.get("MA20_CHANGE", np.nan)]
+        if not all(math.isfinite(float(v)) and float(v) > 0 for v in changes):
+            return "ma_slope"
+    distance_limit = p.get("max_ma10_distance_pct")
+    if distance_limit is not None:
+        ma10 = float(row["MA10"])
+        if not math.isfinite(ma10) or ma10 <= 0 or (price / ma10 - 1) * 100 > distance_limit:
+            return "ma10_distance"
     if not (p["rsi_min"] <= row["RSI"] <= p["rsi_max"]):
         return "rsi"
     vol_ratio = row["Volume"] / row["VOL20"] if row["VOL20"] else 0
@@ -151,7 +163,7 @@ def backtest_one(df, p, prepared=False, start_date=None, end_date=None):
     # Include every execution/signal input. Same-length revised snapshots and
     # copied DataFrames may carry old attrs; dates alone cannot validate them.
     fingerprint = pd.util.hash_pandas_object(
-        df[list(dict.fromkeys(["Open", "Volume", *cols, *(["INSTITUTIONAL_2D"] if "INSTITUTIONAL_2D" in df else [])]))], index=True
+        df[list(dict.fromkeys(["Open", "Volume", *cols, *[key for key in ("INSTITUTIONAL_2D", "MA10_CHANGE", "MA20_CHANGE") if key in df]]))], index=True
     ).to_numpy().tobytes()
     cache_key = (START_DATE, fingerprint)
     if source.attrs.get("record_cache_key") != cache_key:
@@ -302,6 +314,35 @@ def select_training_params(data, grid, start_date, end_date):
     best = max(candidates, key=score)
     return best["params"], best, candidates
 
+def teaching_comparison(data, baseline_params, validation_start, later_start):
+    """Fixed ablations of public teaching themes; no claim of an exact teacher strategy.
+
+    Baseline parameters were chosen on training only. These variants are
+    descriptive comparisons and never replace the production selection.
+    Distance thresholds are our experimental choices, not quoted rules.
+    """
+    variants = {"baseline": dict(baseline_params),
+                "rising_ma10_ma20": dict(baseline_params, rising_ma10_ma20=True)}
+    for cap in (5, 8, 12):
+        variants[f"rising_ma10_ma20_distance_{cap}"] = dict(
+            baseline_params, rising_ma10_ma20=True, max_ma10_distance_pct=cap)
+    windows = {"training": (START_DATE, validation_start),
+               "validation": (validation_start, later_start),
+               "later_period": (later_start, None), "full_period": (START_DATE, None)}
+    results = {}
+    for name, params in variants.items():
+        results[name] = {"params": params, "windows": {}}
+        for window, (start, end) in windows.items():
+            summary, _ = evaluate(data, params, start, end)
+            results[name]["windows"][window] = summary
+        results[name]["entry_diagnostics"] = entry_diagnostics(data, params)
+    return {"status": "exploratory_ablation_no_automatic_promotion",
+            "source": "https://www.youtube.com/watch?v=7wUaxsjukfI",
+            "source_scope": "public description identifies moving-average deduction teaching; full transcript not verified",
+            "interpretation": "positive observed MA10/MA20 changes and optional MA10 distance caps are our quantification, not the creator's exact rules",
+            "preserved_rules": "TWSE only; above MA5/10/20; foreign AND trust each buy on two sessions; hold until close below MA10; next-open execution",
+            "variants": results}
+
 def main():
     os.makedirs("backtest_results", exist_ok=True)
     codes = listed_twse_codes()
@@ -390,7 +431,8 @@ def main():
     # Previously inspected dates cannot establish an unseen-data target claim.
     reached = False
     output = {
-        "engine_version": "9-ma10-entry-funnel",
+        "engine_version": "10-teaching-ablation",
+        "teaching_comparison": teaching_comparison(data, best_params, validation_start, later_start),
         "entry_diagnostics": {
             "full_period": entry_diagnostics(data, best_params),
             "training": entry_diagnostics(data, best_params, START_DATE, validation_start),
@@ -457,4 +499,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
