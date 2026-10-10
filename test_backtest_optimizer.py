@@ -220,7 +220,43 @@ class ExecutionTests(unittest.TestCase):
         self.assertEqual(counts["passed_with_next_session"], 4)
         self.assertEqual(counts["passed_without_next_session"], 1)
 
+    def test_observed_slope_uses_no_future_prices(self):
+        d = pd.DataFrame({"Close": np.arange(1., 91.), "High": np.arange(2., 92.), "Volume": 100.}, index=pd.date_range("2025-10-01", periods=90))
+        before = engine.indicators(d)
+        revised = d.copy()
+        revised.iloc[71:, revised.columns.get_loc("Close")] = 9999
+        after = engine.indicators(revised)
+        pd.testing.assert_frame_equal(before.iloc[:71], after.iloc[:71])
+        for n in (10, 20):
+            self.assertAlmostEqual(before[f"MA{n}_CHANGE"].iloc[70], before[f"MA{n}"].iloc[70] - before[f"MA{n}"].iloc[69])
+
+    def test_slope_and_distance_gate_and_cache_revision(self):
+        d = self.frame()
+        d["MA10_CHANGE"] = 1.
+        d["MA20_CHANGE"] = 1.
+        p = dict(self.p, rising_ma10_ma20=True, max_ma10_distance_pct=12)
+        self.assertTrue(engine.entry_signal(d.iloc[0], p))
+        self.assertEqual(engine.entry_rejection(d.iloc[0], dict(p, max_ma10_distance_pct=8)), "ma10_distance")
+        self.assertEqual(engine.backtest_one(d, p, prepared=True)["trades"], 1)
+        d["MA20_CHANGE"] = -1.
+        self.assertEqual(engine.entry_rejection(d.iloc[0], p), "ma_slope")
+        self.assertEqual(engine.backtest_one(d, p, prepared=True)["trades"], 0)
+        d["MA20_CHANGE"] = np.nan
+        self.assertEqual(engine.entry_rejection(d.iloc[0], p), "ma_slope")
+
+    def test_comparison_preserves_baseline_and_required_gates(self):
+        d = self.frame()
+        d["MA10_CHANGE"] = d["MA20_CHANGE"] = 1.
+        params = dict(self.p, institutional_2d=True)
+        original = params.copy()
+        report = engine.teaching_comparison({"2330": d}, params, "2026-05-01", "2026-08-01")
+        self.assertEqual(params, original)
+        for variant in report["variants"].values():
+            self.assertTrue(variant["params"]["institutional_2d"])
+            self.assertEqual(variant["windows"]["full_period"]["total_entries"], 0)
+
 
 if __name__ == "__main__":
     unittest.main()
+
 
