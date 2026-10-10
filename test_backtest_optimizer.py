@@ -255,6 +255,17 @@ class ExecutionTests(unittest.TestCase):
             self.assertTrue(variant["params"]["institutional_2d"])
             self.assertEqual(variant["windows"]["full_period"]["total_entries"], 0)
 
+    def test_foreign_single_day_entry_and_revised_cache(self):
+        d = self.frame()
+        d['FOREIGN_NET_SHARES'] = 10.
+        d['INSTITUTIONAL_2D'] = False
+        p = dict(self.p, institutional_mode='foreign_big_buy', foreign_volume_pct=10)
+        self.assertTrue(engine.entry_signal(d.iloc[0], p))
+        self.assertEqual(engine.backtest_one(d, p, prepared=True)['trades'], 1)
+        d['FOREIGN_NET_SHARES'] = 9.
+        self.assertEqual(engine.entry_rejection(d.iloc[0], p), 'institutional')
+        self.assertEqual(engine.backtest_one(d, p, prepared=True)['trades'], 0)
+
 
 if __name__ == "__main__":
     unittest.main()

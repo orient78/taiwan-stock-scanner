@@ -1,5 +1,6 @@
 """Point-in-time T86 inputs for next-session-open research orders."""
 import json
+import math
 import time
 import urllib.parse
 import urllib.request
@@ -9,6 +10,16 @@ import pandas as pd
 
 FOREIGN = "外陸資買賣超股數(不含外資自營商)"
 TRUST = "投信買賣超股數"
+
+def foreign_big_buy(net_shares, volume_shares, threshold_pct=10.0):
+    """Single-session net buying / that session's traded shares; fail closed."""
+    try:
+        net, volume, threshold = map(float, (net_shares, volume_shares, threshold_pct))
+    except (TypeError, ValueError):
+        return False
+    return (all(math.isfinite(v) for v in (net, volume, threshold))
+            and net > 0 and volume > 0 and threshold > 0
+            and net / volume * 100 >= threshold)
 
 
 def parse_market_month(payload, month):
@@ -150,4 +161,7 @@ def attach_gate(df, code, calendar, reports):
     out = df.copy()
     out["INSTITUTIONAL_2D"] = gate.reindex(normalized, fill_value=False).to_numpy()
     out["INSTITUTIONAL_AVAILABLE"] = daily.notna().all(axis=1).reindex(normalized, fill_value=False).to_numpy()
+    # Current session only: neither trust buying nor a prior foreign buy is required.
+    out["FOREIGN_NET_SHARES"] = daily["Foreign"].reindex(normalized).to_numpy()
     return out
+

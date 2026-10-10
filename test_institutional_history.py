@@ -1,4 +1,33 @@
 import unittest
+from institutional_history import foreign_big_buy
+
+class ForeignBigBuyTests(unittest.TestCase):
+    def test_scanner_requires_current_date_and_uses_shared_threshold(self):
+        import ast
+        from pathlib import Path
+        node = next(n for n in ast.parse(Path('scanner.py').read_text()).body if isinstance(n, ast.FunctionDef) and n.name == 'passes_foreign_big_buy_gate')
+        scope = {'foreign_big_buy': foreign_big_buy, 'FOREIGN_BIG_BUY_PCT': 10}
+        exec(compile(ast.Module(body=[node], type_ignores=[]), 'scanner.py', 'exec'), scope)
+        gate = scope[node.name]
+        stock = dict(institutional_available=True, date='2026-10-08', institutional_date='2026-10-08', foreign_net_shares=100, volume=1000, trust_net_shares=-50, foreign_buy_streak=1)
+        self.assertTrue(gate(stock))
+        self.assertFalse(gate(dict(stock, institutional_date='2026-10-07')))
+        self.assertFalse(gate(dict(stock, foreign_net_shares=99)))
+
+    def test_threshold_and_invalid_inputs(self):
+        self.assertTrue(foreign_big_buy(100, 1000, 10))
+        self.assertFalse(foreign_big_buy(99, 1000, 10))
+        for net, volume in [(None, 1000), (-100, 1000), (100, 0), (100, float('nan'))]:
+            self.assertFalse(foreign_big_buy(net, volume))
+
+    def test_single_session_does_not_require_trust_or_previous_buy(self):
+        import pandas as pd
+        from institutional_history import attach_gate
+        dates = pd.DatetimeIndex(['2026-01-02', '2026-01-05'])
+        df = pd.DataFrame({'Volume': [1000, 1000]}, index=dates)
+        r = attach_gate(df, '2330', dates, {'2026-01-02': {'2330': [-100, -50]}, '2026-01-05': {'2330': [100, -50]}})
+        self.assertFalse(r.INSTITUTIONAL_2D.any())
+        self.assertTrue(foreign_big_buy(r.FOREIGN_NET_SHARES.iloc[1], r.Volume.iloc[1]))
 from unittest.mock import patch
 
 import pandas as pd
@@ -120,3 +149,4 @@ class InstitutionalTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+

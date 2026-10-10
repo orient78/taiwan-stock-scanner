@@ -9,7 +9,7 @@ import numpy as np
 import pandas as pd
 import yfinance as yf
 import twstock
-from institutional_history import attach_gate, load_reports, load_market_calendar, filter_market_sessions
+from institutional_history import attach_gate, load_reports, load_market_calendar, filter_market_sessions, foreign_big_buy
 
 TIMEZONE = "Asia/Taipei"
 START_DATE = os.getenv("BACKTEST_START", "2026-01-01")
@@ -75,7 +75,13 @@ ENTRY_STAGES = ("institutional", "moving_averages", "ma_order", "ma_slope", "ma1
 def entry_rejection(row, p):
     """First rejected entry gate; used by both orders and funnel diagnostics."""
     gate = row.get("INSTITUTIONAL_2D", False)
-    if p.get("institutional_2d", True) and (pd.isna(gate) or not bool(gate)):
+    mode = p.get("institutional_mode", "legacy_two_day")
+    if mode == "foreign_big_buy":
+        if not foreign_big_buy(row.get("FOREIGN_NET_SHARES"), row.get("Volume"), p.get("foreign_volume_pct", 10)):
+            return "institutional"
+    elif mode != "legacy_two_day":
+        raise ValueError(f"Unknown institutional mode: {mode}")
+    elif p.get("institutional_2d", True) and (pd.isna(gate) or not bool(gate)):
         return "institutional"
     price = float(row["Close"])
     if not (price > row["MA5"] and price > row["MA10"] and price > row["MA20"]):
@@ -163,7 +169,7 @@ def backtest_one(df, p, prepared=False, start_date=None, end_date=None):
     # Include every execution/signal input. Same-length revised snapshots and
     # copied DataFrames may carry old attrs; dates alone cannot validate them.
     fingerprint = pd.util.hash_pandas_object(
-        df[list(dict.fromkeys(["Open", "Volume", *cols, *[key for key in ("INSTITUTIONAL_2D", "MA10_CHANGE", "MA20_CHANGE") if key in df]]))], index=True
+        df[list(dict.fromkeys(["Open", "Volume", *cols, *[key for key in ("INSTITUTIONAL_2D", "FOREIGN_NET_SHARES", "MA10_CHANGE", "MA20_CHANGE") if key in df]]))], index=True
     ).to_numpy().tobytes()
     cache_key = (START_DATE, fingerprint)
     if source.attrs.get("record_cache_key") != cache_key:
@@ -252,7 +258,9 @@ def parameter_grid(previous_params=None):
             continue
         for ma10_confirm in [1]:
             yield {
-                "institutional_2d": True,
+                "institutional_mode": "foreign_big_buy",
+                "foreign_volume_pct": 10,
+                "institutional_2d": False,
                 "ma10_confirm": ma10_confirm,
                 "ma_order": ma_order,
                 "rsi_min": rsi_min,
@@ -340,7 +348,7 @@ def teaching_comparison(data, baseline_params, validation_start, later_start):
             "source": "https://www.youtube.com/watch?v=7wUaxsjukfI",
             "source_scope": "public description identifies moving-average deduction teaching; full transcript not verified",
             "interpretation": "positive observed MA10/MA20 changes and optional MA10 distance caps are our quantification, not the creator's exact rules",
-            "preserved_rules": "TWSE only; above MA5/10/20; foreign AND trust each buy on two sessions; hold until close below MA10; next-open execution",
+            "preserved_rules": "TWSE only; above MA5/10/20; institutional mode from baseline params; hold until close below MA10; next-open execution",
             "variants": results}
 
 def main():
@@ -431,7 +439,12 @@ def main():
     # Previously inspected dates cannot establish an unseen-data target claim.
     reached = False
     output = {
-        "engine_version": "10-teaching-ablation",
+        "engine_version": "11-foreign-single-day",
+        "foreign_threshold_comparison": {
+            str(cap): {window: evaluate(data, dict(best_params, foreign_volume_pct=cap), start, end)[0]
+                       for window, start, end in [("training", START_DATE, validation_start), ("validation", validation_start, later_start), ("later_period", later_start, None), ("full_period", START_DATE, None)]}
+            for cap in (5, 10, 15)
+        },
         "teaching_comparison": teaching_comparison(data, best_params, validation_start, later_start),
         "entry_diagnostics": {
             "full_period": entry_diagnostics(data, best_params),
@@ -439,7 +452,7 @@ def main():
             "validation": entry_diagnostics(data, best_params, validation_start, later_start),
             "later_period": entry_diagnostics(data, best_params, later_start),
         },
-        "entry_scope": "technical entry AND foreign/trust each net-buy on both current and preceding market trading session; order next session open",
+        "entry_scope": "technical entry AND foreign single-session net buying >=10% of same-session volume; no trust or streak requirement; order next session open",
         "institutional_gate_backtested": True,
         "institutional_coverage": coverage,
         "institutional_timing": "T86 trade-date reports assumed available by next open; historical original release timestamps unavailable; missing stock records block entry; never forward-fill",
