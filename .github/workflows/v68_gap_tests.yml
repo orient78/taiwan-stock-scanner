@@ -1,0 +1,18 @@
+name: V6.8 Gap Exit Tests
+on:
+  push:
+    branches:
+      - feature/v6.8-gap-exit
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install pandas
+      - run: python -m unittest discover -s tests -p 'test_gap_exit.py' -v
+      - run: python -m py_compile scanner.py gap_exit.py
