@@ -20,8 +20,8 @@ class GapExitTests(unittest.TestCase):
         result = gap_exit_series(frame(rows))
         self.assertFalse(result[7]["gap_filled"])
         self.assertTrue(result[8]["gap_filled"])
-        self.assertFalse(result[9]["exit_signal"])
-        self.assertTrue(result[8]["exit_signal"])
+        self.assertFalse(result[8]["exit_signal"])
+        self.assertTrue(result[9]["exit_signal"])
 
     def test_no_premature_pivot_and_prefix_invariance(self):
         rows = [(10, 8, 9), (11, 7, 10), (12, 6, 11),
