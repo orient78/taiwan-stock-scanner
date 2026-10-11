@@ -12,7 +12,7 @@ class GapExitTests(unittest.TestCase):
         rows = [
             (105, 100, 103), (104, 99, 102), (103, 96, 100),
             (105, 100, 104), (107, 102, 106), (109, 103, 108),
-            (111, 108, 110),  # gap: bottom 109; pivot 96 confirmed
+            (115, 112, 114),  # gap: bottom 109; pivot 96 confirmed
             (112, 109, 111),  # filled, still above swing
             (110, 94, 95),    # close below 96
         ]
