@@ -14,15 +14,14 @@ import yfinance as yf
 import twstock
 
 from stock_pool import get_groups
-from institutional_history import foreign_big_buy
+from gap_exit import gap_exit_status
 
 
 # ============================================================
 # V6.5 CONFIG
 # ============================================================
 
-VERSION = "V6.7"
-FOREIGN_BIG_BUY_PCT = 10.0
+VERSION = "V6.8"
 TIMEZONE = "Asia/Taipei"
 
 MIN_PRICE = 10
@@ -264,11 +263,12 @@ def passes_institutional_two_day_gate(stock):
     )
 
 def passes_foreign_big_buy_gate(stock):
+    """V6.8: positive foreign net buying, without a big-buy threshold."""
     return bool(
         stock.get("institutional_available")
         and stock.get("date")
         and stock.get("institutional_date") == stock.get("date")
-        and foreign_big_buy(stock.get("foreign_net_shares"), stock.get("volume"), FOREIGN_BIG_BUY_PCT)
+        and safe_float(stock.get("foreign_net_shares")) > 0
     )
 
 # INDICATORS
@@ -1177,7 +1177,7 @@ def get_next_day_failed_gates(stock):
     failed = []
 
     if not passes_foreign_big_buy_gate(stock):
-        failed.append("外資單日買超未達當日成交量10%（或法人資料缺漏／過期）")
+        failed.append("外資未買超（或法人資料缺漏／過期）")
 
     if stock["rsi"] >= 75:
         failed.append("RSI>=75")
@@ -1275,10 +1275,10 @@ def build_reasons(stock):
 
     if passes_foreign_big_buy_gate(stock):
         reasons.append(
-            f"外資單日買超{stock['foreign_net_lots']:.0f}張，占當日成交量{stock['foreign_volume_pct']:.2f}%（門檻10%）"
+            f"外資買超{stock['foreign_net_lots']:.0f}張"
         )
     else:
-        risks.append("外資單日大買條件未通過，或法人資料缺漏／過期")
+        risks.append("外資買超條件未通過，或法人資料缺漏／過期")
 
     if stock["ma5"] > stock["ma10"] > stock["ma20"] > 0:
         reasons.append("短期均線呈多頭排列")
@@ -1426,6 +1426,7 @@ def scan_one(code, market_ref):
         }
 
     df = add_indicators(df)
+    gap_status = gap_exit_status(df)
     row = df.iloc[-1]
     price = safe_float(row["Close"])
 
@@ -1492,6 +1493,9 @@ def scan_one(code, market_ref):
 
     stock = {
         "code": code,
+        "gap_exit": gap_status,
+        "exit_signal": gap_status["exit_signal"],
+        "exit_rule": "latest_bullish_gap_filled_and_close_below_confirmed_swing_low",
         "name": info["name"],
         "market": market,
         "industry": info["industry"],
@@ -1750,7 +1754,7 @@ def main():
 
         stock["foreign_trust_buy_2d"] = passes_institutional_two_day_gate(stock)
         stock["foreign_big_buy_1d"] = passes_foreign_big_buy_gate(stock)
-        stock["foreign_big_buy_threshold_pct"] = FOREIGN_BIG_BUY_PCT
+        stock["foreign_big_buy_threshold_pct"] = None
         stock["foreign_volume_pct"] = r2(stock["foreign_net_shares"] / stock["volume"] * 100) if stock.get("volume", 0) > 0 else 0
 
         volume = stock.get("volume", 0)
@@ -1939,11 +1943,11 @@ def main():
         "updated": now,
         "timezone": TIMEZONE,
         "strategy": (
-            "V6.6 TWSE+TPEx Common-Stock Entry & Position Radar: "
+            "V6.8 TWSE+TPEx Common-Stock Entry & Position Radar: "
             "Trend + Breakout + Volume + Relative Strength "
             "+ Sector Strength + Entry Quality + Risk/Reward "
             "+ Overheat Control"
-            " + Foreign AND Investment Trust Net Buying >=2 Trading Days"
+            " + Foreign Net Buying > 0 + Latest Bullish Gap/Swing-Low Exit"
         ),
         "universe_count": len(codes),
         "valid_count": sum(1 for x in raw_stocks if x.get("eligible_for_trade")),
