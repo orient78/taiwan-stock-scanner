@@ -10,6 +10,7 @@ def frame(rows):
 class GapExitTests(unittest.TestCase):
     def test_gap_fill_and_swing_break(self):
         rows = [
+            (106, 101, 104),
             (105, 100, 103), (104, 99, 102), (103, 96, 100),
             (105, 100, 104), (107, 102, 106), (109, 103, 108),
             (115, 112, 114),  # gap: bottom 109; pivot 96 confirmed
@@ -17,9 +18,9 @@ class GapExitTests(unittest.TestCase):
             (110, 94, 95),    # close below 96
         ]
         result = gap_exit_series(frame(rows))
-        self.assertFalse(result[6]["gap_filled"])
-        self.assertTrue(result[7]["gap_filled"])
-        self.assertFalse(result[7]["exit_signal"])
+        self.assertFalse(result[7]["gap_filled"])
+        self.assertTrue(result[8]["gap_filled"])
+        self.assertFalse(result[9]["exit_signal"])
         self.assertTrue(result[8]["exit_signal"])
 
     def test_no_premature_pivot_and_prefix_invariance(self):
