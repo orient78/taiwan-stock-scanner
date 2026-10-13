@@ -1,6 +1,6 @@
 {
-  "updated_at": "2026-10-13T20:04:14.801536+08:00",
-  "github_run_number": 65,
+  "updated_at": "2026-10-14T03:41:23.483575+08:00",
+  "github_run_number": 66,
   "best": {
     "iteration": 0,
     "symbols": 120,
@@ -10,15 +10,15 @@
     "risk_pass_rate_pct": 4.166666666666667,
     "traded_symbols": 120,
     "no_trade_symbols": 0,
-    "total_entries": 1009,
-    "total_closed_trades": 974,
-    "avg_trades": 8.408333333333333,
-    "avg_win_rate_pct": 25.623093545887663,
-    "pooled_win_rate_pct": 24.84599589322382,
-    "avg_buy_hold_pct": 32.05089397277341,
-    "avg_return_pct": -1.673937622716679,
-    "median_return_pct": -7.165485403493587,
-    "avg_mdd_pct": -23.481400359468967,
+    "total_entries": 1017,
+    "total_closed_trades": 980,
+    "avg_trades": 8.475,
+    "avg_win_rate_pct": 25.604880277674393,
+    "pooled_win_rate_pct": 24.897959183673468,
+    "avg_buy_hold_pct": 32.05089410741775,
+    "avg_return_pct": -1.6766817287983156,
+    "median_return_pct": -7.077008778255411,
+    "avg_mdd_pct": -23.53446934276463,
     "params": {
       "institutional_mode": "foreign_big_buy",
       "foreign_volume_pct": 10,
@@ -161,19 +161,6 @@
       "buy_hold_liquidation_pct": 127.61746924529488
     },
     {
-      "code": "3645",
-      "return_pct": 38.213242779325896,
-      "mdd_pct": -16.48967397726455,
-      "trades": 5,
-      "closed_trades": 5,
-      "winning_trades": 3,
-      "open_trades": 0,
-      "win_rate_pct": 60.0,
-      "buy_hold_pct": 45.06295899544739,
-      "liquidation_return_pct": 38.213242779325896,
-      "buy_hold_liquidation_pct": 44.42105540189254
-    },
-    {
       "code": "6515",
       "return_pct": 37.56495247460487,
       "mdd_pct": -30.150951213617883,
@@ -200,6 +187,19 @@
       "buy_hold_liquidation_pct": 65.3830439238829
     },
     {
+      "code": "3645",
+      "return_pct": 30.841869831095202,
+      "mdd_pct": -17.406734869335406,
+      "trades": 5,
+      "closed_trades": 5,
+      "winning_trades": 3,
+      "open_trades": 0,
+      "win_rate_pct": 60.0,
+      "buy_hold_pct": 45.06295899544739,
+      "liquidation_return_pct": 30.841869831095202,
+      "buy_hold_liquidation_pct": 44.42105540189254
+    },
+    {
       "code": "3090",
       "return_pct": 28.585715988709826,
       "mdd_pct": -29.88020775325071,
@@ -214,16 +214,29 @@
     },
     {
       "code": "2415",
-      "return_pct": 25.99789348406958,
+      "return_pct": 26.81882351779825,
       "mdd_pct": -13.085223426914949,
       "trades": 6,
-      "closed_trades": 5,
+      "closed_trades": 6,
       "winning_trades": 3,
-      "open_trades": 1,
-      "win_rate_pct": 60.0,
+      "open_trades": 0,
+      "win_rate_pct": 50.0,
       "buy_hold_pct": 16.757262627567606,
-      "liquidation_return_pct": 25.440352805402576,
+      "liquidation_return_pct": 26.81882351779825,
       "buy_hold_liquidation_pct": 16.240611740440624
+    },
+    {
+      "code": "6225",
+      "return_pct": 24.919262728825743,
+      "mdd_pct": -34.92963932608434,
+      "trades": 3,
+      "closed_trades": 2,
+      "winning_trades": 1,
+      "open_trades": 1,
+      "win_rate_pct": 50.0,
+      "buy_hold_pct": 341.24449730129027,
+      "liquidation_return_pct": 24.366494991250676,
+      "buy_hold_liquidation_pct": 339.29199040073206
     },
     {
       "code": "3014",
@@ -239,19 +252,6 @@
       "buy_hold_liquidation_pct": 34.27795564362801
     },
     {
-      "code": "6225",
-      "return_pct": 20.261844134876018,
-      "mdd_pct": -34.92963932608434,
-      "trades": 2,
-      "closed_trades": 2,
-      "winning_trades": 1,
-      "open_trades": 0,
-      "win_rate_pct": 50.0,
-      "buy_hold_pct": 341.24449730129027,
-      "liquidation_return_pct": 20.261844134876018,
-      "buy_hold_liquidation_pct": 339.29199040073206
-    },
-    {
       "code": "2454",
       "return_pct": 17.819017894867994,
       "mdd_pct": -40.62496478435118,
@@ -263,6 +263,19 @@
       "buy_hold_pct": 219.5637868812029,
       "liquidation_return_pct": 17.819017894867994,
       "buy_hold_liquidation_pct": 218.14971712425358
+    },
+    {
+      "code": "6598",
+      "return_pct": 14.229312415197182,
+      "mdd_pct": -17.01426446126465,
+      "trades": 9,
+      "closed_trades": 8,
+      "winning_trades": 3,
+      "open_trades": 1,
+      "win_rate_pct": 37.5,
+      "buy_hold_pct": 32.31145444346477,
+      "liquidation_return_pct": 13.72384770775994,
+      "buy_hold_liquidation_pct": 31.725976257552446
     },
     {
       "code": "2891",
@@ -304,19 +317,6 @@
       "buy_hold_liquidation_pct": 296.75194531433436
     },
     {
-      "code": "2010",
-      "return_pct": 10.726851191651798,
-      "mdd_pct": -9.149703924300256,
-      "trades": 9,
-      "closed_trades": 8,
-      "winning_trades": 4,
-      "open_trades": 1,
-      "win_rate_pct": 50.0,
-      "buy_hold_pct": 19.04750632516512,
-      "liquidation_return_pct": 10.236884875128727,
-      "buy_hold_liquidation_pct": 18.520721109676263
-    },
-    {
       "code": "1313",
       "return_pct": 10.462476190656545,
       "mdd_pct": -18.303800213677246,
@@ -330,17 +330,17 @@
       "buy_hold_liquidation_pct": 30.21474349143416
     },
     {
-      "code": "6598",
-      "return_pct": 8.84677777684415,
-      "mdd_pct": -17.01426446126465,
+      "code": "2010",
+      "return_pct": 8.533443267705287,
+      "mdd_pct": -9.149703924300256,
       "trades": 9,
-      "closed_trades": 8,
-      "winning_trades": 3,
-      "open_trades": 1,
-      "win_rate_pct": 37.5,
-      "buy_hold_pct": 32.31145444346477,
-      "liquidation_return_pct": 8.365130785181618,
-      "buy_hold_liquidation_pct": 31.725976257552446
+      "closed_trades": 9,
+      "winning_trades": 4,
+      "open_trades": 0,
+      "win_rate_pct": 44.44444444444444,
+      "buy_hold_pct": 19.04750632516512,
+      "liquidation_return_pct": 8.533443267705287,
+      "buy_hold_liquidation_pct": 18.520721109676263
     },
     {
       "code": "2236",
@@ -356,6 +356,19 @@
       "buy_hold_liquidation_pct": -31.08868496505889
     },
     {
+      "code": "4545",
+      "return_pct": 4.902837096776902,
+      "mdd_pct": -19.755367064984032,
+      "trades": 7,
+      "closed_trades": 7,
+      "winning_trades": 3,
+      "open_trades": 0,
+      "win_rate_pct": 42.857142857142854,
+      "buy_hold_pct": -6.446956243094459,
+      "liquidation_return_pct": 4.902837096776902,
+      "buy_hold_liquidation_pct": -6.860928461718762
+    },
+    {
       "code": "3033",
       "return_pct": 3.3253113152127423,
       "mdd_pct": -24.485263085425846,
@@ -367,6 +380,19 @@
       "buy_hold_pct": 44.43868960492387,
       "liquidation_return_pct": 3.3253113152127423,
       "buy_hold_liquidation_pct": 43.79954840342209
+    },
+    {
+      "code": "3043",
+      "return_pct": 2.6417127186553424,
+      "mdd_pct": -12.930934589358312,
+      "trades": 7,
+      "closed_trades": 7,
+      "winning_trades": 3,
+      "open_trades": 0,
+      "win_rate_pct": 42.857142857142854,
+      "buy_hold_pct": -6.471299630310179,
+      "liquidation_return_pct": 2.6417127186553424,
+      "buy_hold_liquidation_pct": -6.8851641294460535
     },
     {
       "code": "1476",
@@ -395,19 +421,6 @@
       "buy_hold_liquidation_pct": -7.129040036221723
     },
     {
-      "code": "4720",
-      "return_pct": 2.1726175064101794,
-      "mdd_pct": -30.344218689932912,
-      "trades": 4,
-      "closed_trades": 3,
-      "winning_trades": 1,
-      "open_trades": 1,
-      "win_rate_pct": 33.33333333333333,
-      "buy_hold_pct": 55.854662004999376,
-      "liquidation_return_pct": 1.720503673944318,
-      "buy_hold_liquidation_pct": 55.16500512562725
-    },
-    {
       "code": "2317",
       "return_pct": 1.8298180742509995,
       "mdd_pct": -20.239172508957324,
@@ -419,45 +432,6 @@
       "buy_hold_pct": 6.377344704545163,
       "liquidation_return_pct": 1.8298180742509995,
       "buy_hold_liquidation_pct": 5.906624954227557
-    },
-    {
-      "code": "7631",
-      "return_pct": 1.7817138278140243,
-      "mdd_pct": -19.749568119947945,
-      "trades": 6,
-      "closed_trades": 6,
-      "winning_trades": 1,
-      "open_trades": 0,
-      "win_rate_pct": 16.666666666666664,
-      "buy_hold_pct": 11.806921771254908,
-      "liquidation_return_pct": 1.7817138278140243,
-      "buy_hold_liquidation_pct": 11.312176142417108
-    },
-    {
-      "code": "3043",
-      "return_pct": 1.6329451280740814,
-      "mdd_pct": -12.930934589358312,
-      "trades": 7,
-      "closed_trades": 7,
-      "winning_trades": 3,
-      "open_trades": 0,
-      "win_rate_pct": 42.857142857142854,
-      "buy_hold_pct": -6.471299630310179,
-      "liquidation_return_pct": 1.6329451280740814,
-      "buy_hold_liquidation_pct": -6.8851641294460535
-    },
-    {
-      "code": "4545",
-      "return_pct": 1.466542558280226,
-      "mdd_pct": -19.755367064984032,
-      "trades": 7,
-      "closed_trades": 6,
-      "winning_trades": 2,
-      "open_trades": 1,
-      "win_rate_pct": 33.33333333333333,
-      "buy_hold_pct": -6.446956243094459,
-      "liquidation_return_pct": 1.0175531074598343,
-      "buy_hold_liquidation_pct": -6.860928461718762
     },
     {
       "code": "2836",
@@ -487,16 +461,29 @@
     },
     {
       "code": "2330",
-      "return_pct": 0.8252999046528542,
-      "mdd_pct": -14.682569056903993,
+      "return_pct": 0.825320177498079,
+      "mdd_pct": -14.682569056904015,
       "trades": 13,
       "closed_trades": 12,
       "winning_trades": 3,
       "open_trades": 1,
       "win_rate_pct": 25.0,
       "buy_hold_pct": 61.32392526437576,
-      "liquidation_return_pct": 0.3791479525747654,
+      "liquidation_return_pct": 0.3791681357126597,
       "buy_hold_liquidation_pct": 60.610066895080884
+    },
+    {
+      "code": "7631",
+      "return_pct": 0.6912014675927836,
+      "mdd_pct": -20.39206953180488,
+      "trades": 6,
+      "closed_trades": 6,
+      "winning_trades": 1,
+      "open_trades": 0,
+      "win_rate_pct": 16.666666666666664,
+      "buy_hold_pct": 11.806921771254908,
+      "liquidation_return_pct": 0.6912014675927836,
+      "buy_hold_liquidation_pct": 11.312176142417108
     },
     {
       "code": "1905",
@@ -538,6 +525,19 @@
       "buy_hold_liquidation_pct": 4.763287317882958
     },
     {
+      "code": "3588",
+      "return_pct": -0.11291970219576841,
+      "mdd_pct": -27.79414252374063,
+      "trades": 11,
+      "closed_trades": 11,
+      "winning_trades": 3,
+      "open_trades": 0,
+      "win_rate_pct": 27.27272727272727,
+      "buy_hold_pct": 5.454432222921524,
+      "liquidation_return_pct": -0.11291970219576841,
+      "buy_hold_liquidation_pct": 4.987796360335084
+    },
+    {
       "code": "1539",
       "return_pct": -0.1756469844461539,
       "mdd_pct": -18.056583742202182,
@@ -562,19 +562,6 @@
       "buy_hold_pct": 162.26499495623034,
       "liquidation_return_pct": -1.0491666915179332,
       "buy_hold_liquidation_pct": 161.10447235354903
-    },
-    {
-      "code": "3588",
-      "return_pct": -1.2523131908206753,
-      "mdd_pct": -28.251628974289332,
-      "trades": 11,
-      "closed_trades": 11,
-      "winning_trades": 3,
-      "open_trades": 0,
-      "win_rate_pct": 27.27272727272727,
-      "buy_hold_pct": 5.454432222921524,
-      "liquidation_return_pct": -1.2523131908206753,
-      "buy_hold_liquidation_pct": 4.987796360335084
     },
     {
       "code": "2504",
@@ -642,19 +629,6 @@
       "buy_hold_liquidation_pct": -17.129475403325866
     },
     {
-      "code": "1454",
-      "return_pct": -3.7690375944217536,
-      "mdd_pct": -23.369954857767162,
-      "trades": 7,
-      "closed_trades": 7,
-      "winning_trades": 1,
-      "open_trades": 0,
-      "win_rate_pct": 14.285714285714285,
-      "buy_hold_pct": 0.6695499773130997,
-      "liquidation_return_pct": -3.7690375944217536,
-      "buy_hold_liquidation_pct": 0.22408721866349346
-    },
-    {
       "code": "1210",
       "return_pct": -4.127234393002544,
       "mdd_pct": -10.58213273043802,
@@ -707,6 +681,19 @@
       "buy_hold_liquidation_pct": -2.8314786507953715
     },
     {
+      "code": "6202",
+      "return_pct": -5.111160050223795,
+      "mdd_pct": -34.79494023973613,
+      "trades": 13,
+      "closed_trades": 13,
+      "winning_trades": 4,
+      "open_trades": 0,
+      "win_rate_pct": 30.76923076923077,
+      "buy_hold_pct": 52.89656017296076,
+      "liquidation_return_pct": -5.111160050223795,
+      "buy_hold_liquidation_pct": 52.219992894195414
+    },
+    {
       "code": "2204",
       "return_pct": -5.210001440742385,
       "mdd_pct": -9.455264730605373,
@@ -731,6 +718,19 @@
       "buy_hold_pct": 144.40799753898511,
       "liquidation_return_pct": -5.756911155616484,
       "buy_hold_liquidation_pct": 143.3264921498751
+    },
+    {
+      "code": "2362",
+      "return_pct": -5.56715529677716,
+      "mdd_pct": -17.275784133953266,
+      "trades": 13,
+      "closed_trades": 12,
+      "winning_trades": 2,
+      "open_trades": 1,
+      "win_rate_pct": 16.666666666666664,
+      "buy_hold_pct": 27.254556216048464,
+      "liquidation_return_pct": -5.985020634588922,
+      "buy_hold_liquidation_pct": 26.691454804792446
     },
     {
       "code": "3002",
@@ -772,17 +772,17 @@
       "buy_hold_liquidation_pct": 27.531462840892363
     },
     {
-      "code": "6202",
-      "return_pct": -6.4065696328521105,
-      "mdd_pct": -35.52963602544151,
-      "trades": 13,
-      "closed_trades": 13,
-      "winning_trades": 4,
-      "open_trades": 0,
-      "win_rate_pct": 30.76923076923077,
-      "buy_hold_pct": 52.89656017296076,
-      "liquidation_return_pct": -6.4065696328521105,
-      "buy_hold_liquidation_pct": 52.219992894195414
+      "code": "4720",
+      "return_pct": -6.0393858080952985,
+      "mdd_pct": -35.94271974582347,
+      "trades": 4,
+      "closed_trades": 3,
+      "winning_trades": 1,
+      "open_trades": 1,
+      "win_rate_pct": 33.33333333333333,
+      "buy_hold_pct": 55.854662004999376,
+      "liquidation_return_pct": -6.455161525894482,
+      "buy_hold_liquidation_pct": 55.16500512562725
     },
     {
       "code": "4956",
@@ -798,6 +798,19 @@
       "buy_hold_liquidation_pct": 85.48416206841523
     },
     {
+      "code": "1454",
+      "return_pct": -6.753199341140803,
+      "mdd_pct": -25.746284093663373,
+      "trades": 8,
+      "closed_trades": 7,
+      "winning_trades": 1,
+      "open_trades": 1,
+      "win_rate_pct": 14.285714285714285,
+      "buy_hold_pct": 0.6695499773130997,
+      "liquidation_return_pct": -7.165816434056261,
+      "buy_hold_liquidation_pct": 0.22408721866349346
+    },
+    {
       "code": "1752",
       "return_pct": -6.855082563457316,
       "mdd_pct": -6.855082563457316,
@@ -809,19 +822,6 @@
       "buy_hold_pct": -8.905506331909741,
       "liquidation_return_pct": -6.855082563457316,
       "buy_hold_liquidation_pct": -9.308599466391044
-    },
-    {
-      "code": "2362",
-      "return_pct": -7.032035813933668,
-      "mdd_pct": -17.275784133953266,
-      "trades": 12,
-      "closed_trades": 12,
-      "winning_trades": 2,
-      "open_trades": 0,
-      "win_rate_pct": 16.666666666666664,
-      "buy_hold_pct": 27.254556216048464,
-      "liquidation_return_pct": -7.032035813933668,
-      "buy_hold_liquidation_pct": 26.691454804792446
     },
     {
       "code": "2705",
@@ -941,19 +941,6 @@
       "buy_hold_liquidation_pct": -11.817673941800777
     },
     {
-      "code": "1609",
-      "return_pct": -9.97795425535829,
-      "mdd_pct": -20.133733092045013,
-      "trades": 11,
-      "closed_trades": 11,
-      "winning_trades": 3,
-      "open_trades": 0,
-      "win_rate_pct": 27.27272727272727,
-      "buy_hold_pct": 2.8976377918614515,
-      "liquidation_return_pct": -9.97795425535829,
-      "buy_hold_liquidation_pct": 2.442315744632473
-    },
-    {
       "code": "6952",
       "return_pct": -11.175335684812026,
       "mdd_pct": -13.088546940541534,
@@ -965,6 +952,32 @@
       "buy_hold_pct": -10.575189979470135,
       "liquidation_return_pct": -11.56838482440673,
       "buy_hold_liquidation_pct": -10.970894763810978
+    },
+    {
+      "code": "8464",
+      "return_pct": -11.27285654901591,
+      "mdd_pct": -21.861968706677192,
+      "trades": 9,
+      "closed_trades": 8,
+      "winning_trades": 2,
+      "open_trades": 1,
+      "win_rate_pct": 25.0,
+      "buy_hold_pct": 7.2131383465288135,
+      "liquidation_return_pct": -11.665474158786516,
+      "buy_hold_liquidation_pct": 6.738720209345428
+    },
+    {
+      "code": "1609",
+      "return_pct": -11.369649390500259,
+      "mdd_pct": -20.181396618331128,
+      "trades": 12,
+      "closed_trades": 11,
+      "winning_trades": 3,
+      "open_trades": 1,
+      "win_rate_pct": 27.27272727272727,
+      "buy_hold_pct": 2.8976377918614515,
+      "liquidation_return_pct": -11.76183869194729,
+      "buy_hold_liquidation_pct": 2.442315744632473
     },
     {
       "code": "9912",
@@ -1004,19 +1017,6 @@
       "buy_hold_pct": 44.71245399986816,
       "liquidation_return_pct": -12.0733092091743,
       "buy_hold_liquidation_pct": 44.072101390918746
-    },
-    {
-      "code": "8464",
-      "return_pct": -11.738777567134262,
-      "mdd_pct": -21.861968706677192,
-      "trades": 8,
-      "closed_trades": 8,
-      "winning_trades": 2,
-      "open_trades": 0,
-      "win_rate_pct": 25.0,
-      "buy_hold_pct": 7.2131383465288135,
-      "liquidation_return_pct": -11.738777567134262,
-      "buy_hold_liquidation_pct": 6.738720209345428
     },
     {
       "code": "1516",
@@ -1136,30 +1136,43 @@
       "buy_hold_liquidation_pct": 17.81247735470688
     },
     {
-      "code": "2034",
-      "return_pct": -14.857666732560737,
-      "mdd_pct": -24.449922983159567,
-      "trades": 14,
-      "closed_trades": 13,
+      "code": "1101",
+      "return_pct": -14.728881900287616,
+      "mdd_pct": -24.682131082721558,
+      "trades": 13,
+      "closed_trades": 12,
       "winning_trades": 2,
       "open_trades": 1,
-      "win_rate_pct": 15.384615384615385,
-      "buy_hold_pct": 15.11374210403218,
-      "liquidation_return_pct": -15.234421557269162,
-      "buy_hold_liquidation_pct": 14.60436379522183
+      "win_rate_pct": 16.666666666666664,
+      "buy_hold_pct": 16.56480673718319,
+      "liquidation_return_pct": -15.106206597878845,
+      "buy_hold_liquidation_pct": 16.049007467371148
     },
     {
       "code": "5525",
-      "return_pct": -15.68252239173078,
+      "return_pct": -15.220494982141375,
       "mdd_pct": -15.68252239173078,
-      "trades": 8,
+      "trades": 9,
       "closed_trades": 8,
       "winning_trades": 1,
-      "open_trades": 0,
+      "open_trades": 1,
       "win_rate_pct": 12.5,
       "buy_hold_pct": -18.705536815796663,
-      "liquidation_return_pct": -15.68252239173078,
+      "liquidation_return_pct": -15.595644291845401,
       "buy_hold_liquidation_pct": -19.06526481538676
+    },
+    {
+      "code": "2034",
+      "return_pct": -16.12857319982186,
+      "mdd_pct": -24.449922983159567,
+      "trades": 14,
+      "closed_trades": 14,
+      "winning_trades": 3,
+      "open_trades": 0,
+      "win_rate_pct": 21.428571428571427,
+      "buy_hold_pct": 15.11374210403218,
+      "liquidation_return_pct": -16.12857319982186,
+      "buy_hold_liquidation_pct": 14.60436379522183
     },
     {
       "code": "2748",
@@ -1173,19 +1186,6 @@
       "buy_hold_pct": -5.111984573151352,
       "liquidation_return_pct": -17.359628008393248,
       "buy_hold_liquidation_pct": -5.531864041415158
-    },
-    {
-      "code": "1101",
-      "return_pct": -17.5871304169005,
-      "mdd_pct": -26.18987787820146,
-      "trades": 13,
-      "closed_trades": 12,
-      "winning_trades": 2,
-      "open_trades": 1,
-      "win_rate_pct": 16.666666666666664,
-      "buy_hold_pct": 16.56480673718319,
-      "liquidation_return_pct": -17.951807364805717,
-      "buy_hold_liquidation_pct": 16.049007467371148
     },
     {
       "code": "1466",
@@ -1332,15 +1332,15 @@
     },
     {
       "code": "5388",
-      "return_pct": -23.42513150709764,
-      "mdd_pct": -24.029351976537317,
-      "trades": 7,
+      "return_pct": -23.637987730072318,
+      "mdd_pct": -24.24052863950098,
+      "trades": 8,
       "closed_trades": 7,
       "winning_trades": 1,
-      "open_trades": 0,
+      "open_trades": 1,
       "win_rate_pct": 14.285714285714285,
       "buy_hold_pct": -6.060646303625372,
-      "liquidation_return_pct": -23.42513150709764,
+      "liquidation_return_pct": -23.975889634366755,
       "buy_hold_liquidation_pct": -6.47632794373183
     },
     {
@@ -1384,15 +1384,15 @@
     },
     {
       "code": "3694",
-      "return_pct": -25.779589223072573,
-      "mdd_pct": -25.779589223072573,
+      "return_pct": -25.054563465322243,
+      "mdd_pct": -25.054563465322243,
       "trades": 10,
-      "closed_trades": 9,
+      "closed_trades": 10,
       "winning_trades": 0,
-      "open_trades": 1,
+      "open_trades": 0,
       "win_rate_pct": 0.0,
       "buy_hold_pct": -16.630581498814855,
-      "liquidation_return_pct": -26.108014540760482,
+      "liquidation_return_pct": -25.054563465322243,
       "buy_hold_liquidation_pct": -16.9994911756826
     },
     {
@@ -1449,15 +1449,15 @@
     },
     {
       "code": "2612",
-      "return_pct": -27.706001335179977,
+      "return_pct": -28.15264008406816,
       "mdd_pct": -33.64324208540618,
-      "trades": 13,
+      "trades": 14,
       "closed_trades": 13,
       "winning_trades": 2,
-      "open_trades": 0,
+      "open_trades": 1,
       "win_rate_pct": 15.384615384615385,
       "buy_hold_pct": 8.668864664032473,
-      "liquidation_return_pct": -27.706001335179977,
+      "liquidation_return_pct": -28.47056465169616,
       "buy_hold_liquidation_pct": 8.188004937894133
     },
     {
@@ -1566,16 +1566,16 @@
     },
     {
       "code": "2301",
-      "return_pct": -40.73021881437744,
-      "mdd_pct": -47.78435149881697,
+      "return_pct": -39.60282863472019,
+      "mdd_pct": -47.78435149881698,
       "trades": 14,
-      "closed_trades": 13,
+      "closed_trades": 14,
       "winning_trades": 4,
-      "open_trades": 1,
-      "win_rate_pct": 30.76923076923077,
-      "buy_hold_pct": 72.1255061064656,
-      "liquidation_return_pct": -40.992487596123816,
-      "buy_hold_liquidation_pct": 71.36385074194449
+      "open_trades": 0,
+      "win_rate_pct": 28.57142857142857,
+      "buy_hold_pct": 72.12552226378641,
+      "liquidation_return_pct": -39.60282863472019,
+      "buy_hold_liquidation_pct": 71.36386682776916
     },
     {
       "code": "1528",
