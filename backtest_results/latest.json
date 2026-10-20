@@ -46,8 +46,8 @@
         "avg_trades": 3.158333333333333,
         "avg_win_rate_pct": 26.132936507936506,
         "pooled_win_rate_pct": 22.070844686648503,
-        "avg_buy_hold_pct": -1.55683351002446,
-        "avg_return_pct": -2.5707899026287304,
+        "avg_buy_hold_pct": -1.5568334559371522,
+        "avg_return_pct": -2.5707899608391624,
         "median_return_pct": -6.759352241905836,
         "avg_mdd_pct": -15.192362182439831,
         "params": {
@@ -107,7 +107,7 @@
         "avg_win_rate_pct": 26.931952510996627,
         "pooled_win_rate_pct": 26.330027051397657,
         "avg_buy_hold_pct": 29.191192537986147,
-        "avg_return_pct": -3.0618877142645924,
+        "avg_return_pct": -3.0618877714909973,
         "median_return_pct": -7.846529314122697,
         "avg_mdd_pct": -24.967316175125802,
         "params": {
@@ -168,8 +168,8 @@
         "avg_trades": 2.8333333333333335,
         "avg_win_rate_pct": 22.96626984126984,
         "pooled_win_rate_pct": 20.972644376899694,
-        "avg_buy_hold_pct": -1.55683351002446,
-        "avg_return_pct": -1.6517137515132732,
+        "avg_buy_hold_pct": -1.5568334559371522,
+        "avg_return_pct": -1.6517138097237056,
         "median_return_pct": -5.855833726401411,
         "avg_mdd_pct": -13.731278629874248,
         "params": {
@@ -229,7 +229,7 @@
         "avg_win_rate_pct": 26.17945963350375,
         "pooled_win_rate_pct": 25.688976377952756,
         "avg_buy_hold_pct": 29.191192537986147,
-        "avg_return_pct": -2.7210661787916472,
+        "avg_return_pct": -2.7210662288101446,
         "median_return_pct": -7.936790201480959,
         "avg_mdd_pct": -23.908308066656293,
         "params": {
@@ -290,7 +290,7 @@
         "avg_trades": 2.5416666666666665,
         "avg_win_rate_pct": 23.125,
         "pooled_win_rate_pct": 22.2972972972973,
-        "avg_buy_hold_pct": -1.55683351002446,
+        "avg_buy_hold_pct": -1.5568334559371522,
         "avg_return_pct": -0.9474195093659576,
         "median_return_pct": -3.688334173362634,
         "avg_mdd_pct": -12.345488386367512,
@@ -432,8 +432,8 @@
             "avg_trades": 2.8333333333333335,
             "avg_win_rate_pct": 22.96626984126984,
             "pooled_win_rate_pct": 20.972644376899694,
-            "avg_buy_hold_pct": -1.55683351002446,
-            "avg_return_pct": -1.6517137515132732,
+            "avg_buy_hold_pct": -1.5568334559371522,
+            "avg_return_pct": -1.6517138097237056,
             "median_return_pct": -5.855833726401411,
             "avg_mdd_pct": -13.731278629874248,
             "params": {
@@ -493,7 +493,7 @@
             "avg_win_rate_pct": 26.17945963350375,
             "pooled_win_rate_pct": 25.688976377952756,
             "avg_buy_hold_pct": 29.191192537986147,
-            "avg_return_pct": -2.7210661787916472,
+            "avg_return_pct": -2.7210662288101446,
             "median_return_pct": -7.936790201480959,
             "avg_mdd_pct": -23.908308066656293,
             "params": {
@@ -2399,8 +2399,8 @@
             "avg_trades": 2.125,
             "avg_win_rate_pct": 21.486111111111107,
             "pooled_win_rate_pct": 21.86234817813765,
-            "avg_buy_hold_pct": -1.55683351002446,
-            "avg_return_pct": -0.21492778387341704,
+            "avg_buy_hold_pct": -1.5568334559371522,
+            "avg_return_pct": -0.21492784208384955,
             "median_return_pct": -3.5803494678520567,
             "avg_mdd_pct": -11.217691998030809,
             "params": {
@@ -2462,7 +2462,7 @@
             "avg_win_rate_pct": 27.641865079365076,
             "pooled_win_rate_pct": 27.236315086782376,
             "avg_buy_hold_pct": 29.191192537986147,
-            "avg_return_pct": -0.20406263472545258,
+            "avg_return_pct": -0.20406268703582361,
             "median_return_pct": -5.081394666525924,
             "avg_mdd_pct": -20.516836488745415,
             "params": {
@@ -4371,8 +4371,8 @@
             "avg_trades": 1.425,
             "avg_win_rate_pct": 16.25,
             "pooled_win_rate_pct": 24.390243902439025,
-            "avg_buy_hold_pct": -1.55683351002446,
-            "avg_return_pct": -0.19520380186687464,
+            "avg_buy_hold_pct": -1.5568334559371522,
+            "avg_return_pct": -0.19520374206744442,
             "median_return_pct": -1.2603588956317024,
             "avg_mdd_pct": -5.864406763474873,
             "params": {
@@ -4436,7 +4436,7 @@
             "avg_win_rate_pct": 25.89763708513708,
             "pooled_win_rate_pct": 26.217228464419474,
             "avg_buy_hold_pct": 29.191192537986147,
-            "avg_return_pct": -0.710009258433256,
+            "avg_return_pct": -0.7100091995960418,
             "median_return_pct": -4.884509611869603,
             "avg_mdd_pct": -12.590219975764919,
             "params": {
@@ -6346,8 +6346,8 @@
             "avg_trades": 1.8083333333333333,
             "avg_win_rate_pct": 17.986111111111107,
             "pooled_win_rate_pct": 22.966507177033492,
-            "avg_buy_hold_pct": -1.55683351002446,
-            "avg_return_pct": 0.6193863849886051,
+            "avg_buy_hold_pct": -1.5568334559371522,
+            "avg_return_pct": 0.6193863267781726,
             "median_return_pct": -2.917802114930379,
             "avg_mdd_pct": -8.357836999238398,
             "params": {
@@ -6411,7 +6411,7 @@
             "avg_win_rate_pct": 26.57356301106301,
             "pooled_win_rate_pct": 26.5625,
             "avg_buy_hold_pct": 29.191192537986147,
-            "avg_return_pct": 0.44031374709369425,
+            "avg_return_pct": 0.4403136915055877,
             "median_return_pct": -5.207401765904418,
             "avg_mdd_pct": -15.929768616134108,
             "params": {
@@ -8321,8 +8321,8 @@
             "avg_trades": 2.0166666666666666,
             "avg_win_rate_pct": 21.13888888888889,
             "pooled_win_rate_pct": 22.64957264957265,
-            "avg_buy_hold_pct": -1.55683351002446,
-            "avg_return_pct": 1.0531160099965338,
+            "avg_buy_hold_pct": -1.5568334559371522,
+            "avg_return_pct": 1.0531159517861013,
             "median_return_pct": -3.2497689783322237,
             "avg_mdd_pct": -9.959046447350191,
             "params": {
@@ -8386,7 +8386,7 @@
             "avg_win_rate_pct": 28.19332981832982,
             "pooled_win_rate_pct": 27.401129943502823,
             "avg_buy_hold_pct": 29.191192537986147,
-            "avg_return_pct": 1.144878165837453,
+            "avg_return_pct": 1.1448781135270818,
             "median_return_pct": -4.640762556633632,
             "avg_mdd_pct": -18.13719386960112,
             "params": {
@@ -17869,8 +17869,8 @@
         "avg_trades": 2.8333333333333335,
         "avg_win_rate_pct": 22.96626984126984,
         "pooled_win_rate_pct": 20.972644376899694,
-        "avg_buy_hold_pct": -1.55683351002446,
-        "avg_return_pct": -1.6517137515132732,
+        "avg_buy_hold_pct": -1.5568334559371522,
+        "avg_return_pct": -1.6517138097237056,
         "median_return_pct": -5.855833726401411,
         "avg_mdd_pct": -13.731278629874248,
         "params": {
@@ -19266,16 +19266,16 @@
         },
         {
           "code": "7631",
-          "return_pct": 17.182217810767497,
+          "return_pct": 17.18221082551561,
           "mdd_pct": -12.816872732983864,
           "trades": 2,
           "closed_trades": 2,
           "winning_trades": 1,
           "open_trades": 0,
           "win_rate_pct": 50.0,
-          "buy_hold_pct": 5.531818656859078,
-          "liquidation_return_pct": 17.182217810767497,
-          "buy_hold_liquidation_pct": 5.06484035930248
+          "buy_hold_pct": 5.531825147336011,
+          "liquidation_return_pct": 17.18221082551561,
+          "buy_hold_liquidation_pct": 5.064846821059055
         },
         {
           "code": "7749",
@@ -21049,7 +21049,7 @@
   "descriptive_full_period_target_reached": false,
   "target_reached_reason": "No sealed unseen-data validation; full-period metrics are descriptive only",
   "data_end_date": "2026-10-20",
-  "generated_at": "2026-10-21T03:30:33.934297+08:00",
+  "generated_at": "2026-10-21T06:47:51.562211+08:00",
   "universe": "TWSE listed common stocks only",
   "sample_method": "evenly spaced across code range with 2330 reserved; not sector-stratified or market-wide",
   "universe_symbols": 1073,
@@ -21193,7 +21193,7 @@
     "below_ma5": "hold full position while close >= MA10",
     "below_ma10": "exit full position next open"
   },
-  "github_run_number": 105,
+  "github_run_number": 106,
   "improved_history": null,
   "target_reached": false,
   "run_best": {
@@ -21211,7 +21211,7 @@
     "avg_win_rate_pct": 26.17945963350375,
     "pooled_win_rate_pct": 25.688976377952756,
     "avg_buy_hold_pct": 29.191192537986147,
-    "avg_return_pct": -2.7210661787916472,
+    "avg_return_pct": -2.7210662288101446,
     "median_return_pct": -7.936790201480959,
     "avg_mdd_pct": -23.908308066656293,
     "params": {
@@ -21241,7 +21241,7 @@
     "avg_win_rate_pct": 26.17945963350375,
     "pooled_win_rate_pct": 25.688976377952756,
     "avg_buy_hold_pct": 29.191192537986147,
-    "avg_return_pct": -2.7210661787916472,
+    "avg_return_pct": -2.7210662288101446,
     "median_return_pct": -7.936790201480959,
     "avg_mdd_pct": -23.908308066656293,
     "params": {
@@ -21660,15 +21660,15 @@
     },
     {
       "code": "7631",
-      "return_pct": 0.6912014675927836,
-      "mdd_pct": -20.39206953180488,
+      "return_pct": 0.6911954653731511,
+      "mdd_pct": -20.3920695318049,
       "trades": 6,
       "closed_trades": 6,
       "winning_trades": 1,
       "open_trades": 0,
       "win_rate_pct": 16.666666666666664,
       "buy_hold_pct": 4.515166003564364,
-      "liquidation_return_pct": 0.6912014675927836,
+      "liquidation_return_pct": 0.6911954653731511,
       "buy_hold_liquidation_pct": 4.0526863939985835
     },
     {
